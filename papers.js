@@ -7,7 +7,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89535",
-    "file_path": "papers/Raffles Girls/2023/WA1/P4 Maths 2023 WA1 - Raffles Girls.pdf"
+    "file_path": "papers/Raffles Girls/2023/WA1/P4 Maths 2023 WA1 - Raffles Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2023_SA1_Raffles.pdf"
   },
   {
     "title": "P4 Maths 2023 WA1 - Nanyang",
@@ -17,7 +18,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89534",
-    "file_path": "papers/Nanyang/2023/WA1/P4 Maths 2023 WA1 - Nanyang.pdf"
+    "file_path": "papers/Nanyang/2023/WA1/P4 Maths 2023 WA1 - Nanyang.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2023_WA1_Nanyang.pdf"
   },
   {
     "title": "P4 Maths 2023 WA1 - Tao Nan",
@@ -27,7 +29,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89533",
-    "file_path": "papers/Tao Nan/2023/WA1/P4 Maths 2023 WA1 - Tao Nan.pdf"
+    "file_path": "papers/Tao Nan/2023/WA1/P4 Maths 2023 WA1 - Tao Nan.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2023_WA1_Taonan.pdf"
   },
   {
     "title": "P4 Maths 2023 WA1 - Henry Park",
@@ -37,7 +40,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89532",
-    "file_path": "papers/Henry Park/2023/WA1/P4 Maths 2023 WA1 - Henry Park.pdf"
+    "file_path": "papers/Henry Park/2023/WA1/P4 Maths 2023 WA1 - Henry Park.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2023_WA1_Henrypark.pdf"
   },
   {
     "title": "P4 Maths 2023 WA1 - ACS Junior",
@@ -47,7 +51,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89531",
-    "file_path": "papers/ACS Junior/2023/WA1/P4 Maths 2023 WA1 - ACS Junior.pdf"
+    "file_path": "papers/ACS Junior/2023/WA1/P4 Maths 2023 WA1 - ACS Junior.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2023_WA1_ACSJunior.pdf"
   },
   {
     "title": "P4 Maths 2023 WA1 - Red Swastika",
@@ -57,7 +62,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89530",
-    "file_path": "papers/Red Swastika/2023/WA1/P4 Maths 2023 WA1 - Red Swastika.pdf"
+    "file_path": "papers/Red Swastika/2023/WA1/P4 Maths 2023 WA1 - Red Swastika.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2023_WA1_Redswastika.pdf"
   },
   {
     "title": "P4 Maths 2023 WA1 - Maha Bodhi",
@@ -67,7 +73,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89529",
-    "file_path": "papers/Maha Bodhi/2023/WA1/P4 Maths 2023 WA1 - Maha Bodhi.pdf"
+    "file_path": "papers/Maha Bodhi/2023/WA1/P4 Maths 2023 WA1 - Maha Bodhi.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2023_WA1_Mahabodhi.pdf"
   },
   {
     "title": "P4 Maths 2023 WA1 - Catholic High",
@@ -77,7 +84,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89528",
-    "file_path": "papers/Catholic High/2023/WA1/P4 Maths 2023 WA1 - Catholic High.pdf"
+    "file_path": "papers/Catholic High/2023/WA1/P4 Maths 2023 WA1 - Catholic High.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2023_WA1_Catholichigh.pdf"
   },
   {
     "title": "P4 Maths 2023 WA1 - Paya Lebar Methodist Girls",
@@ -87,7 +95,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89527",
-    "file_path": "papers/Paya Lebar Methodist Girls/2023/WA1/P4 Maths 2023 WA1 - Paya Lebar Methodist Girls.pdf"
+    "file_path": "papers/Paya Lebar Methodist Girls/2023/WA1/P4 Maths 2023 WA1 - Paya Lebar Methodist Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2023_WA1_Methodistpl.pdf"
   },
   {
     "title": "P4 Maths 2023 WA1 - Pei Hwa",
@@ -97,7 +106,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89526",
-    "file_path": "papers/Pei Hwa/2023/WA1/P4 Maths 2023 WA1 - Pei Hwa.pdf"
+    "file_path": "papers/Pei Hwa/2023/WA1/P4 Maths 2023 WA1 - Pei Hwa.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2023_WA1_Peihwa.pdf"
   },
   {
     "title": "P4 Maths 2023 WA1 - St Hildas",
@@ -107,7 +117,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89525",
-    "file_path": "papers/St Hildas/2023/WA1/P4 Maths 2023 WA1 - St Hildas.pdf"
+    "file_path": "papers/St Hildas/2023/WA1/P4 Maths 2023 WA1 - St Hildas.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2023_WA1_Sthildas.pdf"
   },
   {
     "title": "P4 Maths 2023 WA1 - Nan Hua",
@@ -117,7 +128,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89524",
-    "file_path": "papers/Nan Hua/2023/WA1/P4 Maths 2023 WA1 - Nan Hua.pdf"
+    "file_path": "papers/Nan Hua/2023/WA1/P4 Maths 2023 WA1 - Nan Hua.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2023_WA1_Nanhua.pdf"
   },
   {
     "title": "P4 Maths 2023 WA2 - Rosyth",
@@ -647,7 +659,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89095",
-    "file_path": "papers/Nan Hua/2022/WA1/P4 Maths 2022 WA1 - Nan Hua.pdf"
+    "file_path": "papers/Nan Hua/2022/WA1/P4 Maths 2022 WA1 - Nan Hua.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2022_WA1_nanhua.pdf"
   },
   {
     "title": "P4 Maths 2022 WA1 - Henry Park",
@@ -657,7 +670,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89094",
-    "file_path": "papers/Henry Park/2022/WA1/P4 Maths 2022 WA1 - Henry Park.pdf"
+    "file_path": "papers/Henry Park/2022/WA1/P4 Maths 2022 WA1 - Henry Park.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2022_WA1_henrypark.pdf"
   },
   {
     "title": "P4 Maths 2022 WA1 - Red Swastika",
@@ -667,7 +681,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89093",
-    "file_path": "papers/Red Swastika/2022/WA1/P4 Maths 2022 WA1 - Red Swastika.pdf"
+    "file_path": "papers/Red Swastika/2022/WA1/P4 Maths 2022 WA1 - Red Swastika.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2022_WA1_redswastika.pdf"
   },
   {
     "title": "P4 Maths 2022 WA1 - Raffles Girls",
@@ -677,7 +692,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89092",
-    "file_path": "papers/Raffles Girls/2022/WA1/P4 Maths 2022 WA1 - Raffles Girls.pdf"
+    "file_path": "papers/Raffles Girls/2022/WA1/P4 Maths 2022 WA1 - Raffles Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2022_WA1_raffles.pdf"
   },
   {
     "title": "P4 Maths 2022 WA1 - Nanyang",
@@ -687,7 +703,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89091",
-    "file_path": "papers/Nanyang/2022/WA1/P4 Maths 2022 WA1 - Nanyang.pdf"
+    "file_path": "papers/Nanyang/2022/WA1/P4 Maths 2022 WA1 - Nanyang.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2022_WA1_nanyang.pdf"
   },
   {
     "title": "P4 Maths 2022 WA2 - Nan Hua",
@@ -737,7 +754,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87880",
-    "file_path": "papers/ACS Primary/2021/CA1/P4 Maths 2021 CA1 - ACS Primary.pdf"
+    "file_path": "papers/ACS Primary/2021/CA1/P4 Maths 2021 CA1 - ACS Primary.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2021_CA1_ACS_Primary.pdf"
   },
   {
     "title": "P4 Maths 2021 CA1 - ACS Junior",
@@ -747,7 +765,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87879",
-    "file_path": "papers/ACS Junior/2021/CA1/P4 Maths 2021 CA1 - ACS Junior.pdf"
+    "file_path": "papers/ACS Junior/2021/CA1/P4 Maths 2021 CA1 - ACS Junior.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2021_CA1_ACS_Junior.pdf"
   },
   {
     "title": "P4 Maths 2021 CA1 - Red Swastika",
@@ -757,7 +776,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87878",
-    "file_path": "papers/Red Swastika/2021/CA1/P4 Maths 2021 CA1 - Red Swastika.pdf"
+    "file_path": "papers/Red Swastika/2021/CA1/P4 Maths 2021 CA1 - Red Swastika.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2021_CA1_Red_Swastika.pdf"
   },
   {
     "title": "P4 Maths 2021 CA1 - Catholic High",
@@ -767,7 +787,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87877",
-    "file_path": "papers/Catholic High/2021/CA1/P4 Maths 2021 CA1 - Catholic High.pdf"
+    "file_path": "papers/Catholic High/2021/CA1/P4 Maths 2021 CA1 - Catholic High.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2021_CA1_Catholic_High.pdf"
   },
   {
     "title": "P4 Maths 2021 CA1 - Tao Nan",
@@ -777,7 +798,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87876",
-    "file_path": "papers/Tao Nan/2021/CA1/P4 Maths 2021 CA1 - Tao Nan.pdf"
+    "file_path": "papers/Tao Nan/2021/CA1/P4 Maths 2021 CA1 - Tao Nan.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2021_CA1_Tao_Nan.pdf"
   },
   {
     "title": "P4 Maths 2021 SA1 - ACS Primary",
@@ -3787,7 +3809,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90481",
-    "file_path": "papers/Ai Tong/2024/WA1/P4 Science 2024 WA1 - Ai Tong.pdf"
+    "file_path": "papers/Ai Tong/2024/WA1/P4 Science 2024 WA1 - Ai Tong.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2024_WA1_aitong.pdf"
   },
   {
     "title": "P4 Science 2024 WA1 - Anglo Chinese",
@@ -3797,7 +3820,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90480",
-    "file_path": "papers/Anglo Chinese/2024/WA1/P4 Science 2024 WA1 - Anglo Chinese.pdf"
+    "file_path": "papers/Anglo Chinese/2024/WA1/P4 Science 2024 WA1 - Anglo Chinese.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2024_WA1_acs.pdf"
   },
   {
     "title": "P4 Science 2024 WA1 - Henry Park",
@@ -3807,7 +3831,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90479",
-    "file_path": "papers/Henry Park/2024/WA1/P4 Science 2024 WA1 - Henry Park.pdf"
+    "file_path": "papers/Henry Park/2024/WA1/P4 Science 2024 WA1 - Henry Park.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2024_WA1_henrypark.pdf"
   },
   {
     "title": "P4 Science 2024 WA1 - Methodist Girls",
@@ -3817,7 +3842,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90478",
-    "file_path": "papers/Methodist Girls/2024/WA1/P4 Science 2024 WA1 - Methodist Girls.pdf"
+    "file_path": "papers/Methodist Girls/2024/WA1/P4 Science 2024 WA1 - Methodist Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2024_WA1_methodist.pdf"
   },
   {
     "title": "P4 Science 2024 WA1 - Nan Hua",
@@ -3827,7 +3853,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90477",
-    "file_path": "papers/Nan Hua/2024/WA1/P4 Science 2024 WA1 - Nan Hua.pdf"
+    "file_path": "papers/Nan Hua/2024/WA1/P4 Science 2024 WA1 - Nan Hua.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2024_WA1_nanhua.pdf"
   },
   {
     "title": "P4 Science 2024 WA1 - Nanyang",
@@ -3837,7 +3864,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90476",
-    "file_path": "papers/Nanyang/2024/WA1/P4 Science 2024 WA1 - Nanyang.pdf"
+    "file_path": "papers/Nanyang/2024/WA1/P4 Science 2024 WA1 - Nanyang.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2024_WA1_nanyang.pdf"
   },
   {
     "title": "P4 Science 2024 WA1 - Raffles Girls",
@@ -3847,7 +3875,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90475",
-    "file_path": "papers/Raffles Girls/2024/WA1/P4 Science 2024 WA1 - Raffles Girls.pdf"
+    "file_path": "papers/Raffles Girls/2024/WA1/P4 Science 2024 WA1 - Raffles Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2024_WA1_raffles.pdf"
   },
   {
     "title": "P4 Science 2024 WA1 - Rulang",
@@ -3857,7 +3886,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90474",
-    "file_path": "papers/Rulang/2024/WA1/P4 Science 2024 WA1 - Rulang.pdf"
+    "file_path": "papers/Rulang/2024/WA1/P4 Science 2024 WA1 - Rulang.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2024_WA1_rulang.pdf"
   },
   {
     "title": "P4 Science 2024 WA1 - Singapore Chinese Girls",
@@ -3867,7 +3897,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90473",
-    "file_path": "papers/Singapore Chinese Girls/2024/WA1/P4 Science 2024 WA1 - Singapore Chinese Girls.pdf"
+    "file_path": "papers/Singapore Chinese Girls/2024/WA1/P4 Science 2024 WA1 - Singapore Chinese Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2024_WA1_scgs.pdf"
   },
   {
     "title": "P4 Science 2024 WA1 - St Hilda's",
@@ -3877,7 +3908,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90472",
-    "file_path": "papers/St Hilda's/2024/WA1/P4 Science 2024 WA1 - St Hilda's.pdf"
+    "file_path": "papers/St Hilda's/2024/WA1/P4 Science 2024 WA1 - St Hilda's.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2024_WA1_sthildas.pdf"
   },
   {
     "title": "P4 Science 2024 WA1 - Tao Nan",
@@ -3887,7 +3919,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90471",
-    "file_path": "papers/Tao Nan/2024/WA1/P4 Science 2024 WA1 - Tao Nan.pdf"
+    "file_path": "papers/Tao Nan/2024/WA1/P4 Science 2024 WA1 - Tao Nan.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2024_WA1_taonan.pdf"
   },
   {
     "title": "P4 Science 2024 WA2 - Ai Tong",
@@ -4217,7 +4250,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89600",
-    "file_path": "papers/Nan Hua/2023/WA1/P4 Science 2023 WA1 - Nan Hua.pdf"
+    "file_path": "papers/Nan Hua/2023/WA1/P4 Science 2023 WA1 - Nan Hua.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2023_WA1_Nanhua.pdf"
   },
   {
     "title": "P4 Science 2023 WA1 - Tao Nan",
@@ -4227,7 +4261,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89599",
-    "file_path": "papers/Tao Nan/2023/WA1/P4 Science 2023 WA1 - Tao Nan.pdf"
+    "file_path": "papers/Tao Nan/2023/WA1/P4 Science 2023 WA1 - Tao Nan.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2023_WA1_Taonan.pdf"
   },
   {
     "title": "P4 Science 2023 WA1 - Henry Park",
@@ -4237,7 +4272,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89598",
-    "file_path": "papers/Henry Park/2023/WA1/P4 Science 2023 WA1 - Henry Park.pdf"
+    "file_path": "papers/Henry Park/2023/WA1/P4 Science 2023 WA1 - Henry Park.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2023_WA1_Henrypark.pdf"
   },
   {
     "title": "P4 Science 2023 WA1 - Anglo Chinese",
@@ -4247,7 +4283,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89597",
-    "file_path": "papers/Anglo Chinese/2023/WA1/P4 Science 2023 WA1 - Anglo Chinese.pdf"
+    "file_path": "papers/Anglo Chinese/2023/WA1/P4 Science 2023 WA1 - Anglo Chinese.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2023_WA1_ACSj.pdf"
   },
   {
     "title": "P4 Science 2023 WA1 - Red Swastika",
@@ -4257,7 +4294,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89596",
-    "file_path": "papers/Red Swastika/2023/WA1/P4 Science 2023 WA1 - Red Swastika.pdf"
+    "file_path": "papers/Red Swastika/2023/WA1/P4 Science 2023 WA1 - Red Swastika.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2023_WA1_Redswastika.pdf"
   },
   {
     "title": "P4 Science 2023 WA1 - Catholic High",
@@ -4267,7 +4305,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89595",
-    "file_path": "papers/Catholic High/2023/WA1/P4 Science 2023 WA1 - Catholic High.pdf"
+    "file_path": "papers/Catholic High/2023/WA1/P4 Science 2023 WA1 - Catholic High.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2023_WA1_Catholichigh.pdf"
   },
   {
     "title": "P4 Science 2023 WA1 - Paya Lebar Methodist Girls",
@@ -4277,7 +4316,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89594",
-    "file_path": "papers/Paya Lebar Methodist Girls/2023/WA1/P4 Science 2023 WA1 - Paya Lebar Methodist Girls.pdf"
+    "file_path": "papers/Paya Lebar Methodist Girls/2023/WA1/P4 Science 2023 WA1 - Paya Lebar Methodist Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2023_WA1_MGSpl.pdf"
   },
   {
     "title": "P4 Science 2023 WA1 - Methodist Girls",
@@ -4287,7 +4327,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89593",
-    "file_path": "papers/Methodist Girls/2023/WA1/P4 Science 2023 WA1 - Methodist Girls.pdf"
+    "file_path": "papers/Methodist Girls/2023/WA1/P4 Science 2023 WA1 - Methodist Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2023_WA1_Methodistgirls.pdf"
   },
   {
     "title": "P4 Science 2023 WA1 - St Hildas",
@@ -4297,7 +4338,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89592",
-    "file_path": "papers/St Hildas/2023/WA1/P4 Science 2023 WA1 - St Hildas.pdf"
+    "file_path": "papers/St Hildas/2023/WA1/P4 Science 2023 WA1 - St Hildas.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2023_WA1_Sthildas.pdf"
   },
   {
     "title": "P4 Science 2023 WA2 - Raffles Girls",
@@ -4847,7 +4889,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89054",
-    "file_path": "papers/Raffles Girls/2022/WA1/P4 Science 2022 WA1 - Raffles Girls.pdf"
+    "file_path": "papers/Raffles Girls/2022/WA1/P4 Science 2022 WA1 - Raffles Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2022_WA1_raffles.pdf"
   },
   {
     "title": "P4 Science 2022 CA1 - Nan Hua",
@@ -4857,7 +4900,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89053",
-    "file_path": "papers/Nan Hua/2022/CA1/P4 Science 2022 CA1 - Nan Hua.pdf"
+    "file_path": "papers/Nan Hua/2022/CA1/P4 Science 2022 CA1 - Nan Hua.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Science_2022_WA1_nanhua.pdf"
   },
   {
     "title": "P4 Science 2021 SA1 - ACS Primary",
@@ -4887,7 +4931,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87838",
-    "file_path": "papers/Maha Bodhi/2021/CA1/P4 Science 2021 CA1 - Maha Bodhi.pdf"
+    "file_path": "papers/Maha Bodhi/2021/CA1/P4 Science 2021 CA1 - Maha Bodhi.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4-Science-2021-CA1-Maha-Bodhi.pdf"
   },
   {
     "title": "P4 Science 2021 CA1 - ACS Junior",
@@ -4897,7 +4942,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87837",
-    "file_path": "papers/ACS Junior/2021/CA1/P4 Science 2021 CA1 - ACS Junior.pdf"
+    "file_path": "papers/ACS Junior/2021/CA1/P4 Science 2021 CA1 - ACS Junior.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4-Science-2021-CA1-ACS-Junior.pdf"
   },
   {
     "title": "P4 Science 2021 CA1 - Tao Nan",
@@ -4907,7 +4953,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87836",
-    "file_path": "papers/Tao Nan/2021/CA1/P4 Science 2021 CA1 - Tao Nan.pdf"
+    "file_path": "papers/Tao Nan/2021/CA1/P4 Science 2021 CA1 - Tao Nan.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4-Science-2021-CA1-Tao-Nan.pdf"
   },
   {
     "title": "P4 Science 2021 CA1 - Nan Hua",
@@ -4917,7 +4964,8 @@ const papers = [
     "level": "P4",
     "subject": "Science",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87835",
-    "file_path": "papers/Nan Hua/2021/CA1/P4 Science 2021 CA1 - Nan Hua.pdf"
+    "file_path": "papers/Nan Hua/2021/CA1/P4 Science 2021 CA1 - Nan Hua.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4-Science-2021-CA1-Nan-Hua.pdf"
   },
   {
     "title": "P4 Science 2021 SA1 - Catholic High",
@@ -8007,7 +8055,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90344",
-    "file_path": "papers/Ai Tong/2024/WA1/P4 English 2024 WA1 - Ai Tong.pdf"
+    "file_path": "papers/Ai Tong/2024/WA1/P4 English 2024 WA1 - Ai Tong.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2024_WA1_aitong.pdf"
   },
   {
     "title": "P4 English 2024 WA1 - Catholic High",
@@ -8017,7 +8066,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90343",
-    "file_path": "papers/Catholic High/2024/WA1/P4 English 2024 WA1 - Catholic High.pdf"
+    "file_path": "papers/Catholic High/2024/WA1/P4 English 2024 WA1 - Catholic High.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2024_WA1_catholic.pdf"
   },
   {
     "title": "P4 English 2024 WA1 - Maha Bodhi",
@@ -8027,7 +8077,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90342",
-    "file_path": "papers/Maha Bodhi/2024/WA1/P4 English 2024 WA1 - Maha Bodhi.pdf"
+    "file_path": "papers/Maha Bodhi/2024/WA1/P4 English 2024 WA1 - Maha Bodhi.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2024_WA1_mahabodhi.pdf"
   },
   {
     "title": "P4 English 2024 WA1 - Methodist Girls",
@@ -8037,7 +8088,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90341",
-    "file_path": "papers/Methodist Girls/2024/WA1/P4 English 2024 WA1 - Methodist Girls.pdf"
+    "file_path": "papers/Methodist Girls/2024/WA1/P4 English 2024 WA1 - Methodist Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2024_WA1_methodistprimary.pdf"
   },
   {
     "title": "P4 English 2024 WA1 - Nan Hua",
@@ -8047,7 +8099,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90340",
-    "file_path": "papers/Nan Hua/2024/WA1/P4 English 2024 WA1 - Nan Hua.pdf"
+    "file_path": "papers/Nan Hua/2024/WA1/P4 English 2024 WA1 - Nan Hua.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2024_WA1_nanhua.pdf"
   },
   {
     "title": "P4 English 2024 WA1 - Nanyang",
@@ -8057,7 +8110,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90339",
-    "file_path": "papers/Nanyang/2024/WA1/P4 English 2024 WA1 - Nanyang.pdf"
+    "file_path": "papers/Nanyang/2024/WA1/P4 English 2024 WA1 - Nanyang.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2024_WA1_nanyang.pdf"
   },
   {
     "title": "P4 English 2024 WA1 - Rosyth",
@@ -8067,7 +8121,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90338",
-    "file_path": "papers/Rosyth/2024/WA1/P4 English 2024 WA1 - Rosyth.pdf"
+    "file_path": "papers/Rosyth/2024/WA1/P4 English 2024 WA1 - Rosyth.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2024_WA1_rosyth.pdf"
   },
   {
     "title": "P4 English 2024 WA1 - Rulang",
@@ -8077,7 +8132,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90337",
-    "file_path": "papers/Rulang/2024/WA1/P4 English 2024 WA1 - Rulang.pdf"
+    "file_path": "papers/Rulang/2024/WA1/P4 English 2024 WA1 - Rulang.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2024_WA1_rulang.pdf"
   },
   {
     "title": "P4 English 2024 WA1 - Tao Nan",
@@ -8087,7 +8143,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=90336",
-    "file_path": "papers/Tao Nan/2024/WA1/P4 English 2024 WA1 - Tao Nan.pdf"
+    "file_path": "papers/Tao Nan/2024/WA1/P4 English 2024 WA1 - Tao Nan.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2024_WA1_taonan.pdf"
   },
   {
     "title": "P4 English 2024 WA2 - Ai Tong",
@@ -8437,7 +8494,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89568",
-    "file_path": "papers/Tao Nan/2023/WA1/P4 English 2023 WA1 - Tao Nan.pdf"
+    "file_path": "papers/Tao Nan/2023/WA1/P4 English 2023 WA1 - Tao Nan.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2023_WA1_Taonan.pdf"
   },
   {
     "title": "P4 English 2023 WA1 - Henry Park",
@@ -8447,7 +8505,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89567",
-    "file_path": "papers/Henry Park/2023/WA1/P4 English 2023 WA1 - Henry Park.pdf"
+    "file_path": "papers/Henry Park/2023/WA1/P4 English 2023 WA1 - Henry Park.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2023_WA1_Henrypark.pdf"
   },
   {
     "title": "P4 English 2023 WA1 - Red Swastika",
@@ -8457,7 +8516,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89566",
-    "file_path": "papers/Red Swastika/2023/WA1/P4 English 2023 WA1 - Red Swastika.pdf"
+    "file_path": "papers/Red Swastika/2023/WA1/P4 English 2023 WA1 - Red Swastika.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2023_WA1_Redswastika.pdf"
   },
   {
     "title": "P4 English 2023 WA1 - Maha Bodhi",
@@ -8467,7 +8527,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89565",
-    "file_path": "papers/Maha Bodhi/2023/WA1/P4 English 2023 WA1 - Maha Bodhi.pdf"
+    "file_path": "papers/Maha Bodhi/2023/WA1/P4 English 2023 WA1 - Maha Bodhi.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2023_WA1_Mahabodhi.pdf"
   },
   {
     "title": "P4 English 2023 WA1 - Raffles Girls",
@@ -8477,7 +8538,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89564",
-    "file_path": "papers/Raffles Girls/2023/WA1/P4 English 2023 WA1 - Raffles Girls.pdf"
+    "file_path": "papers/Raffles Girls/2023/WA1/P4 English 2023 WA1 - Raffles Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2023_WA1_Rafflesgirls.pdf"
   },
   {
     "title": "P4 English 2023 WA1 - Rosyth",
@@ -8487,7 +8549,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89563",
-    "file_path": "papers/Rosyth/2023/WA1/P4 English 2023 WA1 - Rosyth.pdf"
+    "file_path": "papers/Rosyth/2023/WA1/P4 English 2023 WA1 - Rosyth.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2023_WA1_Rosyth.pdf"
   },
   {
     "title": "P4 English 2023 WA2 - Henry Park",
@@ -9027,7 +9090,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89125",
-    "file_path": "papers/Rosyth/2022/WA1/P4 English 2022 WA1 - Rosyth.pdf"
+    "file_path": "papers/Rosyth/2022/WA1/P4 English 2022 WA1 - Rosyth.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2022_WA1_rosyth.pdf"
   },
   {
     "title": "P4 English 2022 WA1 - Nan Hua",
@@ -9037,7 +9101,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89124",
-    "file_path": "papers/Nan Hua/2022/WA1/P4 English 2022 WA1 - Nan Hua.pdf"
+    "file_path": "papers/Nan Hua/2022/WA1/P4 English 2022 WA1 - Nan Hua.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2022_WA1_nanhua.pdf"
   },
   {
     "title": "P4 English 2022 WA1 - Catholic",
@@ -9047,7 +9112,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89123",
-    "file_path": "papers/Catholic/2022/WA1/P4 English 2022 WA1 - Catholic.pdf"
+    "file_path": "papers/Catholic/2022/WA1/P4 English 2022 WA1 - Catholic.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2022_WA1_catholic.pdf"
   },
   {
     "title": "P4 English 2021 CA1 - Catholic High",
@@ -9057,7 +9123,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87916",
-    "file_path": "papers/Catholic High/2021/CA1/P4 English 2021 CA1 - Catholic High.pdf"
+    "file_path": "papers/Catholic High/2021/CA1/P4 English 2021 CA1 - Catholic High.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2021_CA1_Catholichigh.pdf"
   },
   {
     "title": "P4 English 2021 CA1 - ACS Junior",
@@ -9067,7 +9134,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87915",
-    "file_path": "papers/ACS Junior/2021/CA1/P4 English 2021 CA1 - ACS Junior.pdf"
+    "file_path": "papers/ACS Junior/2021/CA1/P4 English 2021 CA1 - ACS Junior.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2021_CA1_ACS_Junior.pdf"
   },
   {
     "title": "P4 English 2021 CA1 - Tao Nan",
@@ -9077,7 +9145,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87914",
-    "file_path": "papers/Tao Nan/2021/CA1/P4 English 2021 CA1 - Tao Nan.pdf"
+    "file_path": "papers/Tao Nan/2021/CA1/P4 English 2021 CA1 - Tao Nan.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2021_CA1_Taonan.pdf"
   },
   {
     "title": "P4 English 2021 CA1 - Nan Hua",
@@ -9087,7 +9156,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87913",
-    "file_path": "papers/Nan Hua/2021/CA1/P4 English 2021 CA1 - Nan Hua.pdf"
+    "file_path": "papers/Nan Hua/2021/CA1/P4 English 2021 CA1 - Nan Hua.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2021_CA1_Nanhua.pdf"
   },
   {
     "title": "P4 English 2021 CA1 - Henry Park",
@@ -9097,7 +9167,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87912",
-    "file_path": "papers/Henry Park/2021/CA1/P4 English 2021 CA1 - Henry Park.pdf"
+    "file_path": "papers/Henry Park/2021/CA1/P4 English 2021 CA1 - Henry Park.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_2021_CA1_Henrypark.pdf"
   },
   {
     "title": "P4 English 2021 SA1 - ACS Primary",
@@ -9467,7 +9538,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87603",
-    "file_path": "papers/Tao Nan/2021/CA1/P4 English CA1 2021 - Tao Nan.pdf"
+    "file_path": "papers/Tao Nan/2021/CA1/P4 English CA1 2021 - Tao Nan.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_CA_Practice_Tao_Nan.pdf"
   },
   {
     "title": "P4 English CA1 2021 - Henry Park",
@@ -9477,7 +9549,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87602",
-    "file_path": "papers/Henry Park/2021/CA1/P4 English CA1 2021 - Henry Park.pdf"
+    "file_path": "papers/Henry Park/2021/CA1/P4 English CA1 2021 - Henry Park.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_CA1_2021_Henry_Park.pdf"
   },
   {
     "title": "P4 English SA1 2021 - Anglo Chinese Junior",
@@ -9637,7 +9710,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87577",
-    "file_path": "papers/Catholic High/2021/CA1/P4 English CA1 2021 - Catholic High.pdf"
+    "file_path": "papers/Catholic High/2021/CA1/P4 English CA1 2021 - Catholic High.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_CA1_2021_Catholic_High.pdf"
   },
   {
     "title": "P4 English CA1 2021 - Nan Hua",
@@ -9647,7 +9721,8 @@ const papers = [
     "level": "P4",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87576",
-    "file_path": "papers/Nan Hua/2021/CA1/P4 English CA1 2021 - Nan Hua.pdf"
+    "file_path": "papers/Nan Hua/2021/CA1/P4 English CA1 2021 - Nan Hua.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_English_CA1_2021_Nan_Hua.pdf"
   },
   {
     "title": "Primary 5 English 2024 WA1 - ACS",

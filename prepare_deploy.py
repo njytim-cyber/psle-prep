@@ -23,31 +23,34 @@ def prepare():
         json_str = content.replace('const papers = ', '').rstrip(';').strip()
         all_papers = json.loads(json_str)
         
-    # Filter
-    exam_papers = []
-    for p in all_papers:
-        if p.get('level') == 'P4' and p.get('term') in ['WA1', 'CA1']:
-            exam_papers.append(p)
-    
-    print(f"Found {len(exam_papers)} papers for deployment.")
-    
-    # Copy PDFs
+    # Filter and Copy
+    deploy_metadata = []
     successful_copies = 0
-    for p in exam_papers:
-        src = p.get('file_path', '').replace('/', os.sep)
-        if not os.path.exists(src):
-            print(f"Warning: File missing {src}")
-            continue
-            
-        dst = os.path.join('deploy', src)
-        os.makedirs(os.path.dirname(dst), exist_ok=True)
-        shutil.copy2(src, dst)
-        successful_copies += 1
-        
-    print(f"Copied {successful_copies} PDF files.")
     
-    # Write filtered papers.js
-    json_output = json.dumps(exam_papers, indent=2)
+    for p in all_papers:
+        # Clone metadata so we don't affect original
+        meta = p.copy()
+        
+        # Check if in Exam Set (P4 WA1/CA1)
+        is_exam_set = (p.get('level') == 'P4' and p.get('term') in ['WA1', 'CA1'])
+        
+        if is_exam_set:
+            # Mark as available
+            meta['available'] = True
+            # We rely on pdf_link now, no need to copy files
+            # if 'pdf_link' is missing, it might default to page url or we can warn
+            if not meta.get('pdf_link'):
+                print(f"Warning: No PDF link for {p['title']}")
+        else:
+            # Mark as unavailable (Local Only)
+            meta['available'] = False
+            
+        deploy_metadata.append(meta)
+    
+    print(f"Generated papers.js with {len(deploy_metadata)} entries.")
+    
+    # Write papers.js
+    json_output = json.dumps(deploy_metadata, indent=2)
     with open('deploy/papers.js', 'w', encoding='utf-8') as f:
         f.write(f"const papers = {json_output};")
         
