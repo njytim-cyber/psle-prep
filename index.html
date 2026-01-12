@@ -40,6 +40,42 @@
             overflow: hidden;
         }
 
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Responsive Grid System */
+        .responsive-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .responsive-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed;
+                height: 100vh;
+                z-index: 1000;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            .responsive-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Sidebar */
         .paper-card.disabled {
             opacity: 0.6;
@@ -2312,7 +2348,7 @@
             }).join('');
 
             listEl.innerHTML = `
-                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <div class="responsive-grid">
                     ${columnsHtml}
                 </div>
             `;
@@ -3278,7 +3314,7 @@
                         </div>
                     </div>
                     
-                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
+                    <div class="responsive-grid">
                         ${subjectStats.map(stat => {
                 const pct = stat.total > 0 ? (stat.done / stat.total) * 100 : 0;
                 const colors = { 'Maths': '#3b82f6', 'Science': '#10b981', 'English': '#f43f5e' };
