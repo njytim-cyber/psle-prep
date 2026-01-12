@@ -20,6 +20,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Pre-flight Validation
+        run: python validate_state.py
 
       - name: Bump Version
         run: |
