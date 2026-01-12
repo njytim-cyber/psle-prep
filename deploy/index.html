@@ -1119,7 +1119,7 @@
 
         <div id="notes-pane" style="display:none;">
             <div id="notes-header" onclick="toggleNotes()">
-                <span>📝 Evan's Field Notes (Debug Log)</span>
+                <span id="notes-header-label">📝 Ethan's Field Notes (Debug Log)</span>
                 <span class="toggle-icon">▼</span>
             </div>
             <textarea id="notes-input"
@@ -1520,12 +1520,10 @@
             // Priority: PDF Link (Remote) > File Path (Local) > Source URL (Page)
             let targetUrl = paper.pdf_link || paper.file_path || paper.url;
 
-            const frame = document.getElementById('content-frame');
-
             // If remote PDF, use srcdoc to avoid X-Frame-Options blocks
             if (paper.pdf_link) {
-                frame.removeAttribute('src');
-                frame.srcdoc = `
+                viewerEl.removeAttribute('src');
+                viewerEl.srcdoc = `
                     <style>
                         body { margin:0; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:#0f172a; color:#e2e8f0; font-family:system-ui, -apple-system, sans-serif; text-align:center; }
                         .btn { display:inline-block; margin-top:20px; padding:12px 24px; background:#3b82f6; color:white; text-decoration:none; border-radius:8px; font-weight:600; font-size:1rem; transition:all 0.2s; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1); }
@@ -1537,8 +1535,8 @@
                  `;
             } else {
                 // Local file or direct URL
-                frame.removeAttribute('srcdoc');
-                frame.src = targetUrl;
+                viewerEl.removeAttribute('srcdoc');
+                viewerEl.src = targetUrl;
             }
 
             document.getElementById('open-btn').href = targetUrl;
@@ -1716,6 +1714,9 @@
         function loadUserData() {
             currentUser = localStorage.getItem('psle_user') || 'Ethan';
             document.getElementById('user-display').innerText = currentUser;
+
+            const label = document.getElementById('notes-header-label');
+            if (label) label.innerText = `📝 ${currentUser}'s Field Notes (Debug Log)`;
 
             // Update Avatar
             const idx = userAvatars[currentUser];
