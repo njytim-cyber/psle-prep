@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evan's PSLE Adventure</title>
+    <title>Our PSLE Adventure</title>
     <script src="papers.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
@@ -52,15 +52,14 @@
         }
 
         #sidebar {
-            width: 360px;
+            width: 450px;
             background: rgba(30, 27, 75, 0.95);
             border-right: 1px solid #4338ca;
             display: flex;
             flex-direction: column;
             backdrop-filter: blur(10px);
             overflow-y: auto;
-            overflow-x: hidden;
-            scrollbar-width: thin;
+            flex-shrink: 0;
         }
 
         #header {
@@ -597,6 +596,79 @@
             height: 30px;
         }
 
+        /* User Switch Button */
+        .switch-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            margin-top: 5px;
+            align-self: flex-start;
+        }
+
+        .switch-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Toggle Group */
+        .toggle-group {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .toggle-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0.6;
+        }
+
+        .toggle-btn.active {
+            background: #334155;
+            opacity: 1;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-btn:hover:not(.active) {
+            opacity: 0.8;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Exam Dashboard Cards */
+        .exam-subject-card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .subject-progress {
+            height: 12px;
+            background: #0f172a;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .subject-progress-fill {
+            height: 100%;
+            transition: width 0.5s;
+        }
+
 
         /* Scrollbar */
         ::-webkit-scrollbar {
@@ -629,6 +701,10 @@
             align-items: center;
             justify-content: center;
             z-index: 100;
+        }
+
+        .modal-overlay.show {
+            display: flex;
         }
 
         #avatar-modal .modal-card {
@@ -976,14 +1052,13 @@
                 <div id="user-avatar-display"></div>
                 <div style="display:flex;flex-direction:column;">
                     <span id="user-display" style="font-size:1.6rem; font-weight:700;">Ethan</span>
-                    <span style="font-size:0.8rem; opacity:0.7; font-weight:400; letter-spacing:1px;">PSLE
-                        EXPLORER</span>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <span style="font-size:0.8rem; opacity:0.7; font-weight:400; letter-spacing:1px;">PSLE
+                            EXPLORER</span>
+                        <button class="switch-btn" onclick="toggleUser(event)">Switch User ⇄</button>
+                    </div>
                 </div>
             </div>
-            <!-- Profile Button logic handled by clicking header -->
-            </h1>
-            <button class="analytics-btn" onclick="openAnalytics()"
-                style="position:absolute; right:20px; color:white; opacity:0.6;" title="Stats">📊</button>
             <div id="stats-card" onclick="openAnalytics()" style="cursor: pointer;" title="View Analytics">
                 <div class="stat-box">
                     <div class="stat-val" id="completed-stat">0</div>
@@ -997,30 +1072,21 @@
             <div id="progress-container">
                 <div id="progress-bar"></div>
             </div>
+            <button onclick="showExamPlanView()"
+                style="width:100%; margin-top:15px; background:#fbbf24; color:#1e1b4b; border:none; padding:10px; border-radius:8px; font-weight:700; cursor:pointer; font-size:1rem; display:flex; justify-content:space-between; align-items:center;">
+                <span>📅 Exam Plan</span>
+                <span style="font-size:0.8rem; opacity:0.8;">View Schedule →</span>
+            </button>
         </div>
 
         <div id="filters">
-            <div id="exam-planner" style="display:none;">
-                <div class="plan-header">
-                    <span class="plan-title">📅 Exam Plan (Mar 2)</span>
-                    <span class="days-left" id="days-remaining"></span>
-                </div>
-                <div class="plan-list" id="plan-list"></div>
-            </div>
-
             <div id="filter-stats-display">Found 0 papers</div>
-
-            <!-- Row 1 -->
             <div class="span-1" id="filter-level"></div>
             <div class="span-1" id="filter-term"></div>
             <div class="span-1" id="filter-year"></div>
-
-            <!-- Row 2 -->
             <div class="span-1" id="filter-subject"></div>
             <div class="span-1" id="filter-status"></div>
             <div class="span-1" id="filter-notes"></div>
-
-            <!-- Row 3 - School spans all columns -->
             <div class="span-3" id="filter-school"></div>
         </div>
 
@@ -1115,6 +1181,20 @@
         if (userAvatars['Evan'] === undefined) userAvatars['Evan'] = 0;
 
         let trackerData = JSON.parse(localStorage.getItem(`psle_data_${currentUser}`) || '{}');
+        let examPlanFilter = 'due'; // 'all' or 'due'
+
+        // Initialize Evan's progress if missing
+        if (currentUser === 'Evan' && Object.keys(trackerData).length === 0) {
+            // Mock some progress for Evan
+            const mockProgress = {};
+            const p4Papers = allPapers.filter(p => (p.level || 'P4') === 'P4' && (p.year || 2023) <= 2023);
+            p4Papers.slice(0, 15).forEach(p => {
+                mockProgress[p.url] = { date: '2025-12-25', notes: 'Great progress!' };
+            });
+            localStorage.setItem(`psle_data_Evan`, JSON.stringify(mockProgress));
+            trackerData = mockProgress;
+        }
+
         let currentUrl = null;
 
         // Multi-select state
@@ -1637,15 +1717,31 @@
             // Refresh UI
             renderList();
             updateStats();
-            if (typeof renderExamPlan === 'function') renderExamPlan();
 
-            // Reset Filters? Maybe keep them.
+            // Refresh Notes for current paper if viewing
+            if (currentUrl) {
+                const savedData = trackerData[currentUrl] || {};
+                notesInput.value = savedData.notes || '';
+                updateMainButton();
+            }
+
+            // Refresh Exam Plan View if visible
+            const examView = document.getElementById('exam-view-container');
+            if (examView && examView.style.display === 'block') {
+                renderExamPlanMain(examView);
+            }
         }
 
         function switchUser(name) {
             currentUser = name;
             localStorage.setItem('psle_user', name);
             loadUserData();
+        }
+
+        function toggleUser(e) {
+            e.stopPropagation();
+            const newUser = currentUser === 'Ethan' ? 'Evan' : 'Ethan';
+            switchUser(newUser);
         }
 
         function updateAvatarDisplay(idx) {
@@ -1697,11 +1793,7 @@
 
         // Init User Data on Load
         setTimeout(loadUserData, 100);
-        const btns = document.querySelectorAll('.analytics-controls .toggle-group:last-child .toggle-btn');
-        btns[0].classList.toggle('active', mode === 'percent');
-        btns[1].classList.toggle('active', mode === 'count');
-        renderAnalytics();
-        }
+
 
         function renderAnalytics() {
             let filteredPapers = allPapers;
@@ -1822,126 +1914,134 @@
             renderList();
         }
 
-        // --- Multi-User Support ---
-        let currentUser = 'Evan'; // Default
 
-        function switchUser(user) {
-            currentUser = user;
-            document.getElementById('user-name-display').innerText = user;
-
-            // Reload data for new user
-            const stored = localStorage.getItem(`${currentUser.toLowerCase()}_tracker_data`);
-            trackerData = stored ? JSON.parse(stored) : {};
-
-            // Refresh complete UI
-            updateStats();
-            renderList();
-            renderExamPlan();
-            if (currentUrl) updateMainButton();
-
-            // Reset filters to default on user switch? Optional. 
-            // For now, keep filters but re-render list.
-        }
-
-        function init() {
-            // Load initial user data
-            const stored = localStorage.getItem(`${currentUser.toLowerCase()}_tracker_data`);
-            if (stored) {
-                trackerData = JSON.parse(stored);
-            }
-
-            // Populate filters
-            populateFilters();
-
-            renderList();
-            updateStats();
-            renderExamPlan();
-        }
-
-        // Modified save function
-        function save() {
-            // Clean up empty entries
-            for (const key in trackerData) {
-                if (!trackerData[key].date && (!trackerData[key].notes || !trackerData[key].notes.trim())) {
-                    delete trackerData[key];
-                }
-            }
-
-            localStorage.setItem(`${currentUser.toLowerCase()}_tracker_data`, JSON.stringify(trackerData));
-            updateStats();
-            renderList();
-            renderExamPlan();
-            if (currentUrl) updateMainButton();
-        }
 
         // --- Exam Planner (Mar 2, 2026) ---
-        function renderExamPlan() {
-            const planner = document.getElementById('exam-planner');
-            const listEl = document.getElementById('plan-list');
-            const daysEl = document.getElementById('days-remaining');
+        // --- Exam Plan View (Main Pane) ---
+        function showExamPlanView() {
+            const mainView = document.getElementById('main-view');
+            // Hide other views if necessary (iframe or empty screen)
+            document.getElementById('empty-screen').style.display = 'none';
+            document.getElementById('pdf-viewer').style.display = 'none';
+            document.getElementById('top-toolbar').style.display = 'none';
+            document.getElementById('notes-pane').style.display = 'none';
 
-            // Target Date: March 2, 2026
+            // Check if exam view exists
+            let examView = document.getElementById('exam-view-container');
+            if (!examView) {
+                examView = document.createElement('div');
+                examView.id = 'exam-view-container';
+                examView.style.padding = '40px';
+                examView.style.overflowY = 'auto';
+                examView.style.flex = '1';
+                examView.style.color = 'white';
+                mainView.appendChild(examView);
+            }
+            examView.style.display = 'block';
+
+            // Render Plan Data
+            renderExamPlanMain(examView);
+        }
+
+        function setExamPlanFilter(filter) {
+            examPlanFilter = filter;
+            const container = document.getElementById('exam-view-container');
+            if (container) renderExamPlanMain(container);
+        }
+
+        function renderExamPlanMain(container) {
             const targetDate = new Date('2026-03-02');
             const today = new Date();
             const diffTime = targetDate - today;
             const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            daysEl.innerText = daysLeft > 0 ? `${daysLeft} days to go` : "Exam Today!";
-            planner.style.display = 'block';
+            const subjects = ['Maths', 'Science', 'English'];
+            const subjectStats = subjects.map(s => {
+                const allSubjectPapers = allPapers.filter(p => (p.subject || 'Maths') === s && (p.level || 'P4') === 'P4' && ['WA1', 'CA1'].includes(p.term));
+                // Sort by year desc
+                allSubjectPapers.sort((a, b) => (b.year || 0) - (a.year || 0));
 
-            // Filter for P4 WA1/CA1 papers not done
-            const candidates = allPapers.filter(p => {
-                const isP4 = (p.level === 'P4');
-                const isExamValid = ['WA1', 'CA1'].includes(p.term);
-                const isDone = isCompleted(p.url);
-                return isP4 && isExamValid && !isDone;
-            });
+                let displayPapers;
+                let total;
+                let done;
 
-            // Strategy: Pick 3 papers (Mix subjects if possible)
-            // Sort by year (newest first)
-            candidates.sort((a, b) => b.year - a.year);
-
-            const subjects = ['English', 'Maths', 'Science'];
-            let plan = [];
-
-            // Try to get one of each
-            subjects.forEach(subj => {
-                const found = candidates.find(p => (p.subject || 'Maths') === subj && !plan.includes(p));
-                if (found) plan.push(found);
-            });
-
-            // Fill up to 3 if missing subjects
-            if (plan.length < 3) {
-                for (const p of candidates) {
-                    if (plan.length >= 3) break;
-                    if (!plan.includes(p)) plan.push(p);
+                if (examPlanFilter === 'due') {
+                    const targetCount = 2;
+                    // For 'due', we define the goal as the 2 most recent papers
+                    const goalPapers = allSubjectPapers.slice(0, targetCount);
+                    done = goalPapers.filter(p => isCompleted(p.url)).length;
+                    total = targetCount;
+                    displayPapers = goalPapers.filter(p => !isCompleted(p.url));
+                } else {
+                    // 'all' - Show everything in the library for this goal
+                    done = allSubjectPapers.filter(p => isCompleted(p.url)).length;
+                    total = allSubjectPapers.length;
+                    displayPapers = allSubjectPapers;
                 }
-            }
 
-            if (plan.length === 0) {
-                listEl.innerHTML = '<div style="color:#94a3b8; font-size:0.9rem;">🎉 You are all caught up!</div>';
-                return;
-            }
+                return { subject: s, done, total, papers: displayPapers };
+            });
 
-            // Render plan
-            const subCode = { 'Maths': 'MA', 'Science': 'SC', 'English': 'EN' };
-            const subClass = { 'Maths': 'ma', 'Science': 'sc', 'English': 'en' };
+            const totalDone = subjectStats.reduce((acc, s) => acc + s.done, 0);
+            const totalGoal = subjectStats.reduce((acc, s) => acc + s.total, 0);
+            const overallPct = totalGoal > 0 ? Math.round((totalDone / totalGoal) * 100) : 0;
 
-            listEl.innerHTML = plan.map(p => {
-                const isAvailable = (p.available !== false);
-                const clickAction = isAvailable ? `loadPaper('${p.url}')` : "";
-                const itemClass = isAvailable ? "plan-item" : "plan-item disabled";
-
-                return `
-                <div class="${itemClass}" onclick="${clickAction}" style="${!isAvailable ? 'opacity:0.6; cursor:not-allowed;' : ''}">
-                    <div style="display:flex; align-items:center; overflow:hidden;">
-                        <div class="plan-subj ${subClass[p.subject || 'Maths']}">${subCode[p.subject || 'Maths']}</div>
-                        <div class="plan-text">${p.year} ${p.term} - ${p.school} ${!isAvailable ? '(Local Only)' : ''}</div>
+            container.innerHTML = `
+                <div style="max-width:800px; margin:0 auto;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+                        <div>
+                            <h1 style="margin:0; font-size:2.5rem; color:#fbbf24;">📅 Exam Plan</h1>
+                            <p style="opacity:0.7; font-size:1.1rem; margin-top:5px;">Target: P4 WA1/CA1 (March 2, 2026)</p>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:20px;">
+                            <div class="toggle-group">
+                                <button class="toggle-btn ${examPlanFilter === 'all' ? 'active' : ''}" onclick="setExamPlanFilter('all')">All</button>
+                                <button class="toggle-btn ${examPlanFilter === 'due' ? 'active' : ''}" onclick="setExamPlanFilter('due')">Due</button>
+                            </div>
+                            <div style="background:#334155; padding:10px 20px; border-radius:12px; text-align:center;">
+                                <div style="font-size:1.5rem; font-weight:700; color:#fbbf24;">${overallPct}%</div>
+                                <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px;">Goal Done</div>
+                            </div>
+                            <div style="background:#334155; padding:10px 20px; border-radius:12px; text-align:center;">
+                                <div style="font-size:1.5rem; font-weight:700; color:#34d399;">${daysLeft}</div>
+                                <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px;">Days Left</div>
+                            </div>
+                        </div>
                     </div>
-                    ${isAvailable ? '<div class="plan-start">▶</div>' : ''}
+                    
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
+                        ${subjectStats.map(stat => {
+                const pct = stat.total > 0 ? (stat.done / stat.total) * 100 : 0;
+                const colors = { 'Maths': '#3b82f6', 'Science': '#10b981', 'English': '#f43f5e' };
+                return `
+                                <div class="exam-subject-card">
+                                    <h2 style="margin:0; font-size:1.5rem;">${stat.subject}</h2>
+                                    <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
+                                        <span>Progress</span>
+                                        <span>${stat.done} / ${stat.total}</span>
+                                    </div>
+                                    <div class="subject-progress">
+                                        <div class="subject-progress-fill" style="width:${pct}%; background:${colors[stat.subject]}"></div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px; max-height:400px; overflow-y:auto; padding-right:5px;">
+                                        ${stat.papers.length > 0 ? stat.papers.map(p => `
+                                            <div onclick="loadPaper('${p.url}')" style="font-size:0.85rem; padding:8px; background:rgba(0,0,0,0.2); border-radius:6px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+                                                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1;">${p.year} ${p.school}</span>
+                                                ${isCompleted(p.url) ? '<span style="color:#10b981; font-weight:bold;">✓</span>' : '<span style="color:#fbbf24;">▶</span>'}
+                                            </div>
+                                        `).join('') : '<div style="font-size:0.8rem; opacity:0.5; text-align:center; padding:10px;">Nothing due! 🎉</div>'}
+                                    </div>
+                                </div>
+                            `;
+            }).join('')}
+                    </div>
                 </div>
-            `;
-            }).join('');
+             `;
+        }
+
+        // Old function kept for reference but unused (or needs removal)
+        function renderExamPlan() {
+            // NO-OP as we moved to Main View
         }
 
         init();
