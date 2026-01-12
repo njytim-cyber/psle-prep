@@ -1650,6 +1650,11 @@
         .empty-future {
             opacity: 0;
         }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 
@@ -1756,7 +1761,7 @@
         <!-- Semver Display -->
         <div
             style="margin-top: auto; padding: 20px; font-size: 0.75rem; color: #94a3b8; opacity: 0.6; text-align: center;">
-            Version 1.1.13
+            Version 1.2.0
         </div>
 
     </div>
@@ -2064,22 +2069,46 @@
             setTimeout(() => { if (listEl.children.length === 0) renderApp(); }, 2000);
         }
 
-        let activeView = 'results'; // Global view state tracker
+        // --- View Manager ---
+        const ViewManager = {
+            views: ['results', 'pdf', 'analytics', 'exam', 'xp'],
+            active: 'results',
 
-        function switchView(viewName) {
-            activeView = viewName;
-            // Hide all views
-            ['results-view', 'pdf-view', 'analytics-view', 'exam-view', 'xp-view'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.style.setProperty('display', 'none', 'important');
-            });
+            init() {
+                // Set initial state
+                this.show('results');
+            },
 
-            // Show target
-            const target = document.getElementById(viewName + '-view');
-            if (target) {
-                const displayType = (viewName === 'pdf-view') ? 'flex' : 'block';
-                target.style.setProperty('display', displayType, 'important');
+            show(viewName) {
+                if (!this.views.includes(viewName)) return;
+                this.active = viewName;
+
+                // 1. Hide all views strictly
+                this.views.forEach(v => {
+                    const el = document.getElementById(`${v}-view`);
+                    if (el) {
+                        el.classList.add('hidden');
+                        el.style.setProperty('display', 'none', 'important'); // Double safety
+                    }
+                });
+
+                // 2. Show target view
+                const target = document.getElementById(`${viewName}-view`);
+                if (target) {
+                    target.classList.remove('hidden');
+                    const displayType = (viewName === 'pdf') ? 'flex' : 'block';
+                    target.style.setProperty('display', displayType, 'important');
+                }
+            },
+
+            is(viewName) {
+                return this.active === viewName;
             }
+        };
+
+        // Legacy compatibility wrapper
+        function switchView(viewName) {
+            ViewManager.show(viewName);
         }
 
         // --- XP Logic ---
@@ -2346,7 +2375,6 @@
             if (filtered.length === 0) {
                 document.getElementById('filter-stats-display').innerText = `No papers found`;
                 listEl.innerHTML = '<div style="text-align:center; padding: 50px; opacity:0.5; font-size: 1.2rem;">No papers found for these filters! 🕵️</div>';
-                // switchView('results'); // FIXED: Do not force switch away from PDF view if list is empty
                 return;
             }
 
@@ -2417,23 +2445,16 @@
         </div>
     `;
 
-            // Auto-switch to results when rendering list (implies filter change or init)
-            // ONLY if we are not in PDF or other views
-            if (activeView === 'results') {
-                // Already in results, do nothing special
-            } else if (activeView === 'pdf' || activeView === 'analytics' || activeView === 'exam' || activeView === 'xp') {
-                // Do NOT switch back to results automatically if we are deep in another view
-                // UNLESS explicit filter change? No, filter change shouldn't boot you out of PDF.
-            } else {
-                // Fallback
-                switchView('results');
-            }
+            // REMOVED: Auto-switch logic.
+            // renderList is now pure rendering.
+            // View switching happens only on user interaction (filter click, nav click, load).
 
-            // Enforce results view ONLY on explicit filter change
             if (filterStateChange) {
-                switchView('results');
+                // If user explicitly changed a filter, make sure we show results
+                ViewManager.show('results');
                 filterStateChange = false;
             }
+        }
         }
 
         function isCompleted(url) {
