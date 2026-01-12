@@ -1,6 +1,6 @@
 {
   "name": "psle-prep",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "devDependencies": {
     "firebase-tools": "^15.2.1"
   }
