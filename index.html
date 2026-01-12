@@ -2523,6 +2523,16 @@
             // Priority: PDF Link (Remote) > File Path (Local) > Source URL (Page)
             let targetUrl = paper.pdf_link || paper.file_path || paper.url;
 
+            // Guard against empty URL (Fixes recursive iframe bug)
+            if (!targetUrl || targetUrl.trim() === '') {
+                viewerEl.removeAttribute('srcdoc');
+                viewerEl.src = ''; // Clear src
+                // Optional: Display a message inside the iframe or viewer area
+                // keeping it simple: just don't load the app recursively.
+                alert("No document URL found for this paper.");
+                return;
+            }
+
             // Use Google Docs Viewer for remote PDFs to bypass X-Frame-Options
             if (paper.pdf_link) {
                 viewerEl.removeAttribute('srcdoc');
@@ -2652,6 +2662,11 @@
                 }
             }
 
+            // Optimistic UI Update (Immediate response)
+            updateStats();
+            renderList();
+            if (currentUrl) updateMainButton();
+
             // Push to Cloud if logged in
             if (auth && auth.currentUser) {
                 try {
@@ -2670,9 +2685,6 @@
             }
             // Removed LocalStorage Fallback per request
 
-            updateStats();
-            renderList();
-            if (currentUrl) updateMainButton();
         }
 
         function triggerConfetti() {
@@ -2873,6 +2885,8 @@
                     }
                 } catch (e) {
                     console.error(e);
+                    // Even if cloud load fails (offline/error), allow app to work
+                    dataLoaded = true;
                     // document.getElementById('sync-status').innerText = 'Sync Off-line'; // User requested removal
                 }
             }
