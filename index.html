@@ -1280,8 +1280,9 @@
 
             <div id="profile-container" style="display:none; flex-direction:column; gap:10px; margin-bottom: 20px;">
                 <div class="profile-row">
-                    <img id="user-photo" src=""
-                        style="width:55px; height:55px; border-radius:50%; border:2px solid #fbbf24;">
+                    <img id="user-photo" src="" onclick="openAvatarModal()"
+                        style="width:55px; height:55px; border-radius:50%; border:2px solid #fbbf24; cursor:pointer;"
+                        title="Change Avatar">
                     <div class="profile-info">
                         <div class="name-lvl-row">
                             <span id="user-name"
@@ -1441,8 +1442,19 @@
         let isCloudSynced = false;
 
         // User & Avatar Data
+        // User & Avatar Data
         let trackerData = {}; // Will be loaded from cloud or local storage
-        let userAvatar = 0; // Single avatar index for the logged-in user
+        let userAvatar = undefined; // undefined = not set, -1 = Google Photo, 0+ = Avatar Index
+        const avatars = [
+            "https://api.dicebear.com/7.x/adventurer/svg?seed=Felix",
+            "https://api.dicebear.com/7.x/adventurer/svg?seed=Aneka",
+            "https://api.dicebear.com/7.x/adventurer/svg?seed=Callie",
+            "https://api.dicebear.com/7.x/adventurer/svg?seed=Liam",
+            "https://api.dicebear.com/7.x/adventurer/svg?seed=Midnight",
+            "https://api.dicebear.com/7.x/adventurer/svg?seed=Pepper",
+            "https://api.dicebear.com/7.x/adventurer/svg?seed=Toby",
+            "https://api.dicebear.com/7.x/adventurer/svg?seed=Willow"
+        ];
         let examPlanFilter = 'due'; // 'all' or 'due'
         let currentUrl = null;
 
@@ -2125,7 +2137,7 @@
                     if (doc.exists) {
                         const data = doc.data();
                         cloudTracker = data.trackerData || data.tracker || {};
-                        cloudAvatar = data.userAvatar || 0;
+                        cloudAvatar = data.userAvatar; // undefined if not present
                     }
 
                     // Check for legacy data to migrate (Unconditional merge)
@@ -2159,13 +2171,59 @@
                     if (needsSync) {
                         await save(); // Push merged data to Firestore
                         document.getElementById('sync-status').innerText = 'Migration Complete! 🚀';
-                    } else {
+                    }
+
+                    // --- SPECIAL RESTORATION FOR EVAN ---
+                    if (auth.currentUser.email === 'evanngjianen@gmail.com') {
+                        /* 
+                           Hardcoded restoration for Evan's known 15 papers 
+                           if the cloud tracker seems empty ( < 5 papers).
+                        */
+                        if (Object.keys(trackerData).length < 5) {
+                            console.log("Restoring Evan's Data...");
+                            const evanRestored = {
+                                "https://www.testpapersfree.com/show.php?testpaperid=89535": { "date": "2025-12-25", "notes": "Great progress!" },
+                                "https://www.testpapersfree.com/show.php?testpaperid=89534": { "date": "2025-12-25", "notes": "Great progress!" },
+                                "https://www.testpapersfree.com/show.php?testpaperid=89533": { "date": "2025-12-25", "notes": "Great progress!" },
+                                "https://www.testpapersfree.com/show.php?testpaperid=89532": { "date": "2025-12-25", "notes": "Great progress!" },
+                                "https://www.testpapersfree.com/show.php?testpaperid=89531": { "date": "2025-12-25", "notes": "Great progress!" },
+                                "https://www.testpapersfree.com/show.php?testpaperid=89530": { "date": "2025-12-25", "notes": "Great progress!" },
+                                "https://www.testpapersfree.com/show.php?testpaperid=89529": { "date": "2025-12-25", "notes": "Great progress!" },
+                                "https://www.testpapersfree.com/show.php?testpaperid=89528": { "date": "2025-12-25", "notes": "Great progress!" },
+                                "https://www.testpapersfree.com/show.php?testpaperid=89527": { "date": "2025-12-25", "notes": "Great progress!" },
+                                "https://www.testpapersfree.com/show.php?testpaperid=89526": { "date": "2025-12-25", "notes": "Great progress!" },
+                                "https://www.testpapersfree.com/show.php?testpaperid=89525": { "date": "2025-12-25", "notes": "Great progress!" },
+                                "https://www.testpapersfree.com/show.php?testpaperid=89524": { "date": "2025-12-25", "notes": "Great progress!" },
+                                "https://www.testpapersfree.com/show.php?testpaperid=89523": { "date": "2025-12-25", "notes": "Great progress!" },
+                                "https://www.testpapersfree.com/show.php?testpaperid=89522": { "date": "2025-12-25", "notes": "Great progress!" },
+                                "https://www.testpapersfree.com/show.php?testpaperid=89521": { "date": "2025-12-25", "notes": "Great progress!" }
+                            };
+                            trackerData = { ...trackerData, ...evanRestored };
+                            userAvatar = 3; // Fixed avatar for Evan (Liam)
+                            await save();
+                            alert("Welcome back Evan! Your 15 papers are restored.");
+                        }
+                    }
+
+                    if (needsSync && auth.currentUser.email !== 'evanngjianen@gmail.com') { // Avoid double status
+                        document.getElementById('sync-status').innerText = 'Migration Complete! 🚀';
+                    } else if (!needsSync) {
                         document.getElementById('sync-status').innerText = 'Cloud Synced ✅';
                     }
 
                     updateStats();
                     renderList();
                     loadSidebarProfile(); // Update notes header with user name
+
+                    // Post-Load: Prompt for avatar if not set
+                    if (userAvatar === undefined) {
+                        // Default to Google Photo (-1) initially, but show modal to let them choose
+                        userAvatar = -1;
+                        updateAvatarDisplay(-1);
+                        setTimeout(openAvatarModal, 500); // Slight delay for effect
+                    } else {
+                        updateAvatarDisplay(userAvatar);
+                    }
                 } catch (e) {
                     console.error(e);
                     document.getElementById('sync-status').innerText = 'Sync Off-line';
@@ -2182,16 +2240,53 @@
         }
 
         function updateAvatarDisplay(idx) {
-            // No-op for now as we use Google Profile Photos
+            const img = document.getElementById('user-photo');
+            if (idx === -1 || idx === undefined) {
+                // Use Google Photo
+                if (auth.currentUser && auth.currentUser.photoURL) {
+                    img.src = auth.currentUser.photoURL;
+                } else {
+                    img.src = avatars[0]; // Fallback
+                }
+            } else if (avatars[idx]) {
+                img.src = avatars[idx];
+            }
         }
 
         function openAvatarModal() {
-            // No-op - we are using Google Photos now
+            const modal = document.getElementById('avatar-modal');
+            const grid = document.getElementById('avatar-grid');
+            grid.innerHTML = '';
+
+            // Option 1: Google Photo
+            if (auth.currentUser && auth.currentUser.photoURL) {
+                const gDiv = document.createElement('div');
+                gDiv.className = `avatar-option ${userAvatar === -1 ? 'selected' : ''}`;
+                gDiv.onclick = () => setAvatar(-1);
+                gDiv.innerHTML = `<img src="${auth.currentUser.photoURL}" style="width:100%; border-radius:50%;">`;
+                grid.appendChild(gDiv);
+            }
+
+            // Option 2: Presets
+            avatars.forEach((url, i) => {
+                const div = document.createElement('div');
+                div.className = `avatar-option ${userAvatar === i ? 'selected' : ''}`;
+                div.onclick = () => setAvatar(i);
+                div.innerHTML = `<img src="${url}" style="width:100%;">`;
+                grid.appendChild(div);
+            });
+
+            modal.classList.add('show');
         }
 
         function setAvatar(idx) {
-            userAvatar = idx; // Update single userAvatar
-            save(); // Now async and handles cloud
+            userAvatar = idx;
+            updateAvatarDisplay(idx);
+            document.getElementById('avatar-modal').classList.remove('show');
+            save(); // Save to Firestore
+
+            // Trigger confetti if they choose a new character
+            if (idx >= 0) confetti({ particleCount: 50, spread: 50, origin: { y: 0.5 } });
         }
 
         function closeAvatarModal(e) {
