@@ -359,7 +359,8 @@ const papers = [
     "level": "P4",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=89500",
-    "file_path": "papers/Pei Chun/2023/SA2/P4 Maths 2023 SA2 - Pei Chun.pdf"
+    "file_path": "papers/Pei Chun/2023/SA2/P4 Maths 2023 SA2 - Pei Chun.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P4_Maths_2023_SA2_Peichun.pdf"
   },
   {
     "title": "P4 Maths 2023 SA2 - Pei Hwa",
@@ -1989,7 +1990,8 @@ const papers = [
     "level": "P5",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=88988",
-    "file_path": "papers/Maha Bodhi/2022/SA2/P5 Maths 2022 SA2 - Maha Bodhi.pdf"
+    "file_path": "papers/Maha Bodhi/2022/SA2/P5 Maths 2022 SA2 - Maha Bodhi.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P5_Maths_2022_SA2_mahabodhi.pdf"
   },
   {
     "title": "P5 Maths 2022 SA2 - CHIJ",
@@ -2539,7 +2541,8 @@ const papers = [
     "level": "P5",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87752",
-    "file_path": "papers/Methodist Girls/2021/SA1/P5 Maths 2021 SA1 - Methodist Girls.pdf"
+    "file_path": "papers/Methodist Girls/2021/SA1/P5 Maths 2021 SA1 - Methodist Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P5-Maths-2021-SA1-Methodist-Girls.pdf"
   },
   {
     "title": "P5 Maths 2021 SA1 - Maris Stella",
@@ -2629,7 +2632,8 @@ const papers = [
     "level": "P5",
     "subject": "Maths",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87743",
-    "file_path": "papers/Nan Hua/2021/CA2/P5 Maths 2021 CA2 - Nan Hua.pdf"
+    "file_path": "papers/Nan Hua/2021/CA2/P5 Maths 2021 CA2 - Nan Hua.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P5-Maths-2021-CA2-Nan-Hua.pdf"
   },
   {
     "title": "P5 Maths 2021 CA2 - Maris Stella",
@@ -11772,7 +11776,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87630",
-    "file_path": "papers/Maris Stella/2021/SA2/P6 English 2021 SA2 - Maris Stella.pdf"
+    "file_path": "papers/Maris Stella/2021/SA2/P6 English 2021 SA2 - Maris Stella.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6-English-2021-SA2-Maris-Stella.pdf"
   },
   {
     "title": "P6 English 2021 SA2 - Singapore Chinese Girls",
@@ -11782,7 +11787,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87629",
-    "file_path": "papers/Singapore Chinese Girls/2021/SA2/P6 English 2021 SA2 - Singapore Chinese Girls.pdf"
+    "file_path": "papers/Singapore Chinese Girls/2021/SA2/P6 English 2021 SA2 - Singapore Chinese Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6-English-2021-SA2-Singapore-Chinese-Girls.pdf"
   },
   {
     "title": "P6 English 2021 SA2 - Methodist Girls",
@@ -11792,7 +11798,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87615",
-    "file_path": "papers/Methodist Girls/2021/SA2/P6 English 2021 SA2 - Methodist Girls.pdf"
+    "file_path": "papers/Methodist Girls/2021/SA2/P6 English 2021 SA2 - Methodist Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_2021_SA2_Methodist-Girls.pdf"
   },
   {
     "title": "P6 English 2021 SA2 - Nan Hua",
@@ -11802,7 +11809,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87614",
-    "file_path": "papers/Nan Hua/2021/SA2/P6 English 2021 SA2 - Nan Hua.pdf"
+    "file_path": "papers/Nan Hua/2021/SA2/P6 English 2021 SA2 - Nan Hua.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_2021_SA2_Nan_Hua.pdf"
   },
   {
     "title": "P6 English 2021 SA2 - Henry Park",
@@ -11812,7 +11820,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87613",
-    "file_path": "papers/Henry Park/2021/SA2/P6 English 2021 SA2 - Henry Park.pdf"
+    "file_path": "papers/Henry Park/2021/SA2/P6 English 2021 SA2 - Henry Park.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_2021_SA2_Henry_Park.pdf"
   },
   {
     "title": "P6 English 2021 SA2 CHIJ",
@@ -11822,7 +11831,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87612",
-    "file_path": "papers/Unknown/2021/SA2/P6 English 2021 SA2 CHIJ.pdf"
+    "file_path": "papers/Unknown/2021/SA2/P6 English 2021 SA2 CHIJ.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_2021_SA2_CHIJ.pdf"
   },
   {
     "title": "P6 English 2021 SA2 Catholic High",
@@ -11832,7 +11842,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87611",
-    "file_path": "papers/Unknown/2021/SA2/P6 English 2021 SA2 Catholic High.pdf"
+    "file_path": "papers/Unknown/2021/SA2/P6 English 2021 SA2 Catholic High.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_2021_SA2_Catholic_High.pdf"
   },
   {
     "title": "P6 English 2021 SA2 - Anglo Chinese",
@@ -11842,7 +11853,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87610",
-    "file_path": "papers/Anglo Chinese/2021/SA2/P6 English 2021 SA2 - Anglo Chinese.pdf"
+    "file_path": "papers/Anglo Chinese/2021/SA2/P6 English 2021 SA2 - Anglo Chinese.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_2021_SA2_ACS.pdf"
   },
   {
     "title": "P6 English 2021 SA2 - Ai Tong",
@@ -11852,7 +11864,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87609",
-    "file_path": "papers/Ai Tong/2021/SA2/P6 English 2021 SA2 - Ai Tong.pdf"
+    "file_path": "papers/Ai Tong/2021/SA2/P6 English 2021 SA2 - Ai Tong.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_2021_SA2_Ai_Tong.pdf"
   },
   {
     "title": "P6 English 2021 SA1 - Tao Nan",
@@ -11862,7 +11875,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87564",
-    "file_path": "papers/Tao Nan/2021/SA1/P6 English 2021 SA1 - Tao Nan.pdf"
+    "file_path": "papers/Tao Nan/2021/SA1/P6 English 2021 SA1 - Tao Nan.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6-English-2021-SA1-Tao-Nan.pdf"
   },
   {
     "title": "P6 English 2021 SA1 - Raffles Girls",
@@ -11872,7 +11886,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87563",
-    "file_path": "papers/Raffles Girls/2021/SA1/P6 English 2021 SA1 - Raffles Girls.pdf"
+    "file_path": "papers/Raffles Girls/2021/SA1/P6 English 2021 SA1 - Raffles Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6-English-2021-SA1-Raffles-Girls.pdf"
   },
   {
     "title": "P6 English 2021 SA1 - Nanyang",
@@ -11882,7 +11897,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87562",
-    "file_path": "papers/Nanyang/2021/SA1/P6 English 2021 SA1 - Nanyang.pdf"
+    "file_path": "papers/Nanyang/2021/SA1/P6 English 2021 SA1 - Nanyang.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6-English-2021-SA1-Nanyang.pdf"
   },
   {
     "title": "P6 English 2021 SA1 - Nan Hua",
@@ -11892,7 +11908,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87561",
-    "file_path": "papers/Nan Hua/2021/SA1/P6 English 2021 SA1 - Nan Hua.pdf"
+    "file_path": "papers/Nan Hua/2021/SA1/P6 English 2021 SA1 - Nan Hua.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6-English-2021-SA1-Nan-Hua.pdf"
   },
   {
     "title": "P6 English 2021 SA1 - Anglo Chinese",
@@ -11902,7 +11919,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87560",
-    "file_path": "papers/Anglo Chinese/2021/SA1/P6 English 2021 SA1 - Anglo Chinese.pdf"
+    "file_path": "papers/Anglo Chinese/2021/SA1/P6 English 2021 SA1 - Anglo Chinese.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6-English-2021-SA1-ACS-Junior.pdf"
   },
   {
     "title": "P6 English 2021 prelim - Tao Nan",
@@ -11912,7 +11930,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87546",
-    "file_path": "papers/Tao Nan/2021/Other/P6 English 2021 prelim - Tao Nan.pdf"
+    "file_path": "papers/Tao Nan/2021/Other/P6 English 2021 prelim - Tao Nan.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6-English-2021-SA2-Tao-Nan.pdf"
   },
   {
     "title": "P6 English 2021 prelim - Rosyth",
@@ -11922,7 +11941,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87545",
-    "file_path": "papers/Rosyth/2021/Other/P6 English 2021 prelim - Rosyth.pdf"
+    "file_path": "papers/Rosyth/2021/Other/P6 English 2021 prelim - Rosyth.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6-English-2021-SA2-Rosyth.pdf"
   },
   {
     "title": "P6 English 2021 prelim - Red Swastika",
@@ -11932,7 +11952,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87544",
-    "file_path": "papers/Red Swastika/2021/Other/P6 English 2021 prelim - Red Swastika.pdf"
+    "file_path": "papers/Red Swastika/2021/Other/P6 English 2021 prelim - Red Swastika.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6-English-2021-SA2-Red-Swastika.pdf"
   },
   {
     "title": "P6 English 2021 prelim - Raffles Girls",
@@ -11942,7 +11963,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87543",
-    "file_path": "papers/Raffles Girls/2021/Other/P6 English 2021 prelim - Raffles Girls.pdf"
+    "file_path": "papers/Raffles Girls/2021/Other/P6 English 2021 prelim - Raffles Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6-English-2021-SA2-Raffles-Girls.pdf"
   },
   {
     "title": "P6 English 2021 prelim - Nanyang",
@@ -11952,7 +11974,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87542",
-    "file_path": "papers/Nanyang/2021/Other/P6 English 2021 prelim - Nanyang.pdf"
+    "file_path": "papers/Nanyang/2021/Other/P6 English 2021 prelim - Nanyang.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6-English-2021-SA2-Nanyang.pdf"
   },
   {
     "title": "P6 English 2020 Prelims - Anglo Chinese",
@@ -11962,7 +11985,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87482",
-    "file_path": "papers/Anglo Chinese/2020/Other/P6 English 2020 Prelims - Anglo Chinese.pdf"
+    "file_path": "papers/Anglo Chinese/2020/Other/P6 English 2020 Prelims - Anglo Chinese.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_SA2_2020_ACS_Exam_Papers.pdf"
   },
   {
     "title": "P6 English 2020 Prelims - Henry Park",
@@ -11972,7 +11996,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87481",
-    "file_path": "papers/Henry Park/2020/Other/P6 English 2020 Prelims - Henry Park.pdf"
+    "file_path": "papers/Henry Park/2020/Other/P6 English 2020 Prelims - Henry Park.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_SA2_2020_Henry_Park_Exam_Papers.pdf"
   },
   {
     "title": "P6 English 2020 Prelims - Nan Chiau",
@@ -11982,7 +12007,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87480",
-    "file_path": "papers/Nan Chiau/2020/Other/P6 English 2020 Prelims - Nan Chiau.pdf"
+    "file_path": "papers/Nan Chiau/2020/Other/P6 English 2020 Prelims - Nan Chiau.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_SA2_2020_Nan_Chiau_Exam_Papers.pdf"
   },
   {
     "title": "P6 English 2020 Prelims - Nanyang",
@@ -11992,7 +12018,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87479",
-    "file_path": "papers/Nanyang/2020/Other/P6 English 2020 Prelims - Nanyang.pdf"
+    "file_path": "papers/Nanyang/2020/Other/P6 English 2020 Prelims - Nanyang.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_SA2_2020_Nanyang_Exam_Papers.pdf"
   },
   {
     "title": "P6 English 2020 Prelims - Raffles Girls",
@@ -12002,7 +12029,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87478",
-    "file_path": "papers/Raffles Girls/2020/Other/P6 English 2020 Prelims - Raffles Girls.pdf"
+    "file_path": "papers/Raffles Girls/2020/Other/P6 English 2020 Prelims - Raffles Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_SA2_2020_Raffles_Exam_Papers.pdf"
   },
   {
     "title": "P6 English 2020 Prelims - Red Swastika",
@@ -12012,7 +12040,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87477",
-    "file_path": "papers/Red Swastika/2020/Other/P6 English 2020 Prelims - Red Swastika.pdf"
+    "file_path": "papers/Red Swastika/2020/Other/P6 English 2020 Prelims - Red Swastika.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_SA2_2020_Red_Swastika_Exam_Papers.pdf"
   },
   {
     "title": "P6 English 2020 Prelims - Rosyth",
@@ -12022,7 +12051,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87476",
-    "file_path": "papers/Rosyth/2020/Other/P6 English 2020 Prelims - Rosyth.pdf"
+    "file_path": "papers/Rosyth/2020/Other/P6 English 2020 Prelims - Rosyth.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_SA2_2020_Rosyth_Exam_Papers.pdf"
   },
   {
     "title": "P6 English 2020 Prelims - Singapore Chinese Girls",
@@ -12032,7 +12062,8 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87475",
-    "file_path": "papers/Singapore Chinese Girls/2020/Other/P6 English 2020 Prelims - Singapore Chinese Girls.pdf"
+    "file_path": "papers/Singapore Chinese Girls/2020/Other/P6 English 2020 Prelims - Singapore Chinese Girls.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_SA2_2020_SCGS_Exam_Papers.pdf"
   },
   {
     "title": "P6 English 2020 Prelims - Tao Nan",
@@ -12042,6 +12073,7 @@ const papers = [
     "level": "P6",
     "subject": "English",
     "url": "https://www.testpapersfree.com/show.php?testpaperid=87474",
-    "file_path": "papers/Tao Nan/2020/Other/P6 English 2020 Prelims - Tao Nan.pdf"
+    "file_path": "papers/Tao Nan/2020/Other/P6 English 2020 Prelims - Tao Nan.pdf",
+    "pdf_link": "https://www.testpapersfree.com/pdfs/P6_English_SA2_2020_Tao_Nan_Exam_Papers.pdf"
   }
 ];

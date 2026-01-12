@@ -7,6 +7,12 @@
     <title>Our PSLE Adventure</title>
     <script src="papers.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Firebase SDK (Compat Version for single-file HTML) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -122,46 +128,224 @@
             transform: scale(1.1);
         }
 
-        #stats-card {
-            background: rgba(255, 255, 255, 0.1);
+        #stats-grid {
             margin-top: 16px;
-            padding: 12px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .stat-card-mini {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 5px;
             border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-card-mini.yellow-card {
+            background: #fbbf24;
+            color: #1e1b4b;
+        }
+
+        .stat-card-mini.yellow-card .stat-val-big,
+        .stat-card-mini.yellow-card .stat-label-mini {
+            color: #1e1b4b;
+        }
+
+        .stat-card-mini:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .stat-card-mini.yellow-card:hover {
+            background: #f59e0b;
+        }
+
+        .stat-card-mini.span-2 {
+            grid-column: span 2;
+            text-align: left;
+        }
+
+        .stat-val-big {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fbbf24;
+            display: block;
+        }
+
+        .stat-label-mini {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* XP Card Style */
+        .xp-card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .xp-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lvl-badge-sidebar {
+            background: #fbbf24;
+            color: #1e1b4b;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .xp-text-sidebar {
+            font-size: 1.1rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .xp-progress-fill {
+            height: 100%;
+            background: #fbbf24;
+            transition: width 0.5s ease-out;
+            border-radius: 3px;
+        }
+
+        .profile-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .name-lvl-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            width: 100%;
         }
 
-        .stat-box {
+        .lvl-badge-mini {
+            background: #fbbf24;
+            color: #1e1b4b;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+
+        .xp-text-mini {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            font-weight: 500;
+        }
+
+        /* Login Overlay */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #312e81 0%, #1e1b4b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            flex-direction: column;
+            color: white;
             text-align: center;
         }
 
-        .stat-val {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #fbbf24;
+        .entry-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 90%;
+            animation: fadeIn 0.8s ease-out;
         }
 
-        .stat-label {
-            font-size: 0.75rem;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .entry-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .entry-subtitle {
+            font-size: 1rem;
             opacity: 0.8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin-bottom: 30px;
         }
 
-        #progress-container {
-            margin-top: 10px;
-            background: rgba(0, 0, 0, 0.2);
-            height: 8px;
-            border-radius: 4px;
-            overflow: hidden;
+        .profile-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
         }
 
-        #progress-bar {
-            height: 100%;
-            background: #34d399;
-            width: 0%;
-            transition: width 0.5s ease-out;
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .name-lvl-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .lvl-badge-mini {
+            background: #fbbf24;
+            color: #1e1b4b;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+
+        .xp-text-mini {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            font-weight: 500;
         }
 
         /* Filter Grid */
@@ -1040,43 +1224,104 @@
             margin-left: 8px;
             text-decoration: none;
         }
+
+        .lvl-badge {
+            background: #fbbf24;
+            color: #1e1b4b;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            margin-left: 10px;
+        }
+
+        .exam-subject-card h2 {
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 
 <body>
 
-    <div id="sidebar">
+    <!-- Login Gateway Overlay -->
+    <div id="login-overlay">
+        <div class="entry-card">
+            <h1 class="entry-title">PSLE Prep</h1>
+            <p class="entry-subtitle">Master your exams with localized practice papers and smart tracking.</p>
+            <button onclick="loginGoogle()"
+                style="width:100%; padding:15px; background:white; color:#1e1b4b; border:none; border-radius:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:12px; font-size:1.1rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);">
+                <svg width="24" height="24" viewBox="0 0 18 18">
+                    <path
+                        d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"
+                        fill="#4285f4" />
+                    <path
+                        d="M9 18c2.43 0 4.467-.806 5.956-2.184L12.048 13.56c-.813.545-1.854.867-3.048.867-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"
+                        fill="#34a853" />
+                    <path
+                        d="M3.964 10.716a5.41 5.41 0 01-.282-1.716c0-.6.101-1.185.282-1.716V4.952H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.048l3.007-2.332z"
+                        fill="#fbbc05" />
+                    <path
+                        d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.46 0 2.403 2.015.957 4.952l3.007 2.332c.708-2.127 2.692-3.711 5.036-3.711z"
+                        fill="#ea4335" />
+                </svg>
+                Sign in with Google
+            </button>
+            <p style="margin-top:20px; font-size:0.8rem; opacity:0.6;">Your progress is synced automatically to the
+                cloud.</p>
+        </div>
+    </div>
+
+    <div id="sidebar" style="display:none;">
         <div id="header">
-            <div onclick="openAvatarModal()" style="display:flex;align-items:center;gap:15px;"
-                title="Click to change profile">
-                <div id="user-avatar-display"></div>
-                <div style="display:flex;flex-direction:column;">
-                    <span id="user-display" style="font-size:1.6rem; font-weight:700;">Ethan</span>
-                    <div style="display:flex; gap:10px; align-items:center;">
-                        <span style="font-size:0.8rem; opacity:0.7; font-weight:400; letter-spacing:1px;">PSLE
-                            EXPLORER</span>
-                        <button class="switch-btn" onclick="toggleUser(event)">Switch User ⇄</button>
+            <!-- Auth Section -->
+            <!-- Auth Section - Removed Login with Google from here -->
+            <div id="auth-section" style="display:none;"></div>
+
+            <div id="profile-container" style="display:none; flex-direction:column; gap:10px; margin-bottom: 20px;">
+                <div class="profile-row">
+                    <img id="user-photo" src=""
+                        style="width:55px; height:55px; border-radius:50%; border:2px solid #fbbf24;">
+                    <div class="profile-info">
+                        <div class="name-lvl-row">
+                            <span id="user-name"
+                                style="font-size:1.4rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Name</span>
+                            <span class="lvl-badge-mini" id="profile-level-badge">Lvl 1</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
+                            <span id="profile-xp-text" class="xp-text-mini">0 / 500 XP</span>
+                            <button class="switch-btn" onclick="logoutGoogle()"
+                                style="margin:0; padding:1px 5px; font-size:0.65rem;">Logout</button>
+                        </div>
+                        <div class="xp-progress-bg">
+                            <div class="xp-progress-fill" id="profile-xp-fill" style="width: 0%;"></div>
+                        </div>
+                        <div id="sync-status" style="font-size:0.6rem; opacity:0.5; margin-top:4px;">Cloud Syncing...
+                        </div>
                     </div>
                 </div>
             </div>
-            <div id="stats-card" onclick="openAnalytics()" style="cursor: pointer;" title="View Analytics">
-                <div class="stat-box">
-                    <div class="stat-val" id="completed-stat">0</div>
-                    <div class="stat-label">Papers Done</div>
+
+            <!-- Guest Profile Removed (Auth is Mandatory) -->
+            <div id="guest-profile" style="display:none;"></div>
+
+            <!-- Stats Grid -->
+            <div id="stats-grid">
+                <div class="stat-card-mini" onclick="openAnalytics()" title="Click for details">
+                    <span class="stat-val-big" id="completed-stat">0</span>
+                    <span class="stat-label-mini">Done</span>
                 </div>
-                <div class="stat-box">
-                    <div class="stat-val" id="percent-stat">0%</div>
-                    <div class="stat-label">Mastery</div>
+                <div class="stat-card-mini" onclick="openAnalytics()" title="Click for details">
+                    <span class="stat-val-big" id="percent-stat">0%</span>
+                    <span class="stat-label-mini">Mastery</span>
+                </div>
+                <div class="stat-card-mini yellow-card" onclick="showExamPlanView()" title="View Exam Plan">
+                    <span class="stat-val-big" id="exam-prep-stat">0%</span>
+                    <span class="stat-label-mini">Exam Prep</span>
                 </div>
             </div>
-            <div id="progress-container">
-                <div id="progress-bar"></div>
-            </div>
-            <button onclick="showExamPlanView()"
-                style="width:100%; margin-top:15px; background:#fbbf24; color:#1e1b4b; border:none; padding:10px; border-radius:8px; font-weight:700; cursor:pointer; font-size:1rem; display:flex; justify-content:space-between; align-items:center;">
-                <span>📅 Exam Plan</span>
-                <span style="font-size:0.8rem; opacity:0.8;">View Schedule →</span>
-            </button>
+
+
         </div>
 
         <div id="filters">
@@ -1131,8 +1376,8 @@
     <!-- Modal -->
     <div id="modal" class="modal-overlay">
         <div class="modal-card">
-            <h2>🎉 Great Job!</h2>
-            <p>You smashed it! When did you finish this?</p>
+            <h2 id="modal-congrats">🎉 Great Job!</h2>
+            <p id="modal-subtext">You smashed it! When did you finish this?</p>
             <input type="date" id="completion-date" class="date-input">
             <button class="btn-save" onclick="saveCompletion()">Save Progress</button>
             <button class="btn-cancel" onclick="closeModal()">Cancel</button>
@@ -1170,31 +1415,34 @@
     </div>
 
     <script>
-        // --- Data & State ---
-        let allPapers = typeof papers !== 'undefined' ? papers : [];
+        // --- Firebase Configuration (REPLACE WITH YOUR KEYS) ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfgkN6Omek66GTwB75wMPxr-KvCnOMN1I",
+            authDomain: "psle-prep.firebaseapp.com",
+            projectId: "psle-prep",
+            storageBucket: "psle-prep.firebasestorage.app",
+            messagingSenderId: "883312014769",
+            appId: "1:883312014769:web:b845c3cc48c164f23df990",
+            measurementId: "G-WXBHDL7RKB"
+        };
 
-        // User & Avatar Data
-        let currentUser = localStorage.getItem('psle_user') || 'Ethan';
-        let userAvatars = JSON.parse(localStorage.getItem('psle_avatars') || '{}');
-        // Defaults
-        if (userAvatars['Ethan'] === undefined) userAvatars['Ethan'] = 1;
-        if (userAvatars['Evan'] === undefined) userAvatars['Evan'] = 0;
-
-        let trackerData = JSON.parse(localStorage.getItem(`psle_data_${currentUser}`) || '{}');
-        let examPlanFilter = 'due'; // 'all' or 'due'
-
-        // Initialize Evan's progress if missing
-        if (currentUser === 'Evan' && Object.keys(trackerData).length === 0) {
-            // Mock some progress for Evan
-            const mockProgress = {};
-            const p4Papers = allPapers.filter(p => (p.level || 'P4') === 'P4' && (p.year || 2023) <= 2023);
-            p4Papers.slice(0, 15).forEach(p => {
-                mockProgress[p.url] = { date: '2025-12-25', notes: 'Great progress!' };
-            });
-            localStorage.setItem(`psle_data_Evan`, JSON.stringify(mockProgress));
-            trackerData = mockProgress;
+        // Initialize Firebase
+        let firebaseApp, auth, db;
+        try {
+            firebaseApp = firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db = firebase.firestore();
+        } catch (e) {
+            console.error("Firebase initialization failed:", e);
         }
 
+        // --- Data & State ---
+        let allPapers = typeof papers !== 'undefined' ? papers : [];
+        let isCloudSynced = false;
+
+        // User & Avatar Data
+        let trackerData = {};
+        let examPlanFilter = 'due'; // 'all' or 'due'
         let currentUrl = null;
 
         // Multi-select state
@@ -1241,6 +1489,51 @@
 
             // Fallback render if data is truly empty or taking too long
             setTimeout(() => { if (listEl.children.length === 0) renderApp(); }, 2000);
+        }
+
+        // --- XP Logic ---
+        const XP_WEIGHTS = {
+            'SA1': 100, 'SA2': 100, 'Prelim': 120, 'Final Exam': 120,
+            'WA1': 50, 'WA2': 50, 'WA3': 50, 'CA1': 50, 'CA2': 50
+        };
+        const DEFAULT_XP = 30;
+
+        function getXPForPaper(paper) {
+            if (!paper) return 0;
+            const term = paper.term || '';
+            return XP_WEIGHTS[term] || DEFAULT_XP;
+        }
+
+        function calculateXPState() {
+            let totalXP = 0;
+            const subjectXP = { 'Maths': 0, 'Science': 0, 'English': 0 };
+
+            for (const url in trackerData) {
+                if (trackerData[url].date) {
+                    const paper = allPapers.find(p => p.url === url);
+                    if (paper) {
+                        const xp = getXPForPaper(paper);
+                        totalXP += xp;
+                        const subj = paper.subject || 'Maths';
+                        if (subjectXP[subj] !== undefined) subjectXP[subj] += xp;
+                    }
+                }
+            }
+
+            const getLevelInfo = (xp) => {
+                const lvl = Math.floor(xp / 500) + 1;
+                const progress = xp % 500;
+                return { lvl, progress, pct: (progress / 500) * 100 };
+            };
+
+            return {
+                overall: getLevelInfo(totalXP),
+                subjects: {
+                    Maths: getLevelInfo(subjectXP['Maths']),
+                    Science: getLevelInfo(subjectXP['Science']),
+                    English: getLevelInfo(subjectXP['English'])
+                }
+            };
         }
 
         function renderApp() {
@@ -1481,14 +1774,64 @@
             return trackerData[url] && trackerData[url].notes && trackerData[url].notes.trim().length > 0;
         }
 
+        function calculateExamPrepStats() {
+            const subjects = ['Maths', 'Science', 'English'];
+            let totalDone = 0;
+            let totalGoal = 0;
+
+            subjects.forEach(s => {
+                const p4ExamPapers = allPapers.filter(p => (p.subject || 'Maths') === s && (p.level || 'P4') === 'P4' && ['WA1', 'CA1'].includes(p.term));
+                p4ExamPapers.sort((a, b) => (b.year || 0) - (a.year || 0));
+
+                if (examPlanFilter === 'due') {
+                    const goalPapers = p4ExamPapers.slice(0, 2);
+                    totalDone += goalPapers.filter(p => isCompleted(p.url)).length;
+                    totalGoal += 2;
+                } else {
+                    totalDone += p4ExamPapers.filter(p => isCompleted(p.url)).length;
+                    totalGoal += p4ExamPapers.length;
+                }
+            });
+
+            return totalGoal > 0 ? Math.round((totalDone / totalGoal) * 100) : 0;
+        }
+
         function updateStats() {
             const doneCount = Object.values(trackerData).filter(d => d.date).length;
             const total = allPapers.length;
             const percentage = total === 0 ? 0 : Math.round((doneCount / total) * 100);
 
-            document.getElementById('completed-stat').innerText = `${doneCount} / ${total}`;
-            document.getElementById('percent-stat').innerText = `${percentage}%`;
-            document.getElementById('progress-bar').style.width = `${percentage}%`;
+            const completedEl = document.getElementById('completed-stat');
+            const percentEl = document.getElementById('percent-stat');
+            const examPrepEl = document.getElementById('exam-prep-stat');
+
+            if (completedEl) completedEl.innerText = doneCount;
+            if (percentEl) percentEl.innerText = `${percentage}%`;
+            if (examPrepEl) examPrepEl.innerText = `${calculateExamPrepStats()}%`;
+
+            // XP System Updates
+            const xpState = calculateXPState();
+
+            // Update Profile Side XP (Using the consolidated prefix)
+            const prefix = 'profile';
+            const lvlBadge = document.getElementById(`${prefix}-level-badge`);
+            const xpText = document.getElementById(`${prefix}-xp-text`);
+            const xpFill = document.getElementById(`${prefix}-xp-fill`);
+
+            if (lvlBadge) lvlBadge.innerText = `Lvl ${xpState.overall.lvl}`;
+            if (xpText) xpText.innerText = `${xpState.overall.progress} / 500 XP`;
+            if (xpFill) xpFill.style.width = `${xpState.overall.pct}%`;
+
+            // Update Subject Levels in Exam Plan if visible
+            const examView = document.getElementById('exam-view-container');
+            if (examView && examView.style.display === 'block') {
+                for (const subj in xpState.subjects) {
+                    const badge = examView.querySelector(`.exam-subject-card[data-subject="${subj}"] .lvl-badge`);
+                    if (badge) {
+                        badge.innerText = `Lvl ${xpState.subjects[subj].lvl}`;
+                    }
+                }
+            }
         }
 
         // --- Interaction ---
@@ -1598,9 +1941,26 @@
         // --- Modal & Saving ---
         let pending = null;
 
+        const ENCOURAGING_MESSAGES = [
+            { title: "🎉 Great Job!", sub: "You're making incredible progress!" },
+            { title: "🚀 You Smashed It!", sub: "Another one bites the dust!" },
+            { title: "🌟 Absolute Legend!", sub: "Your hard work is paying off!" },
+            { title: "🔥 On Fire!", sub: "You're unstoppable today!" },
+            { title: "🏆 Winner Winner!", sub: "Leveling up like a pro!" },
+            { title: "🦁 Roar!", sub: "You've got the heart of a lion!" },
+            { title: "🧠 Mastermind!", sub: "That paper didn't stand a chance!" },
+            { title: "⚡ Lightning!", sub: "Finish fast, learn more!" }
+        ];
+
         function openModal(url) {
             pending = url;
             dateInput.valueAsDate = new Date();
+
+            // Random message
+            const msg = ENCOURAGING_MESSAGES[Math.floor(Math.random() * ENCOURAGING_MESSAGES.length)];
+            document.getElementById('modal-congrats').innerText = msg.title;
+            document.getElementById('modal-subtext').innerText = msg.sub + " When did you finish this?";
+
             modal.style.display = 'flex';
         }
 
@@ -1614,12 +1974,12 @@
             if (!trackerData[pending]) trackerData[pending] = {};
 
             trackerData[pending].date = dateInput.value;
-            save();
+            save(); // Handles stats and cloud
             closeModal();
             triggerConfetti();
         }
 
-        function save() {
+        async function save() {
             // Clean up empty entries
             for (const key in trackerData) {
                 if (!trackerData[key].date && (!trackerData[key].notes || !trackerData[key].notes.trim())) {
@@ -1628,9 +1988,26 @@
             }
 
             localStorage.setItem(`psle_data_${currentUser}`, JSON.stringify(trackerData));
+            localStorage.setItem('psle_avatars', JSON.stringify(userAvatars)); // Always save locally
             updateStats();
             renderList();
             if (currentUrl) updateMainButton();
+
+            // Push to Cloud if logged in
+            if (auth && auth.currentUser) {
+                try {
+                    document.getElementById('sync-status').innerText = "Syncing...";
+                    await db.collection('users').doc(auth.currentUser.uid).set({
+                        tracker: trackerData,
+                        avatars: userAvatars,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                    document.getElementById('sync-status').innerText = "Cloud Synced";
+                } catch (e) {
+                    console.error("Cloud save failed:", e);
+                    document.getElementById('sync-status').innerText = "Sync Failed";
+                }
+            }
         }
 
         function triggerConfetti() {
@@ -1701,83 +2078,121 @@
             renderAnalytics();
         }
 
+        // --- Auth & Cloud Logic ---
+        function loginGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch(e => {
+                console.error("Login failed:", e);
+                alert("Login failed: " + e.message);
+            });
+        }
+
+        function logoutGoogle() {
+            if (confirm("Sign out of Google?")) {
+                auth.signOut().then(() => {
+                    location.reload();
+                });
+            }
+        }
+
+        if (auth) {
+            auth.onAuthStateChanged(async (user) => {
+                const loginBtn = document.getElementById('auth-section');
+                const profileSec = document.getElementById('profile-container');
+                const guestSec = document.getElementById('guest-profile');
+
+                if (user) {
+                    // User is signed in.
+                    document.getElementById('login-overlay').style.display = 'none';
+                    document.getElementById('sidebar').style.display = 'flex';
+                    document.getElementById('main-view').style.display = 'flex';
+
+                    document.getElementById('profile-container').style.display = 'flex';
+                    document.getElementById('user-photo').src = user.photoURL || 'avatars.png';
+                    document.getElementById('user-name').innerText = user.displayName;
+
+                    loadUserData(); // Fetch from Firestore
+                } else {
+                    // User is signed out.
+                    document.getElementById('login-overlay').style.display = 'flex';
+                    document.getElementById('sidebar').style.display = 'none';
+                    document.getElementById('main-view').style.display = 'none';
+                    document.getElementById('profile-container').style.display = 'none';
+                }
+            });
+
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+
+            async function save() {
+                if (!auth || !auth.currentUser) {
+                    localStorage.setItem('psle_data_guest', JSON.stringify({ trackerData, userAvatar }));
+                    return;
+                }
+
+                // Push to Firestore
+                try {
+                    const uid = auth.currentUser.uid;
+                    await db.collection('users').doc(uid).set({
+                        trackerData,
+                        userAvatar,
+                        lastSync: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                    document.getElementById('sync-status').innerText = 'Cloud Synced ✅';
+                } catch (e) {
+                    console.error(e);
+                    document.getElementById('sync-status').innerText = 'Sync Error ⚠️';
+                }
+                updateStats();
+            }
+
+            async function loadUserData() {
+                if (!auth || !auth.currentUser) return;
+                const uid = auth.currentUser.uid;
+
+                document.getElementById('sync-status').innerText = 'Fetching Cloud Data...';
+                try {
+                    const doc = await db.collection('users').doc(uid).get();
+                    if (doc.exists) {
+                        const data = doc.data();
+                        trackerData = data.trackerData || {};
+                        userAvatar = data.userAvatar || 0;
+                        document.getElementById('sync-status').innerText = 'Cloud Synced ✅';
+                    } else {
+                        // Check for migration from legacy localStorage
+                        const legacyData = localStorage.getItem('psle_data_Ethan') || localStorage.getItem('psle_data_Evan');
+                        if (legacyData) {
+                            const parsed = JSON.parse(legacyData);
+                            trackerData = parsed.trackerData || {};
+                            userAvatar = parsed.userAvatar || 0;
+                            await save(); // Migrate to cloud
+                        }
+                        document.getElementById('sync-status').innerText = 'Welcome! Cloud Active';
+                    }
+                    updateStats();
+                    renderPapers();
+                } catch (e) {
+                    console.error(e);
+                    document.getElementById('sync-status').innerText = 'Sync Off-line';
+                }
+            }
+        }
+
         // --- Avatar & User Logic ---
-        function loadUserData() {
-            currentUser = localStorage.getItem('psle_user') || 'Ethan';
-            document.getElementById('user-display').innerText = currentUser;
-
+        function loadSidebarProfile() {
+            // Already handled in Auth observer
             const label = document.getElementById('notes-header-label');
-            if (label) label.innerText = `📝 ${currentUser}'s Field Notes (Debug Log)`;
-
-            // Update Avatar
-            const idx = userAvatars[currentUser];
-            updateAvatarDisplay(idx !== undefined ? idx : 0);
-
-            // Reload Tracker
-            trackerData = JSON.parse(localStorage.getItem(`psle_data_${currentUser}`) || '{}');
-
-            // Refresh UI
-            renderList();
+            const displayName = auth.currentUser ? auth.currentUser.displayName : 'Guest';
+            if (label) label.innerText = `📝 ${displayName}'s Field Notes (Debug Log)`;
             updateStats();
-
-            // Refresh Notes for current paper if viewing
-            if (currentUrl) {
-                const savedData = trackerData[currentUrl] || {};
-                notesInput.value = savedData.notes || '';
-                updateMainButton();
-            }
-
-            // Refresh Exam Plan View if visible
-            const examView = document.getElementById('exam-view-container');
-            if (examView && examView.style.display === 'block') {
-                renderExamPlanMain(examView);
-            }
-        }
-
-        function switchUser(name) {
-            currentUser = name;
-            localStorage.setItem('psle_user', name);
-            loadUserData();
-        }
-
-        function toggleUser(e) {
-            e.stopPropagation();
-            const newUser = currentUser === 'Ethan' ? 'Evan' : 'Ethan';
-            switchUser(newUser);
         }
 
         function updateAvatarDisplay(idx) {
-            const row = Math.floor(idx / 8);
-            const col = idx % 8;
-            const x = (col / 7) * 100;
-            const y = (row / 7) * 100;
-            const el = document.getElementById('user-avatar-display');
-            if (el) el.style.backgroundPosition = `${x}% ${y}%`;
+            // No-op for now as we use Google Profile Photos
         }
 
         function openAvatarModal() {
-            const modal = document.getElementById('avatar-modal');
-            const grid = document.getElementById('avatar-grid');
-            grid.innerHTML = '';
-
-            for (let i = 0; i < 64; i++) {
-                const div = document.createElement('div');
-                div.className = 'avatar-option';
-                const row = Math.floor(i / 8);
-                const col = i % 8;
-                const x = (col / 7) * 100;
-                const y = (row / 7) * 100;
-                div.style.backgroundPosition = `${x}% ${y}%`;
-
-                if ((userAvatars[currentUser] || 0) === i) div.classList.add('selected');
-
-                div.onclick = (e) => {
-                    e.stopPropagation();
-                    setAvatar(i);
-                };
-                grid.appendChild(div);
-            }
-            modal.classList.add('show');
+            // No-op - we are using Google Photos now
         }
 
         function setAvatar(idx) {
@@ -1785,6 +2200,7 @@
             localStorage.setItem('psle_avatars', JSON.stringify(userAvatars));
             updateAvatarDisplay(idx);
             document.getElementById('avatar-modal').classList.remove('show');
+            save(); // Now async and handles cloud
         }
 
         function closeAvatarModal(e) {
@@ -1793,8 +2209,8 @@
             }
         }
 
-        // Init User Data on Load
-        setTimeout(loadUserData, 100);
+        // Init User Data on Load (Now handled by onAuthStateChanged)
+        // setTimeout(loadUserData, 100);
 
 
         function renderAnalytics() {
@@ -2011,14 +2427,17 @@
                         </div>
                     </div>
                     
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
                         ${subjectStats.map(stat => {
                 const pct = stat.total > 0 ? (stat.done / stat.total) * 100 : 0;
                 const colors = { 'Maths': '#3b82f6', 'Science': '#10b981', 'English': '#f43f5e' };
                 return `
-                                <div class="exam-subject-card">
-                                    <h2 style="margin:0; font-size:1.5rem;">${stat.subject}</h2>
-                                    <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
+                                <div class="exam-subject-card" data-subject="${stat.subject}">
+                                    <h2>
+                                        ${stat.subject}
+                                        <span class="lvl-badge">Lvl 1</span>
+                                    </h2>
+                                    <div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-top:5px;">
                                         <span>Progress</span>
                                         <span>${stat.done} / ${stat.total}</span>
                                     </div>

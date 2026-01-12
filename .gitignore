@@ -11,10 +11,16 @@ papers/
 papers.js.tmp
 papers.js_extracted
 papers.json
+exam_links.json
+
+# Node
+node_modules/
+package-lock.json
 
 # Logs & Temp
 *.log
 .DS_Store
+.agent/
 
 # Artifacts
 dist/
