@@ -1033,6 +1033,66 @@
             font-weight: bold;
             font-size: 1rem;
             cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-save:hover {
+            background: #4338ca;
+        }
+
+        /* Welcome Modal Specifics */
+        #welcome-modal .modal-card {
+            width: 450px;
+            text-align: left;
+            padding: 40px;
+        }
+
+        #welcome-modal h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .summary-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .summary-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .summary-label {
+            opacity: 0.7;
+        }
+
+        .summary-value {
+            font-weight: 700;
+            color: #fbbf24;
+        }
+
+        .milestone-alert {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(251, 189, 36, 0.1);
+            border-left: 4px solid #fbbf24;
+            padding: 15px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 25px;
+        }
+
+        font-size: 1rem;
+        cursor: pointer;
         }
 
         .btn-save:hover {
@@ -1500,7 +1560,7 @@
                     <div id="user-photo" class="avatar-sprite" onclick="openAvatarModal()"
                         style="width:55px; height:55px; border-radius:50%; border:2px solid #fbbf24; cursor:pointer; background-image:url('avatars.png'); background-size:800% 800%;"
                         title="Change Avatar"></div>
-                    <div class="profile-info">
+                    <div class="profile-info" onclick="showXPView()" style="cursor:pointer;" title="View XP System">
                         <div class="name-lvl-row">
                             <span id="user-name"
                                 style="font-size:1.4rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Name</span>
@@ -1640,6 +1700,13 @@
             </div>
         </div>
 
+        <!-- View 5: XP System -->
+        <div id="xp-view" class="view-pane" style="display:none;">
+            <div id="xp-view-container" style="padding: 40px; color: white; max-width: 1000px; margin: 0 auto;">
+                <!-- XP Content Here -->
+            </div>
+        </div>
+
     </div>
 
     <!-- Modal -->
@@ -1698,6 +1765,37 @@
                 <button class="btn-save" onclick="saveExamDates()" style="flex:1;">Save Settings</button>
                 <button class="btn-cancel" onclick="closeExamDatesModal()" style="flex:1;">Cancel</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Welcome Summary Modal -->
+    <div id="welcome-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h2 id="welcome-title">Welcome back! 👋</h2>
+            <p id="welcome-msg" style="font-size:1.1rem; opacity:0.9; margin-bottom:25px;">Here's what you've been up
+                to:</p>
+
+            <div class="summary-box">
+                <div class="summary-item">
+                    <span class="summary-label">Papers Today:</span>
+                    <span class="summary-value" id="welcome-today-count">0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">This Week:</span>
+                    <span class="summary-value" id="welcome-week-count">0</span>
+                </div>
+            </div>
+
+            <div class="milestone-alert" id="welcome-milestone-box">
+                <div style="font-size:2rem;">📅</div>
+                <div>
+                    <div style="font-weight:700; color:#fbbf24;" id="welcome-milestone-label">Upcoming: P4 WA1</div>
+                    <div style="font-size:0.9rem; opacity:0.8;" id="welcome-milestone-days">49 days to go!</div>
+                </div>
+            </div>
+
+            <button class="btn-save" onclick="closeWelcomeModal()" style="padding:15px; font-size:1.1rem;">Let's Get
+                Started!</button>
         </div>
     </div>
 
@@ -1808,7 +1906,7 @@
 
         function switchView(viewName) {
             // Hide all views
-            ['results-view', 'pdf-view', 'analytics-view', 'exam-view'].forEach(id => {
+            ['results-view', 'pdf-view', 'analytics-view', 'exam-view', 'xp-view'].forEach(id => {
                 document.getElementById(id).style.display = 'none';
             });
 
@@ -1971,7 +2069,7 @@
         function updateFilterLabel(key) {
             const count = filterState[key].length;
             const el = document.getElementById(`label-${key}`);
-            const defaultLabels = { subject: '📖 Subject', level: '📚 Level', year: '📅 Year', term: '🎓 Term', school: '🏫 School', status: 'Status', notes: '📝 Notes' };
+            const defaultLabels = { subject: '📖 Subject', level: '📚 Level', year: '📅 Year', term: '🎓 Term', school: '🏫 School', status: '🚥 Status', notes: '📝 Notes' };
 
             if (count === 0) {
                 el.innerText = defaultLabels[key];
@@ -2001,7 +2099,7 @@
                 createMultiSelect('filter-term', '🎓 Term', toObj(terms), 'term');
                 createMultiSelect('filter-year', '📅 Year', toObj(years), 'year');
                 createMultiSelect('filter-subject', '📖 Subject', toObj(subjects), 'subject');
-                createMultiSelect('filter-status', 'Status', statusOpts, 'status');
+                createMultiSelect('filter-status', '🚥 Status', statusOpts, 'status');
                 createMultiSelect('filter-notes', '📝 Notes', notesOpts, 'notes');
                 // Create School Filter with Search Enabled
                 createMultiSelect('filter-school', '🏫 School', toObj(schools), 'school', true);
@@ -2621,6 +2719,12 @@
                     } else {
                         updateAvatarDisplay(userAvatar);
                     }
+
+                    // --- Welcome Summary Trigger ---
+                    if (!sessionStorage.getItem('welcome_shown')) {
+                        showWelcomeSummary();
+                        sessionStorage.setItem('welcome_shown', 'true');
+                    }
                 } catch (e) {
                     console.error(e);
                     // document.getElementById('sync-status').innerText = 'Sync Off-line'; // User requested removal
@@ -2634,6 +2738,50 @@
             const displayName = auth.currentUser ? auth.currentUser.displayName : 'Guest';
             if (label) label.innerText = `📝 ${displayName}'s Field Notes`;
             updateStats();
+        }
+
+        // --- Welcome Summary Logic ---
+        function showWelcomeSummary() {
+            if (!auth.currentUser) return;
+
+            const today = new Date().toISOString().split('T')[0];
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+            let todayCount = 0;
+            let weekCount = 0;
+
+            for (const url in trackerData) {
+                const completionDate = trackerData[url].date;
+                if (!completionDate) continue;
+
+                if (completionDate === today) todayCount++;
+                if (new Date(completionDate) >= oneWeekAgo) weekCount++;
+            }
+
+            document.getElementById('welcome-today-count').innerText = todayCount;
+            document.getElementById('welcome-week-count').innerText = weekCount;
+
+            const name = auth.currentUser.displayName ? auth.currentUser.displayName.split(' ')[0] : 'there';
+            document.getElementById('welcome-title').innerText = `Welcome back, ${name}! 👋`;
+
+            // Milestone
+            const level = getActiveLevel();
+            const examInfo = getActiveExamInfo(level);
+
+            if (examInfo) {
+                document.getElementById('welcome-milestone-label').innerText = `Upcoming: ${level} ${examInfo.name}`;
+                document.getElementById('welcome-milestone-days').innerText = `${examInfo.daysLeft} days to go!`;
+                document.getElementById('welcome-milestone-box').style.display = 'flex';
+            } else {
+                document.getElementById('welcome-milestone-box').style.display = 'none';
+            }
+
+            document.getElementById('welcome-modal').classList.add('show');
+        }
+
+        function closeWelcomeModal() {
+            document.getElementById('welcome-modal').classList.remove('show');
         }
 
         function updateAvatarDisplay(idx) {
@@ -3020,6 +3168,92 @@
                     </div>
                 </div>
              `;
+        }
+
+        // --- XP View Logic ---
+        function showXPView() {
+            renderXPViewMain();
+            switchView('xp');
+        }
+
+        function renderXPViewMain() {
+            const container = document.getElementById('xp-view-container');
+            const xpState = calculateXPState();
+
+            container.innerHTML = `
+                <div style="margin-bottom: 40px;">
+                    <h1 style="color: #fbbf24; font-size: 2.5rem; margin: 0;">🚀 Mastery & XP System</h1>
+                    <p style="opacity: 0.8; font-size: 1.2rem;">Track your growth across all subjects and level up your skills!</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px;">
+                    <!-- Level Card -->
+                    <div style="background: #1e1b4b; border: 1px solid #4f46e5; border-radius: 20px; padding: 30px; display: flex; align-items: center; gap: 20px;">
+                        <div style="background: #fbbf24; color: #1e1b4b; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800;">
+                            ${xpState.overall.lvl}
+                        </div>
+                        <div>
+                            <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; font-weight: 700;">Overall Level</div>
+                            <div style="font-size: 1.5rem; font-weight: 700;">Rank: Master Aspirant</div>
+                        </div>
+                    </div>
+
+                    <!-- XP Progress Card -->
+                    <div style="background: #1e1b4b; border: 1px solid #4f46e5; border-radius: 20px; padding: 30px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span style="font-weight: 700;">XP Progress</span>
+                            <span style="color: #fbbf24; font-weight: 700;">${xpState.overall.progress} / 500 XP</span>
+                        </div>
+                        <div style="height: 12px; background: rgba(0,0,0,0.3); border-radius: 6px; overflow: hidden;">
+                            <div style="height: 100%; background: linear-gradient(90deg, #4f46e5, #fbbf24); width: ${xpState.overall.pct}%"></div>
+                        </div>
+                        <p style="font-size: 0.85rem; opacity: 0.6; margin-top: 10px;">Earn ${500 - xpState.overall.progress} more XP to reach Level ${xpState.overall.lvl + 1}!</p>
+                    </div>
+                </div>
+
+                <h2 style="color: #fbbf24; margin-bottom: 20px;">📖 How to Earn XP</h2>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px;">
+                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                        <div style="font-size: 1.5rem; margin-bottom: 10px;">📝</div>
+                        <div style="font-weight: 700; margin-bottom: 5px;">Daily Practice</div>
+                        <div style="font-size: 0.9rem; opacity: 0.7;">Complete any paper to earn a base <b>30 XP</b>.</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                        <div style="font-size: 1.5rem; margin-bottom: 10px;">🎯</div>
+                        <div style="font-weight: 700; margin-bottom: 5px;">Milestone Papers</div>
+                        <div style="font-size: 0.9rem; opacity: 0.7;">WA1, WA2, and CA papers earn <b>50 XP</b>.</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                        <div style="font-size: 1.5rem; margin-bottom: 10px;">🏆</div>
+                        <div style="font-weight: 700; margin-bottom: 5px;">Big Exams</div>
+                        <div style="font-size: 0.9rem; opacity: 0.7;">SA1, SA2, and Prelims earn <b>100-120 XP</b>!</div>
+                    </div>
+                </div>
+
+                <h2 style="color: #fbbf24; margin-bottom: 20px;">📊 Subject Mastery</h2>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                    ${Object.keys(xpState.subjects).map(s => {
+                const subj = xpState.subjects[s];
+                const colors = { 'Maths': '#3b82f6', 'Science': '#10b981', 'English': '#f43f5e' };
+                return `
+                            <div style="background: #1e1b4b; border: 1px solid ${colors[s]}; border-radius: 16px; padding: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                    <span style="font-weight: 700; font-size: 1.1rem;">${s}</span>
+                                    <span style="background: ${colors[s]}; color: white; padding: 2px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 700;">Lvl ${subj.lvl}</span>
+                                </div>
+                                <div style="height: 8px; background: rgba(0,0,0,0.3); border-radius: 4px; overflow: hidden; margin-bottom: 10px;">
+                                    <div style="height: 100%; background: ${colors[s]}; width: ${subj.pct}%"></div>
+                                </div>
+                                <div style="font-size: 0.8rem; opacity: 0.6; text-align: right;">${subj.progress} / 500 XP</div>
+                            </div>
+                        `;
+            }).join('')}
+                </div>
+
+                <div style="margin-top: 50px; text-align: center; opacity: 0.6; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                    Level thresholds are every 500 XP. Keep pushing to reach top rank! 🦁
+                </div>
+            `;
         }
 
         // Old function kept for reference but unused (or needs removal)
