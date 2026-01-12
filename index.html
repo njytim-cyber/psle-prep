@@ -1342,13 +1342,12 @@
         }
 
         .summary-card .label {
-            let currentUrl=null;
-            let auth=null;
-            let db=null;
-            let dataLoaded=false; // Prevents saving before load
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
 
-            // Exam Planner Global State
-            let activeMilestone='PSLE'; // Default
+        /* Exam Planner */
+        #exam-planner {
             background: #1e293b;
             border-radius: 12px;
             padding: 15px;
@@ -1947,6 +1946,7 @@
             "Xylia", "Yoda", "Zia", "Alpha", "Beta", "Gamma", "Delta", "Epsilon"
         ];
         let examPlanFilter = 'due'; // 'all' or 'due'
+        let activeMilestone = 'PSLE'; // Default
         let examPlannerSettings = {
             'P4': { 'WA1': '2026-03-01', 'WA2': '2026-05-01', 'EYE': '2026-11-01' },
             'P5': { 'WA1': '2027-03-01', 'WA2': '2027-05-01', 'EYE': '2027-11-01' },
