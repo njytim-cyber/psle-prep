@@ -1492,10 +1492,20 @@
         }
 
         // --- Interaction ---
-        function loadPaper(url) {
-            currentUrl = url;
-            const paper = allPapers.find(p => p.url === url);
+        function loadPaper(paperOrUrl) {
+            let paper;
+            if (typeof paperOrUrl === 'string') {
+                paper = allPapers.find(p => p.url === paperOrUrl);
+            } else {
+                paper = paperOrUrl;
+            }
+
             if (!paper) return;
+            currentUrl = paper.url;
+
+            // Hide Exam Plan if visible
+            const examView = document.getElementById('exam-view-container');
+            if (examView) examView.style.display = 'none';
 
             renderList(); // Update active state
 
