@@ -277,39 +277,102 @@
             border-radius: 3px;
         }
 
-        .profile-row {
+        /* Refined Profile Card (Added Jan 2026) */
+        #profile-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 12px;
             display: flex;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
+            gap: 12px;
+            align-items: flex-start;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.2s;
         }
 
-        .profile-info {
+        #profile-container:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .profile-left {
+            flex-shrink: 0;
+            padding-top: 2px;
+        }
+
+        .profile-right {
+            flex: 1;
+            min-width: 0;
             display: flex;
             flex-direction: column;
-            flex: 1;
+            gap: 2px;
         }
 
-        .name-lvl-row {
+        .profile-header-row {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            width: 100%;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
         }
 
-        .lvl-badge-mini {
-            background: #fbbf24;
-            color: #1e1b4b;
-            padding: 2px 8px;
-            border-radius: 6px;
+        .profile-name-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #f1f5f9;
+            cursor: pointer;
+        }
+
+        .profile-name-text:hover {
+            text-decoration: underline;
+        }
+
+        .profile-lvl-badge {
+            font-size: 0.75rem;
+            background: #eab308;
+            color: #422006;
+            padding: 2px 6px;
+            border-radius: 4px;
             font-weight: 800;
-            font-size: 0.9rem;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .xp-text-mini {
-            font-size: 0.8rem;
-            opacity: 0.8;
+        .profile-rank-text {
+            font-size: 0.75rem;
+            color: #94a3b8;
             font-weight: 500;
+        }
+
+        .xp-bar-container {
+            height: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .xp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #eab308, #facc15);
+            border-radius: 3px;
+            transition: width 0.5s ease-out;
+        }
+
+        .profile-xp-row {
+            display: flex;
+            justify-content: flex-end;
+            font-size: 0.65rem;
+            color: #cbd5e1;
+            margin-top: 2px;
+        }
+
+        .sync-status-indicator {
+            font-size: 0.65rem;
+            opacity: 0.6;
+            font-style: italic;
         }
 
         /* Login Overlay */
@@ -368,40 +431,6 @@
             margin-bottom: 30px;
         }
 
-        .profile-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
-        }
-
-        .profile-info {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        .name-lvl-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .lvl-badge-mini {
-            background: #fbbf24;
-            color: #1e1b4b;
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-weight: 800;
-            font-size: 0.9rem;
-        }
-
-        .xp-text-mini {
-            font-size: 0.8rem;
-            opacity: 0.8;
-            font-weight: 500;
-        }
 
         /* Filter Grid */
         #filters {
@@ -1652,29 +1681,31 @@
             <!-- Auth Section - Removed Login with Google from here -->
             <div id="auth-section" style="display:none;"></div>
 
-            <div id="profile-container" style="display:none; flex-direction:column; gap:10px; margin-bottom: 20px;">
-                <div class="profile-row">
-                    <div id="user-photo" class="avatar-sprite" onclick="openAvatarModal()"
-                        style="width:55px; height:55px; border-radius:50%; border:2px solid #fbbf24; cursor:pointer; background-image:url('avatars.png'); background-size:800% 800%;"
+            <div id="profile-container" style="display:none; margin-bottom: 20px;">
+                <div class="profile-left">
+                    <div id="user-photo" onclick="openAvatarModal()"
+                        style="width:48px; height:48px; border-radius:50%; border:2px solid #fbbf24; cursor:pointer; background-image:url('avatars.png'); background-size:800% 800%; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);"
                         title="Change Avatar"></div>
-                    <div class="profile-info" onclick="showXPView()" style="cursor:pointer;" title="View XP System">
-                        <div class="name-lvl-row">
-                            <span id="user-name" onclick="event.stopPropagation(); updateUserName()"
-                                title="Click to change name"
-                                style="font-size:1.4rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; text-decoration:underline; text-decoration-style:dotted; text-underline-offset:4px;">Name</span>
-                            <span class="lvl-badge-mini" id="profile-level-badge">Lvl 1</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
-                            <span id="profile-xp-text" class="xp-text-mini">0 / 500 XP</span>
-                        </div>
-                        <div
-                            style="font-size: 0.8rem; opacity: 0.7; font-weight: 600; color: #fbbf24; margin-top: 2px;">
-                            Rank: Master Aspirant</div>
+                </div>
+                <div class="profile-right" onclick="showXPView()" style="cursor:pointer;" title="View XP Details">
+                    <div class="profile-header-row">
+                        <span id="user-name" onclick="event.stopPropagation(); updateUserName()"
+                            title="Click to change name" class="profile-name-text">Guest</span>
+                        <span id="profile-level-badge" class="profile-lvl-badge">Lvl 1</span>
                     </div>
-                    <div class="xp-progress-bg">
-                        <div class="xp-progress-fill" id="profile-xp-fill" style="width: 0%;"></div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px;">
+                        <span class="profile-rank-text">Master Aspirant</span>
+                        <div id="sync-status" class="sync-status-indicator"></div>
                     </div>
-                    <div id="sync-status" style="font-size:0.6rem; opacity:0.5; margin-top:4px;"></div>
+
+                    <!-- XP Bar -->
+                    <div class="xp-bar-container">
+                        <div id="profile-xp-fill" class="xp-bar-fill" style="width: 0%;"></div>
+                    </div>
+                    <div class="profile-xp-row">
+                        <span id="profile-xp-text">0 / 500 XP</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1942,6 +1973,7 @@
         let allPapers = typeof papers !== 'undefined' ? papers : [];
         let isCloudSynced = false;
         let dataLoaded = false; // Flag to prevent saving empty data over cloud data
+        let isSyncLocked = false; // Flag to permanently block saving if load failed dangerously
 
         // User & Avatar Data
         // User & Avatar Data
@@ -2675,6 +2707,14 @@
                 return;
             }
 
+            if (isSyncLocked) {
+                console.warn("Save blocked: Sync is locked due to load error.");
+                // User doesn't need to see "Sync Locked", just show "Saved Locally" or similar if we implemented local save,
+                // but since we blocked it, maybe just show "Offline"
+                document.getElementById('sync-status').innerText = 'Offline ☁️';
+                return;
+            }
+
             // Clean up empty entries
             for (const key in trackerData) {
                 if (!trackerData[key].date && (!trackerData[key].notes || !trackerData[key].notes.trim())) {
@@ -2840,7 +2880,8 @@
 
                     // Legacy migration logic removed per request.
 
-                    trackerData = cloudTracker;
+                    // MERGE STRATEGY: Keep local changes if they exist (optimistic updates), overlay cloud data
+                    trackerData = { ...cloudTracker, ...trackerData };
                     userAvatar = cloudAvatar; // Use cloud avatar, or default if not set
                     if (cloudExamSettings) {
                         examPlannerSettings = { ...examPlannerSettings, ...cloudExamSettings };
@@ -2905,9 +2946,10 @@
                     }
                 } catch (e) {
                     console.error(e);
-                    // Even if cloud load fails (offline/error), allow app to work
+                    // Even if cloud load fails (offline/error), allow app to work but BLOCK SAVING
                     dataLoaded = true;
-                    document.getElementById('sync-status').innerText = 'Sync Locked 🔒';
+                    isSyncLocked = true;
+                    document.getElementById('sync-status').innerText = 'Offline Mode ☁️';
                 }
             }
         }
