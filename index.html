@@ -1364,7 +1364,7 @@
 
         <div id="notes-pane" style="display:none;">
             <div id="notes-header" onclick="toggleNotes()">
-                <span id="notes-header-label">📝 Ethan's Field Notes (Debug Log)</span>
+                <span id="notes-header-label">📝 Field Notes</span>
                 <span class="toggle-icon">▼</span>
             </div>
             <textarea id="notes-input"
@@ -1441,7 +1441,8 @@
         let isCloudSynced = false;
 
         // User & Avatar Data
-        let trackerData = {};
+        let trackerData = {}; // Will be loaded from cloud or local storage
+        let userAvatar = 0; // Single avatar index for the logged-in user
         let examPlanFilter = 'due'; // 'all' or 'due'
         let currentUrl = null;
 
@@ -1614,16 +1615,6 @@
             updateFilterLabel(key);
             renderList();
             refreshOptionsUI(key);
-        }
-
-        function refreshOptionsUI(key) {
-            const container = document.getElementById(`ms-${key}`);
-            const items = container.querySelectorAll('.option-item');
-            items.forEach(div => {
-                const val = div.getAttribute('data-val');
-                const cb = div.querySelector('input');
-                cb.checked = filterState[key].includes(val);
-            });
         }
 
         function filterAction(key, action) {
@@ -1987,19 +1978,13 @@
                 }
             }
 
-            localStorage.setItem(`psle_data_${currentUser}`, JSON.stringify(trackerData));
-            localStorage.setItem('psle_avatars', JSON.stringify(userAvatars)); // Always save locally
-            updateStats();
-            renderList();
-            if (currentUrl) updateMainButton();
-
             // Push to Cloud if logged in
             if (auth && auth.currentUser) {
                 try {
                     document.getElementById('sync-status').innerText = "Syncing...";
                     await db.collection('users').doc(auth.currentUser.uid).set({
                         tracker: trackerData,
-                        avatars: userAvatars,
+                        userAvatar: userAvatar, // Save single userAvatar
                         lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true });
                     document.getElementById('sync-status').innerText = "Cloud Synced";
@@ -2007,7 +1992,13 @@
                     console.error("Cloud save failed:", e);
                     document.getElementById('sync-status').innerText = "Sync Failed";
                 }
+            } else {
+                // Fallback for guest/no-auth, though auth is mandatory now
+                localStorage.setItem('psle_data_guest', JSON.stringify({ trackerData, userAvatar }));
             }
+            updateStats();
+            renderList();
+            if (currentUrl) updateMainButton();
         }
 
         function triggerConfetti() {
@@ -2121,31 +2112,6 @@
                 }
             });
 
-            const auth = firebase.auth();
-            const db = firebase.firestore();
-
-            async function save() {
-                if (!auth || !auth.currentUser) {
-                    localStorage.setItem('psle_data_guest', JSON.stringify({ trackerData, userAvatar }));
-                    return;
-                }
-
-                // Push to Firestore
-                try {
-                    const uid = auth.currentUser.uid;
-                    await db.collection('users').doc(uid).set({
-                        trackerData,
-                        userAvatar,
-                        lastSync: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
-                    document.getElementById('sync-status').innerText = 'Cloud Synced ✅';
-                } catch (e) {
-                    console.error(e);
-                    document.getElementById('sync-status').innerText = 'Sync Error ⚠️';
-                }
-                updateStats();
-            }
-
             async function loadUserData() {
                 if (!auth || !auth.currentUser) return;
                 const uid = auth.currentUser.uid;
@@ -2153,24 +2119,53 @@
                 document.getElementById('sync-status').innerText = 'Fetching Cloud Data...';
                 try {
                     const doc = await db.collection('users').doc(uid).get();
+                    let cloudTracker = {};
+                    let cloudAvatar = 0;
+
                     if (doc.exists) {
                         const data = doc.data();
-                        trackerData = data.trackerData || {};
-                        userAvatar = data.userAvatar || 0;
-                        document.getElementById('sync-status').innerText = 'Cloud Synced ✅';
-                    } else {
-                        // Check for migration from legacy localStorage
-                        const legacyData = localStorage.getItem('psle_data_Ethan') || localStorage.getItem('psle_data_Evan');
+                        cloudTracker = data.trackerData || data.tracker || {};
+                        cloudAvatar = data.userAvatar || 0;
+                    }
+
+                    // Check for legacy data to migrate (Unconditional merge)
+                    const legacyUsers = ['Ethan', 'Evan'];
+                    let needsSync = false;
+
+                    for (const legacyUser of legacyUsers) {
+                        const legacyData = localStorage.getItem(`psle_data_${legacyUser}`);
                         if (legacyData) {
                             const parsed = JSON.parse(legacyData);
-                            trackerData = parsed.trackerData || {};
-                            userAvatar = parsed.userAvatar || 0;
-                            await save(); // Migrate to cloud
+                            const legacyMap = parsed.trackerData || parsed;
+                            cloudTracker = { ...cloudTracker, ...legacyMap }; // Merge legacy into cloud data
+                            localStorage.removeItem(`psle_data_${legacyUser}`); // Remove local legacy data
+                            needsSync = true;
                         }
-                        document.getElementById('sync-status').innerText = 'Welcome! Cloud Active';
                     }
+
+                    // Also check for a generic 'psle_data_guest' if it exists
+                    const guestData = localStorage.getItem('psle_data_guest');
+                    if (guestData) {
+                        const parsed = JSON.parse(guestData);
+                        const guestMap = parsed.trackerData || parsed;
+                        cloudTracker = { ...cloudTracker, ...guestMap };
+                        localStorage.removeItem('psle_data_guest');
+                        needsSync = true;
+                    }
+
+                    trackerData = cloudTracker;
+                    userAvatar = cloudAvatar; // Use cloud avatar, or default if not set
+
+                    if (needsSync) {
+                        await save(); // Push merged data to Firestore
+                        document.getElementById('sync-status').innerText = 'Migration Complete! 🚀';
+                    } else {
+                        document.getElementById('sync-status').innerText = 'Cloud Synced ✅';
+                    }
+
                     updateStats();
-                    renderPapers();
+                    renderList();
+                    loadSidebarProfile(); // Update notes header with user name
                 } catch (e) {
                     console.error(e);
                     document.getElementById('sync-status').innerText = 'Sync Off-line';
@@ -2180,10 +2175,9 @@
 
         // --- Avatar & User Logic ---
         function loadSidebarProfile() {
-            // Already handled in Auth observer
             const label = document.getElementById('notes-header-label');
             const displayName = auth.currentUser ? auth.currentUser.displayName : 'Guest';
-            if (label) label.innerText = `📝 ${displayName}'s Field Notes (Debug Log)`;
+            if (label) label.innerText = `📝 ${displayName}'s Field Notes`;
             updateStats();
         }
 
@@ -2196,10 +2190,7 @@
         }
 
         function setAvatar(idx) {
-            userAvatars[currentUser] = idx;
-            localStorage.setItem('psle_avatars', JSON.stringify(userAvatars));
-            updateAvatarDisplay(idx);
-            document.getElementById('avatar-modal').classList.remove('show');
+            userAvatar = idx; // Update single userAvatar
             save(); // Now async and handles cloud
         }
 
