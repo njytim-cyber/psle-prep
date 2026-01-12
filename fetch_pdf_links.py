@@ -23,18 +23,18 @@ def fetch_links():
         json_str = content.replace('const papers = ', '').rstrip(';').strip()
         all_papers = json.loads(json_str)
 
-    # Filter for Exam Set
-    exam_papers = [p for p in all_papers if p.get('level') == 'P4' and p.get('term') in ['WA1', 'CA1']]
-    print(f"Targeting {len(exam_papers)} papers...")
+    # Process all papers
+    print(f"Targeting {len(all_papers)} papers...")
 
     updated_count = 0
     
-    for i, p in enumerate(exam_papers):
-        print(f"[{i+1}/{len(exam_papers)}] Processing: {p['title']}")
+    for i, p in enumerate(all_papers):
+        # logging every 10 instead of every 1 to reduce noise
+        if (i+1) % 10 == 0:
+            print(f"[{i+1}/{len(all_papers)}] Processing: {p['title']}")
         
         # skip if already has pdf_link
         if p.get('pdf_link'):
-            print("  Already has link.")
             continue
 
         html = get_page(p['url'])

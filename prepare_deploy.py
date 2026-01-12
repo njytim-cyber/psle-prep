@@ -31,23 +31,19 @@ def prepare():
         # Clone metadata so we don't affect original
         meta = p.copy()
         
-        # Check if in Exam Set (P4 WA1/CA1)
-        is_exam_set = (p.get('level') == 'P4' and p.get('term') in ['WA1', 'CA1'])
-        
-        if is_exam_set:
-            # Mark as available
+        # Check availability based on PDF link presence
+        # (For web deployment, only papers with remote links are "available")
+        if meta.get('pdf_link'):
             meta['available'] = True
-            # We rely on pdf_link now, no need to copy files
-            # if 'pdf_link' is missing, it might default to page url or we can warn
-            if not meta.get('pdf_link'):
-                print(f"Warning: No PDF link for {p['title']}")
         else:
-            # Mark as unavailable (Local Only)
+            # If no link, mark as unavailable (Local Only)
             meta['available'] = False
             
         deploy_metadata.append(meta)
     
     print(f"Generated papers.js with {len(deploy_metadata)} entries.")
+    available_count = sum(1 for p in deploy_metadata if p['available'])
+    print(f"Papers available for web: {available_count}/{len(deploy_metadata)}")
     
     # Write papers.js
     json_output = json.dumps(deploy_metadata, indent=2)

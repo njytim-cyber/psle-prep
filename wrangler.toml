@@ -2,5 +2,4 @@ name = "psle-prep"
 pages_build_output_dir = "deploy"
 compatibility_date = "2026-01-12"
 
-[build]
-command = "exit 0"
+
