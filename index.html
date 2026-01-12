@@ -1277,11 +1277,44 @@
         }
 
         /* Contribution Graph Styles */
+        .contrib-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            /* Align legend to right or grid to fit */
+        }
+
+        .contrib-container {
+            display: flex;
+            gap: 5px;
+        }
+
+        .contrib-days-label {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-top: 15px;
+            /* Align with first row approx */
+            height: 86px;
+            /* 7 * (10+2) = 84 approx */
+            font-size: 0.6rem;
+            color: #94a3b8;
+            padding-right: 5px;
+        }
+
+        .contrib-months-label {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 5px;
+            margin-left: 25px;
+            /* Space for day labels */
+            font-size: 0.6rem;
+            color: #94a3b8;
+        }
+
         .contrib-grid {
             display: flex;
             gap: 2px;
-            /* overflow-x: auto; */
-            /* Let it fit or scroll if needed */
         }
 
         .contrib-column {
@@ -1294,41 +1327,42 @@
             width: 10px;
             height: 10px;
             border-radius: 2px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
         }
 
+        .contrib-day:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            z-index: 10;
+            border: 1px solid #334155;
+            pointer-events: none;
+        }
+
+        .contrib-legend {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+
+        /* Color Scale */
         .contrib-day.l0 {
             background: #1e293b;
         }
 
-        .contrib-day.l1 {
-            background: #0e4429;
-        }
-
-        /* GitHub-like dark green dim */
-        .contrib-day.l2 {
-            background: #006d32;
-        }
-
-        .contrib-day.l3 {
-            background: #26a641;
-        }
-
-        .contrib-day.l4 {
-            background: #39d353;
-        }
-
-        /* Brightest */
-
-        /* Adjust colors to match theme (Indigo/Rose/Amber) instead of Green? 
-           User image showed green, so I will stick to green or maybe theme it.
-           Theme: Primary #6366f1 (Indigo).
-           Let's use Indigo/Purple shades for consistency.
-        */
-        .contrib-day.l0 {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
+        /* Empty */
         .contrib-day.l1 {
             background: #312e81;
         }
@@ -1344,8 +1378,6 @@
         .contrib-day.l4 {
             background: #a5b4fc;
         }
-
-        /* Very bright */
 
         .empty-future {
             opacity: 0;
@@ -1439,22 +1471,22 @@
             <div id="sidebar-contrib"></div>
         </div>
 
-
+        <!-- Filters (Moved inside sidebar) -->
+        <div id="filters">
+            <div id="filter-stats-display">Found 0 papers</div>
+            <div class="span-1" id="filter-level"></div>
+            <div class="span-1" id="filter-term"></div>
+            <div class="span-1" id="filter-year"></div>
+            <div class="span-1" id="filter-subject"></div>
+            <div class="span-1" id="filter-status"></div>
+            <div class="span-1" id="filter-notes"></div>
+            <div class="span-3" id="filter-school"></div>
+        </div>
     </div>
 
-    <div id="filters">
-        <div id="filter-stats-display">Found 0 papers</div>
-        <div class="span-1" id="filter-level"></div>
-        <div class="span-1" id="filter-term"></div>
-        <div class="span-1" id="filter-year"></div>
-        <div class="span-1" id="filter-subject"></div>
-        <div class="span-1" id="filter-status"></div>
-        <div class="span-1" id="filter-notes"></div>
-        <div class="span-3" id="filter-school"></div>
-    </div>
 
     <!-- Paper List Moved to Main View -->
-    </div>
+
 
     <div id="main-view">
 
@@ -2619,11 +2651,16 @@
         // --- Exam Planner (Mar 2, 2026) ---
         // --- Exam Plan View (Main Pane) ---
         function showExamPlanView() {
-            switchView('exam');
-            const examView = document.getElementById('exam-view');
-            // Check if content rendered
-            if (examView.innerHTML.trim() === '' || examView.innerHTML.includes('Exam Plan')) {
-                renderExamPlanMain(examView);
+            console.log("Opening Exam Plan View");
+            try {
+                switchView('exam');
+                const examView = document.getElementById('exam-view');
+                if (examView.innerHTML.trim() === '' || examView.innerHTML.includes('Exam Plan')) {
+                    renderExamPlanMain(examView);
+                }
+            } catch (e) {
+                console.error("Error showing exam plan:", e);
+                alert("Error opening exam plan: " + e.message);
             }
         }
 
@@ -2738,18 +2775,41 @@
             if (!container) return;
 
             container.innerHTML = '';
-            container.className = 'contrib-grid';
 
+            // Wrapper
+            const wrapper = document.createElement('div');
+            wrapper.className = 'contrib-wrapper';
+
+            // Top Labels (Months)
+            const monthsLabelRow = document.createElement('div');
+            monthsLabelRow.className = 'contrib-months-label';
+
+            // Main Container (Days + Grid)
+            const mainCont = document.createElement('div');
+            mainCont.className = 'contrib-container';
+
+            // Day Labels (Mon/Wed/Fri)
+            const daysLabelCol = document.createElement('div');
+            daysLabelCol.className = 'contrib-days-label';
+            daysLabelCol.innerHTML = '<div></div><div>Mon</div><div></div><div>Wed</div><div></div><div>Fri</div><div></div>';
+            mainCont.appendChild(daysLabelCol);
+
+            // The Grid
+            const grid = document.createElement('div');
+            grid.className = 'contrib-grid';
+            mainCont.appendChild(grid);
+
+            // Data Logic
             const today = new Date();
             const startDate = new Date();
             startDate.setMonth(today.getMonth() - monthsBack);
-            // Adjust to start on a Sunday (or Monday? GitHub is Sun). Let's do Monday (1) or Sunday (0).
-            // Let's align to Monday to match standard work weeks often used in schools.
-            const dayOfWeek = startDate.getDay(); // 0 is Sunday
-            const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+            // Align start to Sunday (0)
+            const dayOfWeek = startDate.getDay();
+            const daysToSubtract = dayOfWeek; // 0 if Sunday
             startDate.setDate(startDate.getDate() - daysToSubtract);
 
-            // Generate map of date -> count
+            // Generate map
             const dateCount = {};
             for (const url in trackerData) {
                 const date = trackerData[url].date;
@@ -2759,48 +2819,72 @@
                 }
             }
 
-            // Create grid
-            // We draw column by column (Weeks)
             const oneDay = 24 * 60 * 60 * 1000;
             let current = new Date(startDate);
+            let currentMonth = -1;
 
-            // Loop until we pass today
             while (current <= today) {
+                // Month Labels Logic
+                // If it's the first week of a new month, add label
+                // Position approximated by flex gap
+                if (current.getMonth() !== currentMonth) {
+                    currentMonth = current.getMonth();
+                    const monthName = current.toLocaleString('default', { month: 'short' });
+                    const monthLabel = document.createElement('div');
+                    monthLabel.innerText = monthName;
+                    monthLabel.style.width = '45px'; // Approx width of 4 weeks
+                    monthsLabelRow.appendChild(monthLabel);
+                }
+
                 const weekCol = document.createElement('div');
                 weekCol.className = 'contrib-column';
 
                 for (let i = 0; i < 7; i++) {
-                    if (current > today) {
-                        // Fill remaining slots in the last week with empty if needed, or just stop
-                        // But to keep grid alignment we might want empty squares
-                        const empty = document.createElement('div');
-                        empty.className = 'contrib-day empty-future';
-                        weekCol.appendChild(empty);
-                        current.setDate(current.getDate() + 1);
-                        continue;
-                    }
-
                     const dateStr = current.toISOString().split('T')[0];
                     const count = dateCount[dateStr] || 0;
 
                     const dayEl = document.createElement('div');
                     dayEl.className = 'contrib-day';
-                    dayEl.dataset.date = dateStr;
-                    dayEl.dataset.count = count;
-                    dayEl.title = `${dateStr}: ${count} papers`;
 
-                    // Color scale
-                    if (count === 0) dayEl.classList.add('l0');
-                    else if (count === 1) dayEl.classList.add('l1');
-                    else if (count === 2) dayEl.classList.add('l2');
-                    else if (count === 3) dayEl.classList.add('l3');
-                    else dayEl.classList.add('l4');
+                    if (current > today) {
+                        dayEl.classList.add('empty-future');
+                    } else {
+                        dayEl.dataset.date = dateStr;
+                        // Color styling
+                        if (count === 0) dayEl.classList.add('l0');
+                        else if (count === 1) dayEl.classList.add('l1');
+                        else if (count === 2) dayEl.classList.add('l2');
+                        else if (count === 3) dayEl.classList.add('l3');
+                        else dayEl.classList.add('l4'); // 4+
+
+                        // Native Title Tooltip fallback + custom hover
+                        const niceDate = current.toLocaleDateString('en-SG', { weekday: 'short', month: 'short', day: 'numeric' });
+                        dayEl.title = `${count} papers on ${niceDate}`;
+                    }
 
                     weekCol.appendChild(dayEl);
                     current.setDate(current.getDate() + 1);
                 }
-                container.appendChild(weekCol);
+                grid.appendChild(weekCol);
             }
+
+            // Legend
+            const legend = document.createElement('div');
+            legend.className = 'contrib-legend';
+            legend.innerHTML = `
+                <span>Less</span>
+                <div class="contrib-day l0"></div>
+                <div class="contrib-day l1"></div>
+                <div class="contrib-day l2"></div>
+                <div class="contrib-day l3"></div>
+                <div class="contrib-day l4"></div>
+                <span>More</span>
+            `;
+
+            wrapper.appendChild(monthsLabelRow);
+            wrapper.appendChild(mainCont);
+            wrapper.appendChild(legend);
+            container.appendChild(wrapper);
         }
 
         // --- Init & Updates ---
