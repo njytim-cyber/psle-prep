@@ -2067,15 +2067,15 @@
         function switchView(viewName) {
             // Hide all views
             ['results-view', 'pdf-view', 'analytics-view', 'exam-view', 'xp-view'].forEach(id => {
-                document.getElementById(id).style.display = 'none';
+                const el = document.getElementById(id);
+                if (el) el.style.setProperty('display', 'none', 'important');
             });
 
             // Show target
             const target = document.getElementById(viewName + '-view');
             if (target) {
-                target.style.display = (viewName === 'pdf-view') ? 'flex' : 'block';
-                // pdf-view is flex column for toolbar/iframe/notes
-                // others are block with overflow
+                const displayType = (viewName === 'pdf-view') ? 'flex' : 'block';
+                target.style.setProperty('display', displayType, 'important');
             }
         }
 
