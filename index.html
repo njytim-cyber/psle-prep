@@ -2420,12 +2420,11 @@
                     } else {
                         updateAvatarDisplay(userAvatar);
                     }
-                }
                 } catch (e) {
-                console.error(e);
-                // document.getElementById('sync-status').innerText = 'Sync Off-line'; // User requested removal
+                    console.error(e);
+                    // document.getElementById('sync-status').innerText = 'Sync Off-line'; // User requested removal
+                }
             }
-        }
         }
 
         // --- Avatar & User Logic ---
