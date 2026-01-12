@@ -1342,12 +1342,13 @@
         }
 
         .summary-card .label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
+            let currentUrl=null;
+            let auth=null;
+            let db=null;
+            let dataLoaded=false; // Prevents saving before load
 
-        /* Exam Planner */
-        #exam-planner {
+            // Exam Planner Global State
+            let activeMilestone='PSLE'; // Default
             background: #1e293b;
             border-radius: 12px;
             padding: 15px;
@@ -1929,6 +1930,7 @@
         // --- Data & State ---
         let allPapers = typeof papers !== 'undefined' ? papers : [];
         let isCloudSynced = false;
+        let dataLoaded = false; // Flag to prevent saving empty data over cloud data
 
         // User & Avatar Data
         // User & Avatar Data
@@ -2638,6 +2640,11 @@
         }
 
         async function save() {
+            if (!dataLoaded) {
+                console.warn("Save blocked: Cloud data not yet loaded.");
+                return;
+            }
+
             // Clean up empty entries
             for (const key in trackerData) {
                 if (!trackerData[key].date && (!trackerData[key].notes || !trackerData[key].notes.trim())) {
@@ -2660,10 +2667,9 @@
                     console.error("Cloud save failed:", e);
                     // document.getElementById('sync-status').innerText = "Sync Failed";
                 }
-            } else {
-                // Fallback for guest/no-auth, though auth is mandatory now
-                localStorage.setItem('psle_data_guest', JSON.stringify({ trackerData, userAvatar }));
             }
+            // Removed LocalStorage Fallback per request
+
             updateStats();
             renderList();
             if (currentUrl) updateMainButton();
@@ -2800,30 +2806,7 @@
                         cloudExamSettings = data.examPlannerSettings || null;
                     }
 
-                    // Check for legacy data to migrate (Unconditional merge)
-                    const legacyUsers = ['Ethan', 'Evan'];
-                    let needsSync = false;
-
-                    for (const legacyUser of legacyUsers) {
-                        const legacyData = localStorage.getItem(`psle_data_${legacyUser}`);
-                        if (legacyData) {
-                            const parsed = JSON.parse(legacyData);
-                            const legacyMap = parsed.trackerData || parsed;
-                            cloudTracker = { ...cloudTracker, ...legacyMap }; // Merge legacy into cloud data
-                            localStorage.removeItem(`psle_data_${legacyUser}`); // Remove local legacy data
-                            needsSync = true;
-                        }
-                    }
-
-                    // Also check for a generic 'psle_data_guest' if it exists
-                    const guestData = localStorage.getItem('psle_data_guest');
-                    if (guestData) {
-                        const parsed = JSON.parse(guestData);
-                        const guestMap = parsed.trackerData || parsed;
-                        cloudTracker = { ...cloudTracker, ...guestMap };
-                        localStorage.removeItem('psle_data_guest');
-                        needsSync = true;
-                    }
+                    // Legacy migration logic removed per request.
 
                     trackerData = cloudTracker;
                     userAvatar = cloudAvatar; // Use cloud avatar, or default if not set
@@ -2831,15 +2814,14 @@
                         examPlannerSettings = { ...examPlannerSettings, ...cloudExamSettings };
                     }
 
-                    if (needsSync) {
-                        await save(); // Push merged data to Firestore
-                        document.getElementById('sync-status').innerText = 'Migration Complete! 🚀';
-                    }
+                    dataLoaded = true; // Mark data as loaded to allow saving
+                    document.getElementById('sync-status').innerText = 'Cloud Synced ✅';
+
 
                     // --- SPECIAL RESTORATION FOR EVAN ---
                     if (auth.currentUser.email === 'evanngjianen@gmail.com') {
-                        /* 
-                           Hardcoded restoration for Evan's known 15 papers 
+                        /*
+                           Hardcoded restoration for Evan's known 15 papers
                            if the cloud tracker seems empty ( < 5 papers).
                         */
                         if (Object.keys(trackerData).length < 5) {
@@ -2868,11 +2850,7 @@
                         }
                     }
 
-                    if (needsSync && auth.currentUser.email !== 'evanngjianen@gmail.com') { // Avoid double status
-                        document.getElementById('sync-status').innerText = 'Migration Complete! 🚀';
-                    } else if (!needsSync) {
-                        document.getElementById('sync-status').innerText = 'Cloud Synced ✅';
-                    }
+
 
                     updateStats();
                     renderList();
@@ -2977,12 +2955,8 @@
                 if (auth.currentUser && auth.currentUser.photoURL) {
                     el.style.backgroundImage = `url('${auth.currentUser.photoURL}')`;
                     el.style.backgroundSize = 'cover';
-                } else {
-                    // Fallback to first sprite
-                    el.style.backgroundImage = "url('avatars.png')";
-                    el.style.backgroundSize = '800% 800%';
-                    el.style.backgroundPosition = '0% 0%';
                 }
+                // Fallback for guest/no-auth removed per request
             } else {
                 el.style.backgroundImage = "url('avatars.png')";
                 el.style.backgroundSize = '800% 800%';
