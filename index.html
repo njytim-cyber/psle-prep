@@ -518,9 +518,8 @@
             padding: 24px;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
             overflow-y: auto;
-            height: 100%;
             box-sizing: border-box;
             max-width: 900px;
             margin: 0 auto;
@@ -555,10 +554,8 @@
 
         .paper-card {
             background: var(--bg-card);
-            padding: 16px;
+            padding: 20px;
             border-radius: 12px;
-            margin-bottom: 0;
-            /* managed by grid gap */
             border: 1px solid transparent;
             cursor: pointer;
             transition: all 0.2s;
@@ -566,8 +563,9 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            height: 100%;
+            gap: 12px;
+            height: auto;
+            min-height: 120px;
         }
 
         .paper-card:hover {
@@ -1630,8 +1628,8 @@
         <!-- View 1: Results -->
         <div id="results-view" class="view-pane">
             <div id="filter-stats-display"
-                style="padding: 10px 20px; font-size: 1.1rem; font-weight: 600; color: #fbbf24; opacity: 0.9;">Found 0
-                papers</div>
+                style="padding: 10px 0; margin: 0 auto; max-width: 900px; font-size: 1.1rem; font-weight: 600; color: #fbbf24; opacity: 0.9; text-align: left;">
+                Found 0 papers</div>
             <div id="paper-list">
                 <!-- Cards go here -->
             </div>
@@ -2078,6 +2076,18 @@
                 el.innerText = `${defaultLabels[key]}: ${count}`;
                 el.style.color = '#fbbf24';
             }
+        }
+
+        function refreshOptionsUI(key) {
+            const container = document.getElementById(`ms-${key}`);
+            if (!container) return;
+            const items = container.querySelectorAll('.option-item');
+            items.forEach(item => {
+                const val = item.getAttribute('data-val');
+                const cb = item.querySelector('input');
+                if (cb) cb.checked = filterState[key].includes(val);
+                item.classList.toggle('selected', filterState[key].includes(val));
+            });
         }
 
         function populateFilters() {
