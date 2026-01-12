@@ -1,10 +1,6 @@
 {
   "name": "psle-prep",
-<<<<<<< HEAD
-  "version": "1.3.4",
-=======
   "version": "1.3.5",
->>>>>>> 08dd1c4 (Feat: Add Sync Animation & Fix Deployment Workflow (v1.3.5))
   "devDependencies": {
     "firebase-tools": "^15.2.1"
   }
