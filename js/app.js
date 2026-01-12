@@ -1,7 +1,7 @@
 import { auth, db } from './modules/firebase-init.js';
 import {
     getPapers, setPapers, getTrackerData, setTrackerData,
-    userAvatar, setUserAvatar, examPlannerSettings, setExamPlannerSettings,
+    getUserAvatar, setUserAvatar, getExamPlannerSettings, setExamPlannerSettings,
     save, updateTrackerItem, isDataLoaded, setDataLoaded, setIsSyncLocked
 } from './modules/state.js';
 import ViewManager from './modules/view-manager.js';
@@ -99,7 +99,7 @@ async function loadUserData() {
         // Merge
         setTrackerData({ ...cloudTracker, ...getTrackerData() });
         if (cloudAvatar !== undefined) setUserAvatar(cloudAvatar);
-        if (cloudExamSettings) setExamPlannerSettings({ ...examPlannerSettings, ...cloudExamSettings });
+        if (cloudExamSettings) setExamPlannerSettings({ ...getExamPlannerSettings(), ...cloudExamSettings });
 
         setDataLoaded(true);
         showSynced();
