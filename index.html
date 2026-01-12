@@ -2672,9 +2672,9 @@
                 try {
                     document.getElementById('sync-status').innerText = "Syncing...";
                     await db.collection('users').doc(auth.currentUser.uid).set({
-                        tracker: trackerData,
-                        userAvatar: userAvatar, // Save single userAvatar
-                        examPlannerSettings: examPlannerSettings, // Save exam planner settings
+                        trackerData: trackerData, // Standardized key
+                        userAvatar: userAvatar,
+                        examPlannerSettings: examPlannerSettings,
                         lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true });
                     document.getElementById('sync-status').innerText = "Cloud Synced";
