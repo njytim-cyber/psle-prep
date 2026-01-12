@@ -18,9 +18,15 @@ def prepare():
     os.makedirs('deploy')
     
     # Read papers
-    with open('papers.js', 'r', encoding='utf-8') as f:
+    papers_path = 'js/data/papers.js'
+    if not os.path.exists(papers_path):
+        print(f"Error: {papers_path} not found.")
+        return
+
+    with open(papers_path, 'r', encoding='utf-8') as f:
         content = f.read()
-        json_str = content.replace('const papers = ', '').rstrip(';').strip()
+        # ESM format: export const papers = [...];
+        json_str = content.replace('export const papers = ', '').rstrip(';').strip()
         all_papers = json.loads(json_str)
         
     # Filter and Copy
@@ -46,12 +52,38 @@ def prepare():
     print(f"Papers available for web: {available_count}/{len(deploy_metadata)}")
     
     # Write papers.js
-    json_output = json.dumps(deploy_metadata, indent=2)
-    with open('deploy/papers.js', 'w', encoding='utf-8') as f:
-        f.write(f"const papers = {json_output};")
+    # Write papers.js
+    if not os.path.exists('deploy/js/data'):
+        os.makedirs('deploy/js/data')
         
-    # Copy index.html
+    json_output = json.dumps(deploy_metadata, indent=2)
+    with open('deploy/js/data/papers.js', 'w', encoding='utf-8') as f:
+        f.write(f"export const papers = {json_output};")
+        
+    # Copy index.html and assets
     shutil.copy2('index.html', 'deploy/index.html')
+    
+    # Copy JS Modules
+    if os.path.exists('js'):
+        # We need to copy everything in js/ EXCEPT data/papers.js which we generated above
+        # But copytree is recursive. Simpler to copy all js/ then overwrite papers.js
+        # Actually simplest: Copy all js/ structure to deploy/js/ then write our filtered paper list
+        if os.path.exists('deploy/js'):
+            shutil.rmtree('deploy/js')
+        shutil.copytree('js', 'deploy/js')
+        
+        # Overwrite the papers.js with the filtered one
+        with open('deploy/js/data/papers.js', 'w', encoding='utf-8') as f:
+            f.write(f"export const papers = {json_output};")
+
+    # Copy CSS
+    if os.path.exists('css'):
+        if os.path.exists('deploy/css'): shutil.rmtree('deploy/css')
+        shutil.copytree('css', 'deploy/css')
+        
+    # Copy Avatars
+    if os.path.exists('avatars.png'):
+        shutil.copy2('avatars.png', 'deploy/avatars.png')
     
     print("Deployment preparation complete in 'deploy/' folder.")
 

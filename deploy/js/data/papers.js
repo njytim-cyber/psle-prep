@@ -1,4 +1,4 @@
-const papers = [
+export const papers = [
   {
     "title": "P4 Maths 2023 WA1 - Raffles Girls",
     "year": 2023,
