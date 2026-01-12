@@ -2396,7 +2396,7 @@
             const overallPct = totalGoal > 0 ? Math.round((totalDone / totalGoal) * 100) : 0;
 
             container.innerHTML = `
-                <div style="max-width:800px; margin:0 auto;">
+                <div style="max-width:1200px; margin:0 auto;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
                         <div>
                             <h1 style="margin:0; font-size:2.5rem; color:#fbbf24;">📅 Exam Plan</h1>
@@ -2418,7 +2418,7 @@
                         </div>
                     </div>
                     
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
+                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
                         ${subjectStats.map(stat => {
                 const pct = stat.total > 0 ? (stat.done / stat.total) * 100 : 0;
                 const colors = { 'Maths': '#3b82f6', 'Science': '#10b981', 'English': '#f43f5e' };
