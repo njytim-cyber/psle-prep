@@ -2,6 +2,7 @@
   "name": "psle-prep",
   "version": "1.3.7",
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "firebase-tools": "^15.2.1"
   }
 }

@@ -115,7 +115,7 @@ export function renderExamPlanMain(container, examPlanFilter = 'due', activeLeve
         const listHtml = displayPapers.map(p => {
             const comp = isCompleted(p.url);
             return `
-                <div style="background:rgba(255,255,255,0.05); padding:8px; border-radius:6px; margin-bottom:5px; font-size:0.9rem; display:flex; justify-content:space-between; align-items:center;">
+                <div onclick="window.loadPaper('${p.url}')" style="background:rgba(255,255,255,0.05); padding:8px; border-radius:6px; margin-bottom:5px; font-size:0.9rem; display:flex; justify-content:space-between; align-items:center; cursor:pointer;" class="paper-item-exam">
                     <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-right:10px;">${p.year} ${p.school} ${p.term}</div>
                     <div>${comp ? '✅' : '⬜'}</div>
                 </div>
