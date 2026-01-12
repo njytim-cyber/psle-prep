@@ -2523,13 +2523,13 @@
             // Priority: PDF Link (Remote) > File Path (Local) > Source URL (Page)
             let targetUrl = paper.pdf_link || paper.file_path || paper.url;
 
-            // Guard against empty URL (Fixes recursive iframe bug)
-            if (!targetUrl || targetUrl.trim() === '') {
+            // Guard against empty URL, relative paths often pointing to app, or index.html
+            // If it doesn't end in .pdf and isn't a google docs link, it's suspicious.
+            // Also explicitly check for recursive app loading.
+            if (!targetUrl || targetUrl.trim() === '' || targetUrl.includes('index.html') || targetUrl === './' || targetUrl === '/') {
                 viewerEl.removeAttribute('srcdoc');
                 viewerEl.src = ''; // Clear src
-                // Optional: Display a message inside the iframe or viewer area
-                // keeping it simple: just don't load the app recursively.
-                alert("No document URL found for this paper.");
+                alert("No PDF document found for this paper.");
                 return;
             }
 
