@@ -38,6 +38,8 @@
             background-color: var(--bg-dark);
             color: var(--text-light);
             overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         /* Iframe Guard: Hide Shell if app is loaded inside an iframe */
@@ -55,6 +57,12 @@
         button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        input,
+        textarea {
+            user-select: text !important;
+            -webkit-user-select: text !important;
         }
 
         /* Responsive Grid System */
@@ -1721,7 +1729,7 @@
             </div>
             <div class="stat-card-mini" onclick="openAnalytics()" title="Click for details">
                 <span class="stat-val-big" id="percent-stat">0%</span>
-                <span class="stat-label-mini">Mastery</span>
+                <span class="stat-label-mini">Complete</span>
             </div>
             <div class="stat-card-mini yellow-card" onclick="showExamPlanView()" title="View Exam Plan">
                 <span class="stat-val-big" id="exam-prep-stat">0%</span>
@@ -3359,7 +3367,7 @@
                             <!-- Controls Column -->
                             <div style="display:flex; flex-direction:column; justify-content:space-between; height: 80px;">
                                 <!-- All/Due Toggle -->
-                                <div class="toggle-group" style="background:#1e293b; border:1px solid #334155; width: 100%; justify-content: center;">
+                                <div class="toggle-group" style="background:#1e293b; border:1px solid #334155; width: 100%; justify-content: center; height: 34px;">
                                     <button class="toggle-btn ${examPlanFilter === 'all' ? 'active' : ''}" style="padding:0 15px;" onclick="setExamPlanFilter('all')">All</button>
                                     <button class="toggle-btn ${examPlanFilter === 'due' ? 'active' : ''}" style="padding:0 15px;" onclick="setExamPlanFilter('due')">Due</button>
                                 </div>
