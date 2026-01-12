@@ -2269,11 +2269,21 @@
 
         // --- Auth & Cloud Logic ---
         function loginGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(e => {
-                console.error("Login failed:", e);
-                alert("Login failed: " + e.message);
-            });
+            try {
+                if (!auth) {
+                    alert("Firebase Auth not initialized! Check console.");
+                    console.error("Auth object is", auth);
+                    return;
+                }
+                const provider = new firebase.auth.GoogleAuthProvider();
+                auth.signInWithPopup(provider).catch(e => {
+                    console.error("Login failed:", e);
+                    alert("Login failed: " + e.message);
+                });
+            } catch (err) {
+                alert("Critical Error: " + err.message);
+                console.error(err);
+            }
         }
 
         function logoutGoogle() {
