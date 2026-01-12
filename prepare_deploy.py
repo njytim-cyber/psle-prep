@@ -84,6 +84,8 @@ def prepare():
     # Copy Avatars
     if os.path.exists('avatars.png'):
         shutil.copy2('avatars.png', 'deploy/avatars.png')
+    if os.path.exists('avatars.webp'):
+        shutil.copy2('avatars.webp', 'deploy/avatars.webp')
     
     print("Deployment preparation complete in 'deploy/' folder.")
 

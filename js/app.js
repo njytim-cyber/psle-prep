@@ -64,7 +64,7 @@ if (auth) {
             document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('main-view').style.display = 'flex';
             document.getElementById('profile-container').style.display = 'flex';
-            document.getElementById('user-photo').src = user.photoURL || 'avatars.png';
+            document.getElementById('user-photo').src = user.photoURL || 'avatars.webp';
             document.getElementById('user-name').innerText = user.displayName;
 
             loadUserData();
@@ -337,7 +337,7 @@ function updateAvatarDisplay(idx) {
             el.style.backgroundSize = 'cover';
         }
     } else {
-        el.style.backgroundImage = "url('avatars.png')";
+        el.style.backgroundImage = "url('avatars.webp')";
         el.style.backgroundSize = '800% 800%';
         const posX = (idx % 8) * (100 / 7);
         const posY = Math.floor(idx / 8) * (100 / 7);
