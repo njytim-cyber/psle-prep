@@ -1778,7 +1778,7 @@
         </div>
 
         <!-- View 2: PDF Viewer -->
-        <div id="pdf-view" class="view-pane" style="display:none;">
+        <div id="pdf-view" class="view-pane" style="display:none; background-color: var(--bg-dark);">
             <div id="top-toolbar">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <button class="btn-action" style="background:#334155; color:white; padding:8px 12px;"
@@ -2064,7 +2064,10 @@
             setTimeout(() => { if (listEl.children.length === 0) renderApp(); }, 2000);
         }
 
+        let activeView = 'results'; // Global view state tracker
+
         function switchView(viewName) {
+            activeView = viewName;
             // Hide all views
             ['results-view', 'pdf-view', 'analytics-view', 'exam-view', 'xp-view'].forEach(id => {
                 const el = document.getElementById(id);
@@ -2416,11 +2419,13 @@
 
             // Auto-switch to results when rendering list (implies filter change or init)
             // ONLY if we are not in PDF or other views
-            if (document.getElementById('results-view').style.display === 'none' &&
-                document.getElementById('pdf-view').style.display === 'none' &&
-                document.getElementById('analytics-view').style.display === 'none' && // Added checks
-                document.getElementById('exam-view').style.display === 'none' &&
-                document.getElementById('xp-view').style.display === 'none') {
+            if (activeView === 'results') {
+                // Already in results, do nothing special
+            } else if (activeView === 'pdf' || activeView === 'analytics' || activeView === 'exam' || activeView === 'xp') {
+                // Do NOT switch back to results automatically if we are deep in another view
+                // UNLESS explicit filter change? No, filter change shouldn't boot you out of PDF.
+            } else {
+                // Fallback
                 switchView('results');
             }
 
@@ -2428,14 +2433,6 @@
             if (filterStateChange) {
                 switchView('results');
                 filterStateChange = false;
-            } else if (document.getElementById('main-view').style.display !== 'none' &&
-                document.getElementById('results-view').style.display === 'none' &&
-                document.getElementById('pdf-view').style.display === 'none' &&
-                document.getElementById('analytics-view').style.display === 'none' &&
-                document.getElementById('exam-view').style.display === 'none' &&
-                document.getElementById('xp-view').style.display === 'none') {
-                // Initial load fallback
-                switchView('results');
             }
         }
 
