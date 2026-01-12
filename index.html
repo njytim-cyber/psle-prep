@@ -2335,7 +2335,7 @@
             if (filtered.length === 0) {
                 document.getElementById('filter-stats-display').innerText = `No papers found`;
                 listEl.innerHTML = '<div style="text-align:center; padding: 50px; opacity:0.5; font-size: 1.2rem;">No papers found for these filters! 🕵️</div>';
-                switchView('results');
+                // switchView('results'); // FIXED: Do not force switch away from PDF view if list is empty
                 return;
             }
 
@@ -2369,50 +2369,54 @@
                     const tooltipText = isDone ? `Completed on ${trackerData[p.url].date}` : `Click to open`;
 
                     return `
-                        <div onclick="loadPaper('${p.url}')" title="${tooltipText}" style="font-size:0.9rem; padding:10px; background:rgba(0,0,0,0.2); border-radius:6px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px; transition: background 0.2s;">
-                            <div style="flex:1; display: flex; align-items: center; gap: 8px; overflow: hidden;">
-                                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                    ${p.year} ${p.school} ${p.term}
-                                </span>
-                                ${hasUserNotes(p.url) ? '<span style="font-size:0.8rem;" title="Has Notes">📝</span>' : ''}
-                            </div>
-                            ${isDone ? '<span style="color:#10b981; font-weight:bold;">✓</span>' : '<span style="color:#fbbf24;">▶</span>'}
-                        </div>
-                    `;
+                <div onclick="loadPaper('${p.url}')" title="${tooltipText}" style="font-size:0.9rem; padding:10px; background:rgba(0,0,0,0.2); border-radius:6px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px; transition: background 0.2s;">
+                    <div style="flex:1; display: flex; align-items: center; gap: 8px; overflow: hidden;">
+                        <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            ${p.year} ${p.school} ${p.term}
+                        </span>
+                        ${hasUserNotes(p.url) ? '<span style="font-size:0.8rem;" title="Has Notes">📝</span>' : ''}
+                    </div>
+                    ${isDone ? '<span style="color:#10b981; font-weight:bold;">✓</span>' : '<span style="color:#fbbf24;">▶</span>'}
+                </div>
+            `;
                 }).join('');
 
                 return `
-                    <div class="exam-subject-card" style="background: rgba(30, 41, 59, 0.5); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div style="margin-bottom: 15px;">
-                            <h2 style="margin:0; font-size: 1.5rem; color: #f1f5f9; display:flex; align-items:center; justify-content:space-between;">
-                                ${subj}
-                                <span style="font-size:0.9rem; color:#94a3b8; font-weight:400;">${done} / ${total}</span>
-                            </h2>
-                            <div class="subject-progress" style="background:rgba(255,255,255,0.1); height:4px; border-radius:2px; margin-top:10px; width:100%;">
-                                 <div class="subject-progress-fill" style="width:${pct}%; background:${colors[subj]}; height:100%; border-radius:2px;"></div>
-                            </div>
-                        </div>
-                        <div class="paper-column-list" style="max-height: 600px; overflow-y: auto; padding-right: 5px;">
-                            ${papers.length > 0 ? listHtml : '<div style="opacity:0.4; text-align:center; padding:20px;">No papers</div>'}
-                        </div>
+            <div class="exam-subject-card" style="background: rgba(30, 41, 59, 0.5); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.05);">
+                <div style="margin-bottom: 15px;">
+                    <h2 style="margin:0; font-size: 1.5rem; color: #f1f5f9; display:flex; align-items:center; justify-content:space-between;">
+                        ${subj}
+                        <span style="font-size:0.9rem; color:#94a3b8; font-weight:400;">${done} / ${total}</span>
+                    </h2>
+                    <div class="subject-progress" style="background:rgba(255,255,255,0.1); height:4px; border-radius:2px; margin-top:10px; width:100%;">
+                         <div class="subject-progress-bar" style="width:${pct}%; background:${colors[subj]}; height:100%; border-radius:2px; transition:width 1s;"></div>
                     </div>
-                `;
+                </div>
+                <!-- Scrollable List Container -->
+                <div class="custom-scrollbar" style="max-height: 400px; overflow-y: auto; padding-right: 5px;">
+                    ${listHtml}
+                </div>
+            </div>
+        `;
             }).join('');
 
             listEl.innerHTML = `
-                <div class="responsive-grid">
-                    ${columnsHtml}
-                </div>
-            `;
+        <div class="responsive-grid">
+            ${columnsHtml}
+        </div>
+    `;
 
             // Auto-switch to results when rendering list (implies filter change or init)
-            // Unless we are explicitly in another mode? 
-            // Valid assumption: if renderList is called, we probably want to see the results.
+            // ONLY if we are not in PDF or other views
             if (document.getElementById('results-view').style.display === 'none' &&
-                document.getElementById('pdf-view').style.display === 'none') {
+                document.getElementById('pdf-view').style.display === 'none' &&
+                document.getElementById('analytics-view').style.display === 'none' && // Added checks
+                document.getElementById('exam-view').style.display === 'none' &&
+                document.getElementById('xp-view').style.display === 'none') {
                 switchView('results');
             }
-            // Actually, enforce results view on filter change
+
+            // Enforce results view ONLY on explicit filter change
             if (filterStateChange) {
                 switchView('results');
                 filterStateChange = false;
@@ -2420,8 +2424,9 @@
                 document.getElementById('results-view').style.display === 'none' &&
                 document.getElementById('pdf-view').style.display === 'none' &&
                 document.getElementById('analytics-view').style.display === 'none' &&
-                document.getElementById('exam-view').style.display === 'none') {
-                // Initial load
+                document.getElementById('exam-view').style.display === 'none' &&
+                document.getElementById('xp-view').style.display === 'none') {
+                // Initial load fallback
                 switchView('results');
             }
         }
@@ -2737,7 +2742,7 @@
                         examPlannerSettings: examPlannerSettings,
                         lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true });
-                    document.getElementById('sync-status').innerText = "Cloud Synced";
+                    document.getElementById('sync-status').innerText = ""; // Hide text on success per user request
                 } catch (e) {
                     console.error("Cloud save failed:", e);
                     document.getElementById('sync-status').innerText = "Sync Failed ❌";
@@ -2888,7 +2893,7 @@
                     }
 
                     dataLoaded = true; // Mark data as loaded to allow saving
-                    document.getElementById('sync-status').innerText = 'Cloud Synced ✅';
+                    document.getElementById('sync-status').innerText = ''; // Hide text on success
 
 
                     // --- SPECIAL RESTORATION FOR EVAN ---
