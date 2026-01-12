@@ -5,7 +5,8 @@ import {
     save, updateTrackerItem, isDataLoaded, setDataLoaded, setIsSyncLocked
 } from './modules/state.js';
 import ViewManager from './modules/view-manager.js';
-import { initFilterSystem, renderList, toggleDropdown, filterAction, toggleOption, filterDropdownOptions } from './modules/list-manager.js';
+import { initFilterSystem, renderList, filterAction, toggleOption, filterDropdownOptions } from './modules/list-manager.js';
+import { toggleDropdown } from './modules/ui.js';
 import { initAnalytics, setSubject, setLevel, setDisplayMode } from './modules/analytics.js';
 import { calculateXPState } from './modules/xp.js';
 import { calculateExamPrepStats, renderExamPlanMain, saveExamDates } from './modules/exams.js';
