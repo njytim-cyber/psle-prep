@@ -1573,25 +1573,39 @@ function renderExamPlanMain(container) {
     const totalGoal = subjectStats.reduce((acc, s) => acc + s.total, 0);
     const overallPct = totalGoal > 0 ? Math.round((totalDone / totalGoal) * 100) : 0;
 
-    const listHtml = papers.map(p => {
-        const isDone = isCompleted(p.url);
-        const tooltipText = isDone ? `Completed on ${trackerData[p.url].date}` : `Click to open`;
+    const subjectsHtml = subjectStats.map(stat => {
+        const colors = { 'Maths': '#3b82f6', 'Science': '#10b981', 'English': '#f43f5e' };
+        const total = stat.total;
+        const done = stat.done;
+        const pct = total > 0 ? (done / total) * 100 : 0;
 
-        return `
+        const listHtml = stat.papers.map(p => {
+            const isDone = isCompleted(p.url);
+            const tooltipText = isDone ? `Completed on ${trackerData[p.url].date}` : `Click to open`;
+
+            // Shorten pills
+            let stretchPill = '';
+            if (p.year <= 2020) stretchPill = '<span class="pill red">Old</span>';
+
+            const star = isDone ? '⭐' : '';
+
+            return `
                 <div class="list-item-card" data-url="${p.url}" title="${tooltipText}" style="font-size:0.85rem; padding:8px; background:rgba(0,0,0,0.2); border-radius:6px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; pointer-events: none;">
-                        ${p.year} ${p.school} ${stretchPill} ${star}
-                    </span>
+                    <div style="flex:1; display: flex; align-items: center; gap: 8px; overflow: hidden; pointer-events: none;">
+                        <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                             ${p.year} ${p.school}
+                        </span>
+                    </div>
                     ${isDone ? '<span style="color:#10b981; font-weight:bold; pointer-events: none;">✓</span>' : '<span style="color:#fbbf24; pointer-events: none;">▶</span>'}
                 </div>
             `;
-    }).join('');
+        }).join('');
 
-    return `
+        return `
             <div class="exam-subject-card" data-subject="${stat.subject}">
                 <h2>
                     ${stat.subject}
-                    <span class="lvl-badge">Lvl 1</span>
+                    <span class="lvl-badge">Lvl ${calculateXPState().subjects[stat.subject].lvl}</span>
                 </h2>
                 <div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-top:5px;">
                     <span>Progress</span>
@@ -1606,9 +1620,9 @@ function renderExamPlanMain(container) {
                 </div>
             </div>
         `;
-}).join('');
+    }).join('');
 
-container.innerHTML = `
+    container.innerHTML = `
                 <div style="max-width:1200px; margin:0 auto;">
                     <!-- HEADER REMOVED FOR BREVITY - REMAINS UNCHANGED -->
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:30px;">
@@ -1645,20 +1659,20 @@ container.innerHTML = `
                     
                     <div class="responsive-grid">
                         ${subjectStats.map(stat => {
-    // ... inner rendering logic ...
-    // REPEATING logic for clarity, but in delegation we rely on data-url
-    const pct = stat.total > 0 ? (stat.done / stat.total) * 100 : 0;
-    const colors = { 'Maths': '#3b82f6', 'Science': '#10b981', 'English': '#f43f5e' };
+        // ... inner rendering logic ...
+        // REPEATING logic for clarity, but in delegation we rely on data-url
+        const pct = stat.total > 0 ? (stat.done / stat.total) * 100 : 0;
+        const colors = { 'Maths': '#3b82f6', 'Science': '#10b981', 'English': '#f43f5e' };
 
-    // Re-generate list HTML for the final return
-    const listHtml = stat.papers.length > 0 ? stat.papers.map((p, idx) => {
-        const isDone = isCompleted(p.url);
-        const isStretch = examPlanFilter === 'due' && idx === 1;
-        const stretchPill = isStretch ? `<span style="background:#818cf8; color:white; font-size:0.6rem; padding:1px 4px; border-radius:4px; margin-left:5px; font-weight:800;">STRETCH</span>` : '';
-        const star = (isStretch && isDone) ? `<span style="color:#fbbf24; margin-left:4px;">⭐</span>` : '';
-        const tooltipText = isDone ? `Completed on ${trackerData[p.url].date}` : `Due in ${daysLeft} days`;
+        // Re-generate list HTML for the final return
+        const listHtml = stat.papers.length > 0 ? stat.papers.map((p, idx) => {
+            const isDone = isCompleted(p.url);
+            const isStretch = examPlanFilter === 'due' && idx === 1;
+            const stretchPill = isStretch ? `<span style="background:#818cf8; color:white; font-size:0.6rem; padding:1px 4px; border-radius:4px; margin-left:5px; font-weight:800;">STRETCH</span>` : '';
+            const star = (isStretch && isDone) ? `<span style="color:#fbbf24; margin-left:4px;">⭐</span>` : '';
+            const tooltipText = isDone ? `Completed on ${trackerData[p.url].date}` : `Due in ${daysLeft} days`;
 
-        return `
+            return `
                                     <div class="list-item-card" data-url="${p.url}" title="${tooltipText}" style="font-size:0.85rem; padding:8px; background:rgba(0,0,0,0.2); border-radius:6px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
                                         <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; pointer-events: none;">
                                             ${p.year} ${p.school} ${stretchPill} ${star}
@@ -1666,9 +1680,9 @@ container.innerHTML = `
                                         ${isDone ? '<span style="color:#10b981; font-weight:bold; pointer-events: none;">✓</span>' : '<span style="color:#fbbf24; pointer-events: none;">▶</span>'}
                                     </div>
                                 `;
-    }).join('') : '<div style="font-size:0.8rem; opacity:0.5; text-align:center; padding:10px;">Nothing due! 🎉</div>';
+        }).join('') : '<div style="font-size:0.8rem; opacity:0.5; text-align:center; padding:10px;">Nothing due! 🎉</div>';
 
-    return `
+        return `
                                 <div class="exam-subject-card" data-subject="${stat.subject}">
                                     <h2>
                                         ${stat.subject}
@@ -1686,11 +1700,11 @@ container.innerHTML = `
                                     </div>
                                 </div>
                             `;
-}).join('')}
+    }).join('')}
                     </div>
                 </div>
              `;
-        }
+}
 
 // --- Event Delegation Setup ---
 // Add single listener to the exam-view container
