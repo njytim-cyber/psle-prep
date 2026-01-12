@@ -508,22 +508,58 @@
         }
 
 
+
         #paper-list {
-            flex: none;
-            /* overflow-y: auto; handled by sidebar */
-            padding: 16px;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            overflow-y: auto;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .view-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #results-view,
+        #analytics-view,
+        #exam-view {
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #analytics-view .analytics-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 30px;
+            /* Remove fixed positioning from modal style */
         }
 
         .paper-card {
             background: var(--bg-card);
             padding: 16px;
             border-radius: 12px;
-            margin-bottom: 12px;
+            margin-bottom: 0;
+            /* managed by grid gap */
             border: 1px solid transparent;
             cursor: pointer;
             transition: all 0.2s;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
         }
 
         .paper-card:hover {
@@ -1239,6 +1275,81 @@
             display: flex;
             align-items: center;
         }
+
+        /* Contribution Graph Styles */
+        .contrib-grid {
+            display: flex;
+            gap: 2px;
+            /* overflow-x: auto; */
+            /* Let it fit or scroll if needed */
+        }
+
+        .contrib-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .contrib-day {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .contrib-day.l0 {
+            background: #1e293b;
+        }
+
+        .contrib-day.l1 {
+            background: #0e4429;
+        }
+
+        /* GitHub-like dark green dim */
+        .contrib-day.l2 {
+            background: #006d32;
+        }
+
+        .contrib-day.l3 {
+            background: #26a641;
+        }
+
+        .contrib-day.l4 {
+            background: #39d353;
+        }
+
+        /* Brightest */
+
+        /* Adjust colors to match theme (Indigo/Rose/Amber) instead of Green? 
+           User image showed green, so I will stick to green or maybe theme it.
+           Theme: Primary #6366f1 (Indigo).
+           Let's use Indigo/Purple shades for consistency.
+        */
+        .contrib-day.l0 {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .contrib-day.l1 {
+            background: #312e81;
+        }
+
+        .contrib-day.l2 {
+            background: #4338ca;
+        }
+
+        .contrib-day.l3 {
+            background: #6366f1;
+        }
+
+        .contrib-day.l4 {
+            background: #a5b4fc;
+        }
+
+        /* Very bright */
+
+        .empty-future {
+            opacity: 0;
+        }
     </style>
 </head>
 
@@ -1294,84 +1405,129 @@
                             <button class="switch-btn" onclick="logoutGoogle()"
                                 style="margin:0; padding:1px 5px; font-size:0.65rem;">Logout</button>
                         </div>
-                        <div class="xp-progress-bg">
-                            <div class="xp-progress-fill" id="profile-xp-fill" style="width: 0%;"></div>
-                        </div>
-                        <div id="sync-status" style="font-size:0.6rem; opacity:0.5; margin-top:4px;">Cloud Syncing...
-                        </div>
                     </div>
+                    <div class="xp-progress-bg">
+                        <div class="xp-progress-fill" id="profile-xp-fill" style="width: 0%;"></div>
+                    </div>
+                    <div id="sync-status" style="font-size:0.6rem; opacity:0.5; margin-top:4px;"></div>
                 </div>
             </div>
+        </div>
 
-            <!-- Guest Profile Removed (Auth is Mandatory) -->
-            <div id="guest-profile" style="display:none;"></div>
+        <!-- Guest Profile Removed (Auth is Mandatory) -->
+        <div id="guest-profile" style="display:none;"></div>
 
-            <!-- Stats Grid -->
-            <div id="stats-grid">
-                <div class="stat-card-mini" onclick="openAnalytics()" title="Click for details">
-                    <span class="stat-val-big" id="completed-stat">0</span>
-                    <span class="stat-label-mini">Done</span>
-                </div>
-                <div class="stat-card-mini" onclick="openAnalytics()" title="Click for details">
-                    <span class="stat-val-big" id="percent-stat">0%</span>
-                    <span class="stat-label-mini">Mastery</span>
-                </div>
-                <div class="stat-card-mini yellow-card" onclick="showExamPlanView()" title="View Exam Plan">
-                    <span class="stat-val-big" id="exam-prep-stat">0%</span>
-                    <span class="stat-label-mini">Exam Prep</span>
-                </div>
+        <!-- Stats Grid -->
+        <div id="stats-grid">
+            <div class="stat-card-mini" onclick="openAnalytics()" title="Click for details">
+                <span class="stat-val-big" id="completed-stat">0</span>
+                <span class="stat-label-mini">Done</span>
             </div>
-
-
+            <div class="stat-card-mini" onclick="openAnalytics()" title="Click for details">
+                <span class="stat-val-big" id="percent-stat">0%</span>
+                <span class="stat-label-mini">Mastery</span>
+            </div>
+            <div class="stat-card-mini yellow-card" onclick="showExamPlanView()" title="View Exam Plan">
+                <span class="stat-val-big" id="exam-prep-stat">0%</span>
+                <span class="stat-label-mini">Exam Prep</span>
+            </div>
         </div>
 
-        <div id="filters">
-            <div id="filter-stats-display">Found 0 papers</div>
-            <div class="span-1" id="filter-level"></div>
-            <div class="span-1" id="filter-term"></div>
-            <div class="span-1" id="filter-year"></div>
-            <div class="span-1" id="filter-subject"></div>
-            <div class="span-1" id="filter-status"></div>
-            <div class="span-1" id="filter-notes"></div>
-            <div class="span-3" id="filter-school"></div>
+        <!-- Contribution Graph (Sidebar) -->
+        <div style="margin-top: 20px;">
+            <div style="font-size:0.8rem; opacity:0.7; margin-bottom:5px;">Activity (Last 3 Months)</div>
+            <div id="sidebar-contrib"></div>
         </div>
 
-        <div id="paper-list">
-            <!-- Cards go here -->
-        </div>
+
+    </div>
+
+    <div id="filters">
+        <div id="filter-stats-display">Found 0 papers</div>
+        <div class="span-1" id="filter-level"></div>
+        <div class="span-1" id="filter-term"></div>
+        <div class="span-1" id="filter-year"></div>
+        <div class="span-1" id="filter-subject"></div>
+        <div class="span-1" id="filter-status"></div>
+        <div class="span-1" id="filter-notes"></div>
+        <div class="span-3" id="filter-school"></div>
+    </div>
+
+    <!-- Paper List Moved to Main View -->
     </div>
 
     <div id="main-view">
-        <div id="top-toolbar" style="display:none;">
-            <div id="paper-info">
-                <h2 id="current-title">Paper Title</h2>
-                <p id="current-details">Details</p>
-            </div>
-            <div>
-                <button id="mark-btn" class="btn-action btn-mark" onclick="handleMainMark()">⭐ Mark Complete</button>
-                <a id="open-btn" href="#" target="_blank" class="btn-action btn-open">Open PDF ↗</a>
+
+        <!-- View 1: Results -->
+        <div id="results-view" class="view-pane">
+            <div id="paper-list">
+                <!-- Cards go here -->
             </div>
         </div>
 
-        <div id="empty-screen">
-            <div style="font-size: 80px; margin-bottom: 20px;">🦁</div>
-            <h1>Ready for PSLE Success?</h1>
-            <p style="font-size: 1.2rem; max-width: 400px; line-height: 1.6;">
-                Select a P4, P5, or P6 paper to start your learning adventure!
-            </p>
-        </div>
-
-        <iframe id="pdf-viewer" style="display:none;"></iframe>
-
-        <div id="notes-pane" style="display:none;">
-            <div id="notes-header" onclick="toggleNotes()">
-                <span id="notes-header-label">📝 Field Notes</span>
-                <span class="toggle-icon">▼</span>
+        <!-- View 2: PDF Viewer -->
+        <div id="pdf-view" class="view-pane" style="display:none;">
+            <div id="top-toolbar">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <button class="btn-action" style="background:#334155; color:white; padding:8px 12px;"
+                        onclick="switchView('results')">◀ Back</button>
+                    <div id="paper-info">
+                        <h2 id="current-title">Paper Title</h2>
+                        <p id="current-details">Details</p>
+                    </div>
+                </div>
+                <div>
+                    <button id="mark-btn" class="btn-action btn-mark" onclick="handleMainMark()">⭐ Mark
+                        Complete</button>
+                    <a id="open-btn" href="#" target="_blank" class="btn-action btn-open">Open PDF ↗</a>
+                </div>
             </div>
-            <textarea id="notes-input"
-                placeholder="// Write your observations here... (e.g. 'Tricky ratio question in Q5')"
-                oninput="saveNotes()"></textarea>
+
+            <iframe id="pdf-viewer"></iframe>
+
+            <div id="notes-pane">
+                <div id="notes-header" onclick="toggleNotes()">
+                    <span id="notes-header-label">📝 Field Notes</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <textarea id="notes-input"
+                    placeholder="// Write your observations here... (e.g. 'Tricky ratio question in Q5')"
+                    oninput="saveNotes()"></textarea>
+            </div>
         </div>
+
+        <!-- View 3: Analytics -->
+        <div id="analytics-view" class="view-pane" style="display:none;">
+            <div class="analytics-container">
+                <div class="analytics-header">
+                    <h2>📊 Analytics Dashboard</h2>
+                    <button class="analytics-close" onclick="switchView('results')">✕</button>
+                </div>
+                <div class="analytics-controls">
+                    <div class="toggle-group" id="subject-toggle"></div>
+                    <div class="toggle-group" id="level-toggle"></div>
+                    <div class="toggle-group">
+                        <button class="toggle-btn active" onclick="setDisplayMode('percent')">%</button>
+                        <button class="toggle-btn" onclick="setDisplayMode('count')">Count</button>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <div style="font-size:1.1rem; font-weight:600; margin-bottom:10px; color:#fbbf24;">Activity (Last 12
+                        Months)</div>
+                    <div id="analytics-contrib"></div>
+                </div>
+
+                <div class="summary-stats" id="summary-stats"></div>
+                <div class="analytics-grid" id="analytics-grid"></div>
+            </div>
+        </div>
+
+        <!-- View 4: Exam Plan -->
+        <div id="exam-view" class="view-pane" style="display:none;">
+            <!-- Exam Content Here -->
+        </div>
+
     </div>
 
     <!-- Modal -->
@@ -1396,24 +1552,8 @@
     </div>
 
     <!-- Analytics Modal -->
-    <div id="analytics-modal">
-        <div class="analytics-container">
-            <div class="analytics-header">
-                <h2>📊 Analytics Dashboard</h2>
-                <button class="analytics-close" onclick="closeAnalytics()">✕</button>
-            </div>
-            <div class="analytics-controls">
-                <div class="toggle-group" id="subject-toggle"></div>
-                <div class="toggle-group" id="level-toggle"></div>
-                <div class="toggle-group">
-                    <button class="toggle-btn active" onclick="setDisplayMode('percent')">%</button>
-                    <button class="toggle-btn" onclick="setDisplayMode('count')">Count</button>
-                </div>
-            </div>
-            <div class="summary-stats" id="summary-stats"></div>
-            <div class="analytics-grid" id="analytics-grid"></div>
-        </div>
-    </div>
+    <!-- Analytics Modal REMOVED (Moved to Main View) -->
+    <!-- Kept in memory, removed from DOM -->
 
     <script>
         // --- Firebase Configuration (REPLACE WITH YOUR KEYS) ---
@@ -1457,6 +1597,7 @@
         ];
         let examPlanFilter = 'due'; // 'all' or 'due'
         let currentUrl = null;
+        let filterStateChange = false; // Flag to track explicit user filter interactions
 
         // Multi-select state
         let filterState = {
@@ -1479,7 +1620,7 @@
         const modal = document.getElementById('modal');
         const dateInput = document.getElementById('completion-date');
 
-        // --- Init ---
+        // --- init ---
         function init() {
             // Close dropdowns on outside click
             document.addEventListener('click', (e) => {
@@ -1494,14 +1635,28 @@
                     allPapers = papers;
                     clearInterval(waitForData);
                     renderApp();
-                } else if (allPapers.length > 0) { // If loaded from local init
+                } else if (allPapers.length > 0) {
                     clearInterval(waitForData);
                     renderApp();
                 }
             }, 500);
 
-            // Fallback render if data is truly empty or taking too long
             setTimeout(() => { if (listEl.children.length === 0) renderApp(); }, 2000);
+        }
+
+        function switchView(viewName) {
+            // Hide all views
+            ['results-view', 'pdf-view', 'analytics-view', 'exam-view'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+
+            // Show target
+            const target = document.getElementById(viewName + '-view');
+            if (target) {
+                target.style.display = (viewName === 'pdf-view') ? 'flex' : 'block';
+                // pdf-view is flex column for toolbar/iframe/notes
+                // others are block with overflow
+            }
         }
 
         // --- XP Logic ---
@@ -1618,6 +1773,7 @@
         }
 
         function toggleOption(key, value) {
+            filterStateChange = true;
             const idx = filterState[key].indexOf(value);
             if (idx === -1) {
                 filterState[key].push(value);
@@ -1630,6 +1786,7 @@
         }
 
         function filterAction(key, action) {
+            filterStateChange = true;
             let allVals = [];
             if (key === 'subject') allVals = [...new Set(allPapers.map(p => p.subject || "Maths"))];
             if (key === 'level') allVals = [...new Set(allPapers.map(p => p.level || "P4"))];
@@ -1731,7 +1888,8 @@
 
             if (filtered.length === 0) {
                 document.getElementById('filter-stats-display').innerText = `No papers found`;
-                listEl.innerHTML = '<div style="text-align:center; padding: 20px; opacity:0.5">No papers found! 🕵️</div>';
+                listEl.innerHTML = '<div style="text-align:center; padding: 50px; opacity:0.5; font-size: 1.2rem;">No papers found for these filters! 🕵️</div>';
+                switchView('results');
                 return;
             }
 
@@ -1767,6 +1925,26 @@
 
                 listEl.appendChild(card);
             });
+
+            // Auto-switch to results when rendering list (implies filter change or init)
+            // Unless we are explicitly in another mode? 
+            // Valid assumption: if renderList is called, we probably want to see the results.
+            if (document.getElementById('results-view').style.display === 'none' &&
+                document.getElementById('pdf-view').style.display === 'none') {
+                switchView('results');
+            }
+            // Actually, enforce results view on filter change
+            if (filterStateChange) {
+                switchView('results');
+                filterStateChange = false;
+            } else if (document.getElementById('main-view').style.display !== 'none' &&
+                document.getElementById('results-view').style.display === 'none' &&
+                document.getElementById('pdf-view').style.display === 'none' &&
+                document.getElementById('analytics-view').style.display === 'none' &&
+                document.getElementById('exam-view').style.display === 'none') {
+                // Initial load
+                switchView('results');
+            }
         }
 
         function isCompleted(url) {
@@ -1849,16 +2027,25 @@
             if (!paper) return;
             currentUrl = paper.url;
 
-            // Hide Exam Plan if visible
-            const examView = document.getElementById('exam-view-container');
-            if (examView) examView.style.display = 'none';
+            // Switch to PDF View
+            switchView('pdf');
+
+            // Hide Exam Plan if visible (handled by switchView)
+            // const examView = document.getElementById('exam-view-container');
+            // if (examView) examView.style.display = 'none';
 
             renderList(); // Update active state
 
-            emptyEl.style.display = 'none';
-            toolbarEl.style.display = 'flex';
-            viewerEl.style.display = 'block';
-            notesPane.style.display = 'flex';
+            // emptyEl.style.display = 'none'; // Removed
+            // toolbarEl.style.display = 'flex';
+            // viewerEl.style.display = 'block';
+            // notesPane.style.display = 'flex';
+            // Handled by switchView('pdf') which makes #pdf-view flex
+
+            // Ensure components inside pdf-view are visible? They are static now.
+
+            document.getElementById('notes-pane').classList.remove('collapsed'); // Reset notes pane state?
+            document.getElementById('notes-pane').style.height = '120px'; // Default open
 
             document.getElementById('current-title').innerText = paper.title;
             document.getElementById('current-details').innerText = `${paper.subject || 'Maths'} | ${paper.level || 'P4'} | ${paper.year} | ${paper.term} | ${paper.school}`;
@@ -2029,13 +2216,12 @@
         const TERM_ORDER = ['CA1', 'CA2', 'WA1', 'WA2', 'WA3', 'SA1', 'SA2', 'Prelim'];
 
         function openAnalytics() {
-            const modal = document.getElementById('analytics-modal');
-            modal.classList.add('show');
+            switchView('analytics');
             initAnalytics();
         }
 
         function closeAnalytics() {
-            document.getElementById('analytics-modal').classList.remove('show');
+            switchView('results');
         }
 
         function initAnalytics() {
@@ -2224,11 +2410,12 @@
                     } else {
                         updateAvatarDisplay(userAvatar);
                     }
-                } catch (e) {
-                    console.error(e);
-                    document.getElementById('sync-status').innerText = 'Sync Off-line';
                 }
+                } catch (e) {
+                console.error(e);
+                // document.getElementById('sync-status').innerText = 'Sync Off-line'; // User requested removal
             }
+        }
         }
 
         // --- Avatar & User Logic ---
@@ -2381,8 +2568,8 @@
         }
 
         function applyTermFilter(term) {
-            // Close analytics modal
-            closeAnalytics();
+            // Close analytics
+            closeAnalytics(); // switches to results
 
             // Clear all filters first
             filterState.subject = [];
@@ -2423,33 +2610,17 @@
         // --- Exam Planner (Mar 2, 2026) ---
         // --- Exam Plan View (Main Pane) ---
         function showExamPlanView() {
-            const mainView = document.getElementById('main-view');
-            // Hide other views if necessary (iframe or empty screen)
-            document.getElementById('empty-screen').style.display = 'none';
-            document.getElementById('pdf-viewer').style.display = 'none';
-            document.getElementById('top-toolbar').style.display = 'none';
-            document.getElementById('notes-pane').style.display = 'none';
-
-            // Check if exam view exists
-            let examView = document.getElementById('exam-view-container');
-            if (!examView) {
-                examView = document.createElement('div');
-                examView.id = 'exam-view-container';
-                examView.style.padding = '40px';
-                examView.style.overflowY = 'auto';
-                examView.style.flex = '1';
-                examView.style.color = 'white';
-                mainView.appendChild(examView);
+            switchView('exam');
+            const examView = document.getElementById('exam-view');
+            // Check if content rendered
+            if (examView.innerHTML.trim() === '' || examView.innerHTML.includes('Exam Plan')) {
+                renderExamPlanMain(examView);
             }
-            examView.style.display = 'block';
-
-            // Render Plan Data
-            renderExamPlanMain(examView);
         }
 
         function setExamPlanFilter(filter) {
             examPlanFilter = filter;
-            const container = document.getElementById('exam-view-container');
+            const container = document.getElementById('exam-view');
             if (container) renderExamPlanMain(container);
         }
 
@@ -2551,6 +2722,88 @@
             // NO-OP as we moved to Main View
         }
 
+
+        // --- Contribution Graph Logic ---
+        function renderContributionGraph(containerId, monthsBack) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            container.innerHTML = '';
+            container.className = 'contrib-grid';
+
+            const today = new Date();
+            const startDate = new Date();
+            startDate.setMonth(today.getMonth() - monthsBack);
+            // Adjust to start on a Sunday (or Monday? GitHub is Sun). Let's do Monday (1) or Sunday (0).
+            // Let's align to Monday to match standard work weeks often used in schools.
+            const dayOfWeek = startDate.getDay(); // 0 is Sunday
+            const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+            startDate.setDate(startDate.getDate() - daysToSubtract);
+
+            // Generate map of date -> count
+            const dateCount = {};
+            for (const url in trackerData) {
+                const date = trackerData[url].date;
+                if (date) {
+                    if (!dateCount[date]) dateCount[date] = 0;
+                    dateCount[date]++;
+                }
+            }
+
+            // Create grid
+            // We draw column by column (Weeks)
+            const oneDay = 24 * 60 * 60 * 1000;
+            let current = new Date(startDate);
+
+            // Loop until we pass today
+            while (current <= today) {
+                const weekCol = document.createElement('div');
+                weekCol.className = 'contrib-column';
+
+                for (let i = 0; i < 7; i++) {
+                    if (current > today) {
+                        // Fill remaining slots in the last week with empty if needed, or just stop
+                        // But to keep grid alignment we might want empty squares
+                        const empty = document.createElement('div');
+                        empty.className = 'contrib-day empty-future';
+                        weekCol.appendChild(empty);
+                        current.setDate(current.getDate() + 1);
+                        continue;
+                    }
+
+                    const dateStr = current.toISOString().split('T')[0];
+                    const count = dateCount[dateStr] || 0;
+
+                    const dayEl = document.createElement('div');
+                    dayEl.className = 'contrib-day';
+                    dayEl.dataset.date = dateStr;
+                    dayEl.dataset.count = count;
+                    dayEl.title = `${dateStr}: ${count} papers`;
+
+                    // Color scale
+                    if (count === 0) dayEl.classList.add('l0');
+                    else if (count === 1) dayEl.classList.add('l1');
+                    else if (count === 2) dayEl.classList.add('l2');
+                    else if (count === 3) dayEl.classList.add('l3');
+                    else dayEl.classList.add('l4');
+
+                    weekCol.appendChild(dayEl);
+                    current.setDate(current.getDate() + 1);
+                }
+                container.appendChild(weekCol);
+            }
+        }
+
+        // --- Init & Updates ---
+        // Hook into existing functions
+        const originalUpdateStats = updateStats;
+        updateStats = function () {
+            originalUpdateStats();
+            renderContributionGraph('sidebar-contrib', 2); // Current + 2 months back = 3 months range usually implied
+            renderContributionGraph('analytics-contrib', 11); // 12 months rolling
+        };
+
+        // Call init() 
         init();
     </script>
 </body>
