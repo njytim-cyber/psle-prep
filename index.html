@@ -535,10 +535,22 @@
             position: relative;
         }
 
+        #main-view {
+            flex: 1;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: #1e1b4b;
+            /* Match bg-dark */
+        }
+
         #results-view,
         #analytics-view,
         #exam-view {
             overflow-y: auto;
+            flex: 1;
+            /* Allow to take full height of main-view */
             padding: 20px;
             box-sizing: border-box;
         }
@@ -1567,6 +1579,9 @@
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
                             <span id="profile-xp-text" class="xp-text-mini">0 / 500 XP</span>
                         </div>
+                        <div
+                            style="font-size: 0.8rem; opacity: 0.7; font-weight: 600; color: #fbbf24; margin-top: 2px;">
+                            Rank: Master Aspirant</div>
                     </div>
                     <div class="xp-progress-bg">
                         <div class="xp-progress-fill" id="profile-xp-fill" style="width: 0%;"></div>
@@ -3102,47 +3117,23 @@
                                 <h1 style="margin:0; font-size:2.5rem; color:#fbbf24;">📅 Exam Plan</h1>
                             </div>
                             <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
-                                <p style="opacity:0.7; font-size:1.1rem; margin:0;">Target: ${level} ${examInfo.milestone} (${targetDate.toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' })})</p>
-                                <button class="btn-action" onclick="openExamDatesModal()" style="background:rgba(251,191,36,0.1); border:1px solid #fbbf24; color:#fbbf24; padding:2px 8px; font-size:0.7rem; border-radius:6px; cursor:pointer;">Update Dates</button>
+                                <p style="opacity:0.7; font-size:1.1rem; margin:0;">${level} ${examInfo.milestone} (${targetDate.toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' })})</p>
+                                <button class="btn-action" onclick="openExamDatesModal()" style="background:rgba(251,191,36,0.1); border:1px solid #fbbf24; color:#fbbf24; padding:2px 8px; font-size:0.7rem; border-radius:6px; cursor:pointer;">Dates</button>
                             </div>
                         </div>
-                        <div style="display:flex; align-items:flex-end; gap:20px;">
+                        <div style="display:flex; align-items:flex-end; gap:15px;">
                             <!-- Tracking Goal Toggle -->
-                            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
-                                <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; opacity:0.6; font-weight:700;">Tracking Goal</div>
-                                <div class="toggle-group" style="height:64px; border-radius:16px; background:#1e293b; border:1px solid #334155;">
-                                    <button class="toggle-btn ${!selectedExamGoal ? 'active' : ''}" style="padding:0 15px; font-size:0.9rem;" onclick="setExamGoal(null)">Auto</button>
-                                    <button class="toggle-btn ${selectedExamGoal === 'WA1' ? 'active' : ''}" style="padding:0 15px; font-size:0.9rem;" onclick="setExamGoal('WA1')">WA1</button>
-                                    <button class="toggle-btn ${selectedExamGoal === 'WA2' ? 'active' : ''}" style="padding:0 15px; font-size:0.9rem;" onclick="setExamGoal('WA2')">WA2</button>
-                                    <button class="toggle-btn ${selectedExamGoal === 'EYE' ? 'active' : ''}" style="padding:0 15px; font-size:0.9rem;" onclick="setExamGoal('EYE')">EYE</button>
-                                </div>
+                            <div class="toggle-group" style="height:48px; border-radius:12px; background:#1e293b; border:1px solid #334155;">
+                                <button class="toggle-btn ${!selectedExamGoal ? 'active' : ''}" style="padding:0 15px; font-size:0.85rem;" onclick="setExamGoal(null)">Auto</button>
+                                <button class="toggle-btn ${selectedExamGoal === 'WA1' ? 'active' : ''}" style="padding:0 15px; font-size:0.85rem;" onclick="setExamGoal('WA1')">WA1</button>
+                                <button class="toggle-btn ${selectedExamGoal === 'WA2' ? 'active' : ''}" style="padding:0 15px; font-size:0.85rem;" onclick="setExamGoal('WA2')">WA2</button>
+                                <button class="toggle-btn ${selectedExamGoal === 'EYE' ? 'active' : ''}" style="padding:0 15px; font-size:0.85rem;" onclick="setExamGoal('EYE')">EYE</button>
                             </div>
 
                             <!-- All/Due Toggle -->
-                            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
-                                <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; opacity:0.6; font-weight:700;">Filter</div>
-                                <div class="toggle-group" style="height:64px; border-radius:16px; background:#1e293b; border:1px solid #334155;">
-                                    <button class="toggle-btn ${examPlanFilter === 'all' ? 'active' : ''}" style="padding:0 20px; font-size:0.9rem;" onclick="setExamPlanFilter('all')">All</button>
-                                    <button class="toggle-btn ${examPlanFilter === 'due' ? 'active' : ''}" style="padding:0 20px; font-size:0.9rem;" onclick="setExamPlanFilter('due')">Due</button>
-                                </div>
-                            </div>
-
-                            <!-- Done Metric -->
-                            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
-                                <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; opacity:0.6; font-weight:700;">Completion</div>
-                                <div style="background:#334155; height:64px; min-width:100px; border-radius:16px; display:flex; flex-direction:column; justify-content:center; align-items:center; border:1px solid #475569;">
-                                    <div style="font-size:1.6rem; font-weight:800; color:#fbbf24; line-height:1;">${overallPct}%</div>
-                                    <div style="font-size:0.6rem; text-transform:uppercase; letter-spacing:1px; margin-top:4px;">Done</div>
-                                </div>
-                            </div>
-
-                            <!-- Days Left Metric -->
-                            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
-                                <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; opacity:0.6; font-weight:700;">Countdown</div>
-                                <div style="background:#334155; height:64px; min-width:100px; border-radius:16px; display:flex; flex-direction:column; justify-content:center; align-items:center; border:1px solid #475569;">
-                                    <div style="font-size:1.6rem; font-weight:800; color:#34d399; line-height:1;">${daysLeft}</div>
-                                    <div style="font-size:0.6rem; text-transform:uppercase; letter-spacing:1px; margin-top:4px;">Days Left</div>
-                                </div>
+                            <div class="toggle-group" style="height:48px; border-radius:12px; background:#1e293b; border:1px solid #334155;">
+                                <button class="toggle-btn ${examPlanFilter === 'all' ? 'active' : ''}" style="padding:0 20px; font-size:0.85rem;" onclick="setExamPlanFilter('all')">All</button>
+                                <button class="toggle-btn ${examPlanFilter === 'due' ? 'active' : ''}" style="padding:0 20px; font-size:0.85rem;" onclick="setExamPlanFilter('due')">Due</button>
                             </div>
                         </div>
                     </div>
@@ -3304,8 +3295,22 @@
 
             // Data Logic
             const today = new Date();
-            const startDate = new Date();
-            startDate.setMonth(today.getMonth() - monthsBack);
+            const year2026 = 2026;
+            const startMonth2026 = 0; // Jan
+            const endMonthWindow = 7; // Aug (0-indexed)
+
+            let startDate;
+
+            // Logic: start from Jan 2026. 
+            // If current date > Aug 2026, then it's a rolling 8-month window.
+            if (today.getFullYear() > year2026 || (today.getFullYear() === year2026 && today.getMonth() > endMonthWindow)) {
+                // Rolling window (last 8 months)
+                startDate = new Date(today);
+                startDate.setMonth(today.getMonth() - 7); // Show 8 months total (current + 7 back)
+            } else {
+                // Fixed start from Jan 2026
+                startDate = new Date(year2026, startMonth2026, 1);
+            }
 
             // Align start to Sunday (0)
             const dayOfWeek = startDate.getDay();
