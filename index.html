@@ -547,7 +547,8 @@
 
         #results-view,
         #analytics-view,
-        #exam-view {
+        #exam-view,
+        #xp-view {
             overflow-y: auto;
             flex: 1;
             /* Allow to take full height of main-view */
@@ -566,7 +567,7 @@
 
         .paper-card {
             background: var(--bg-card);
-            padding: 20px;
+            padding: 12px 20px;
             border-radius: 12px;
             border: 1px solid transparent;
             cursor: pointer;
@@ -574,10 +575,10 @@
             position: relative;
             overflow: hidden;
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-            height: auto;
-            min-height: 120px;
+            flex-direction: row;
+            align-items: center;
+            gap: 15px;
+            min-height: 60px;
         }
 
         .paper-card:hover {
@@ -596,14 +597,12 @@
             border-left: 5px solid var(--success);
         }
 
-        .paper-card.completed::after {
-            content: '★';
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            font-size: 40px;
-            color: rgba(16, 185, 129, 0.1);
-            transform: rotate(15deg);
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        font-size: 40px;
+        color: rgba(16, 185, 129, 0.1);
+        transform: rotate(15deg);
         }
 
         .paper-title {
@@ -1340,8 +1339,25 @@
             box-sizing: border-box;
         }
 
-        .plan-item:hover {
-            background: #334155;
+        .toggle-group {
+            display: flex;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 48px;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            padding: 0 15px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+            font-weight: 500;
         }
 
         .plan-subj {
@@ -1400,15 +1416,15 @@
         .contrib-wrapper {
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
-            /* Align legend to right or grid to fit */
+            align-items: flex-start;
+            padding: 0 12px;
         }
 
         .contrib-container {
             display: flex;
             gap: 5px;
             overflow-x: auto;
-            /* Support 9 months rolling */
+            /* Support fixed Jan-Aug 2026 */
             padding-bottom: 8px;
             padding-top: 35px;
             /* Prevent tooltip clipping on top row */
@@ -1771,6 +1787,18 @@
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <label>EYE Date:</label>
                     <input type="date" id="modal-date-eye" class="date-input" style="width:180px;">
+                </div>
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <label
+                    style="display:block; margin-bottom:8px; font-weight:600; font-size: 0.85rem; color: #94a3b8; text-transform: uppercase;">Tracking
+                    Goal:</label>
+                <div class="toggle-group" id="modal-goal-toggle" style="height:48px; border-radius:12px;">
+                    <button class="toggle-btn" onclick="setExamGoal(null)">Auto</button>
+                    <button class="toggle-btn" onclick="setExamGoal('WA1')">WA1</button>
+                    <button class="toggle-btn" onclick="setExamGoal('WA2')">WA2</button>
+                    <button class="toggle-btn" onclick="setExamGoal('EYE')">EYE</button>
                 </div>
             </div>
 
@@ -2193,14 +2221,7 @@
                     <div class="check-btn" onclick="handleCheck(event, '${p.url}')">
                         <span class="checked-icon">✓</span>
                     </div>
-                    <div class="paper-title">${p.title} ${notesIndicator}</div>
-                    <div class="badges">
-                        <span class="badge bg-subject">${p.subject || "Maths"}</span>
-                        <span class="badge bg-level">${p.level || "P4"}</span>
-                        <span class="badge bg-year">${p.year}</span>
-                        <span class="badge bg-term">${p.term}</span>
-                        <span class="badge bg-school">${p.school}</span>
-                    </div>
+                    <div class="paper-title" style="flex:1; font-size:1.1rem; font-weight:700;">${p.title} ${notesIndicator}</div>
                 `;
 
                 card.onclick = (e) => {
@@ -3038,6 +3059,13 @@
             document.getElementById('modal-date-wa1').value = settings.WA1;
             document.getElementById('modal-date-wa2').value = settings.WA2;
             document.getElementById('modal-date-eye').value = settings.EYE;
+
+            // Goal toggle in modal
+            const btns = document.querySelectorAll('#modal-goal-toggle .toggle-btn');
+            btns.forEach(b => {
+                const goal = b.innerText === 'Auto' ? null : b.innerText;
+                b.classList.toggle('active', selectedExamGoal === goal);
+            });
         }
 
         function closeExamDatesModal() {
@@ -3111,29 +3139,31 @@
 
             container.innerHTML = `
                 <div style="max-width:1200px; margin:0 auto;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:30px;">
                         <div>
                             <div style="display:flex; align-items:center; gap:15px;">
                                 <h1 style="margin:0; font-size:2.5rem; color:#fbbf24;">📅 Exam Plan</h1>
                             </div>
                             <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
                                 <p style="opacity:0.7; font-size:1.1rem; margin:0;">${level} ${examInfo.milestone} (${targetDate.toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' })})</p>
-                                <button class="btn-action" onclick="openExamDatesModal()" style="background:rgba(251,191,36,0.1); border:1px solid #fbbf24; color:#fbbf24; padding:2px 8px; font-size:0.7rem; border-radius:6px; cursor:pointer;">Dates</button>
+                                <button class="btn-action" onclick="openExamDatesModal()" style="background:rgba(251,191,36,0.1); border:1px solid #fbbf24; color:#fbbf24; padding:2px 8px; font-size:0.7rem; border-radius:6px; cursor:pointer;">Dates/Goals</button>
                             </div>
                         </div>
-                        <div style="display:flex; align-items:flex-end; gap:15px;">
-                            <!-- Tracking Goal Toggle -->
-                            <div class="toggle-group" style="height:48px; border-radius:12px; background:#1e293b; border:1px solid #334155;">
-                                <button class="toggle-btn ${!selectedExamGoal ? 'active' : ''}" style="padding:0 15px; font-size:0.85rem;" onclick="setExamGoal(null)">Auto</button>
-                                <button class="toggle-btn ${selectedExamGoal === 'WA1' ? 'active' : ''}" style="padding:0 15px; font-size:0.85rem;" onclick="setExamGoal('WA1')">WA1</button>
-                                <button class="toggle-btn ${selectedExamGoal === 'WA2' ? 'active' : ''}" style="padding:0 15px; font-size:0.85rem;" onclick="setExamGoal('WA2')">WA2</button>
-                                <button class="toggle-btn ${selectedExamGoal === 'EYE' ? 'active' : ''}" style="padding:0 15px; font-size:0.85rem;" onclick="setExamGoal('EYE')">EYE</button>
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <div style="background:rgba(251,191,36,0.1); border:1px solid #fbbf24; padding:10px 15px; border-radius:12px; text-align:center; min-width:100px;">
+                                    <div style="font-size:1.5rem; font-weight:800; color:#fbbf24;">${daysLeft}</div>
+                                    <div style="font-size:0.6rem; text-transform:uppercase; color:#94a3b8; font-weight:700;">Days Left</div>
+                                </div>
+                                <div style="background:rgba(16,185,129,0.1); border:1px solid #10b981; padding:10px 15px; border-radius:12px; text-align:center; min-width:100px;">
+                                    <div style="font-size:1.5rem; font-weight:800; color:#10b981;">${overallPct}%</div>
+                                    <div style="font-size:0.6rem; text-transform:uppercase; color:#94a3b8; font-weight:700;">Completion</div>
+                                </div>
                             </div>
-
                             <!-- All/Due Toggle -->
-                            <div class="toggle-group" style="height:48px; border-radius:12px; background:#1e293b; border:1px solid #334155;">
-                                <button class="toggle-btn ${examPlanFilter === 'all' ? 'active' : ''}" style="padding:0 20px; font-size:0.85rem;" onclick="setExamPlanFilter('all')">All</button>
-                                <button class="toggle-btn ${examPlanFilter === 'due' ? 'active' : ''}" style="padding:0 20px; font-size:0.85rem;" onclick="setExamPlanFilter('due')">Due</button>
+                            <div class="toggle-group" style="background:#1e293b; border:1px solid #334155;">
+                                <button class="toggle-btn ${examPlanFilter === 'all' ? 'active' : ''}" style="padding:0 20px;" onclick="setExamPlanFilter('all')">All</button>
+                                <button class="toggle-btn ${examPlanFilter === 'due' ? 'active' : ''}" style="padding:0 20px;" onclick="setExamPlanFilter('due')">Due</button>
                             </div>
                         </div>
                     </div>
@@ -3301,16 +3331,18 @@
 
             let startDate;
 
-            // Logic: start from Jan 2026. 
-            // If current date > Aug 2026, then it's a rolling 8-month window.
+            // Fixed Logic: Strictly display Jan-Aug 2026 (8 months)
+            // Rolling starts ONLY after August 2026.
             if (today.getFullYear() > year2026 || (today.getFullYear() === year2026 && today.getMonth() > endMonthWindow)) {
-                // Rolling window (last 8 months)
                 startDate = new Date(today);
-                startDate.setMonth(today.getMonth() - 7); // Show 8 months total (current + 7 back)
+                startDate.setMonth(today.getMonth() - 7);
             } else {
-                // Fixed start from Jan 2026
                 startDate = new Date(year2026, startMonth2026, 1);
             }
+
+            const endDate = new Date(startDate);
+            endDate.setMonth(startDate.getMonth() + 8); // Always show 8 months from start
+            endDate.setDate(0); // Last day of that 8th month
 
             // Align start to Sunday (0)
             const dayOfWeek = startDate.getDay();
@@ -3331,7 +3363,7 @@
             let current = new Date(startDate);
             let currentMonth = -1;
 
-            while (current <= today) {
+            while (current <= endDate) {
                 // Month Labels Logic
                 // If it's the first week of a new month, add label
                 // Position approximated by flex gap
