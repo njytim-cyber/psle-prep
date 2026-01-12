@@ -227,6 +227,7 @@ export function renderList() {
     listEl.innerHTML = '';
 
     const filtered = Indexer.filter(criteria);
+    console.log("RenderList: Filtered papers count:", filtered.length);
     const trackerData = getTrackerData();
     const isCompleted = (url) => trackerData[url] && trackerData[url].date;
 

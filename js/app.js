@@ -41,7 +41,8 @@ async function init() {
 
     // Load papers data dynamically
     try {
-        const module = await import('../js/data/papers.js');
+        const module = await import('./data/papers.js');
+        console.log("App: Loaded papers module", module.papers.length);
         setPapers(module.papers);
         renderApp();
     } catch (e) {
