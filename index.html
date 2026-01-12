@@ -66,6 +66,8 @@
             backdrop-filter: blur(10px);
             overflow-y: auto;
             flex-shrink: 0;
+            padding-left: 15px;
+            /* Added left padding */
         }
 
         #header {
@@ -1287,6 +1289,28 @@
         .contrib-container {
             display: flex;
             gap: 5px;
+            overflow-x: auto;
+            /* Support 12 months */
+            padding-bottom: 8px;
+        }
+
+        /* Custom Scrollbar for Graph */
+        .contrib-container::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .contrib-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .contrib-container::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 10px;
+        }
+
+        .contrib-container::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
         }
 
         .contrib-days-label {
@@ -1423,9 +1447,9 @@
 
             <div id="profile-container" style="display:none; flex-direction:column; gap:10px; margin-bottom: 20px;">
                 <div class="profile-row">
-                    <img id="user-photo" src="" onclick="openAvatarModal()"
-                        style="width:55px; height:55px; border-radius:50%; border:2px solid #fbbf24; cursor:pointer;"
-                        title="Change Avatar">
+                    <div id="user-photo" class="avatar-sprite" onclick="openAvatarModal()"
+                        style="width:55px; height:55px; border-radius:50%; border:2px solid #fbbf24; cursor:pointer; background-image:url('avatars.png'); background-size:800% 800%;"
+                        title="Change Avatar"></div>
                     <div class="profile-info">
                         <div class="name-lvl-row">
                             <span id="user-name"
@@ -1434,8 +1458,6 @@
                         </div>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
                             <span id="profile-xp-text" class="xp-text-mini">0 / 500 XP</span>
-                            <button class="switch-btn" onclick="logoutGoogle()"
-                                style="margin:0; padding:1px 5px; font-size:0.65rem;">Logout</button>
                         </div>
                     </div>
                     <div class="xp-progress-bg">
@@ -1465,15 +1487,8 @@
             </div>
         </div>
 
-        <!-- Contribution Graph (Sidebar) -->
-        <div style="margin-top: 20px;">
-            <div style="font-size:0.8rem; opacity:0.7; margin-bottom:5px;">Activity (Last 3 Months)</div>
-            <div id="sidebar-contrib"></div>
-        </div>
-
         <!-- Filters (Moved inside sidebar) -->
         <div id="filters">
-            <div id="filter-stats-display">Found 0 papers</div>
             <div class="span-1" id="filter-level"></div>
             <div class="span-1" id="filter-term"></div>
             <div class="span-1" id="filter-year"></div>
@@ -1482,6 +1497,18 @@
             <div class="span-1" id="filter-notes"></div>
             <div class="span-3" id="filter-school"></div>
         </div>
+
+        <!-- Contribution Graph (Moved below filters) -->
+        <div style="margin-top: 30px;">
+            <div id="sidebar-contrib"></div>
+        </div>
+
+        <!-- Semver Display -->
+        <div
+            style="margin-top: auto; padding: 20px; font-size: 0.75rem; color: #94a3b8; opacity: 0.6; text-align: center;">
+            Version 1.1.1
+        </div>
+
     </div>
 
 
@@ -1492,6 +1519,9 @@
 
         <!-- View 1: Results -->
         <div id="results-view" class="view-pane">
+            <div id="filter-stats-display"
+                style="padding: 10px 20px; font-size: 1.1rem; font-weight: 600; color: #fbbf24; opacity: 0.9;">Found 0
+                papers</div>
             <div id="paper-list">
                 <!-- Cards go here -->
             </div>
@@ -1545,8 +1575,6 @@
                 </div>
 
                 <div style="margin-bottom: 25px;">
-                    <div style="font-size:1.1rem; font-weight:600; margin-bottom:10px; color:#fbbf24;">Activity (Last 12
-                        Months)</div>
                     <div id="analytics-contrib"></div>
                 </div>
 
@@ -1557,7 +1585,9 @@
 
         <!-- View 4: Exam Plan -->
         <div id="exam-view" class="view-pane" style="display:none;">
-            <!-- Exam Content Here -->
+            <div id="exam-view-container" style="padding: 20px; color: white;">
+                <!-- Exam Content Here -->
+            </div>
         </div>
 
     </div>
@@ -1580,6 +1610,44 @@
             <div id="avatar-grid"></div>
             <button class="btn-cancel" onclick="document.getElementById('avatar-modal').classList.remove('show')"
                 style="margin-top:20px;color:white;">Close</button>
+        </div>
+    </div>
+
+    <!-- Exam Dates Modal -->
+    <div id="exam-dates-modal" class="modal-overlay">
+        <div class="modal-card" style="max-width:500px;">
+            <h2 style="margin-top:0; color:#fbbf24;">⚙️ Update Exam Dates</h2>
+            <p style="opacity:0.8; margin-bottom:20px;">Configure milestone dates for your level.</p>
+
+            <div style="margin-bottom:20px;">
+                <label style="display:block; margin-bottom:8px; font-weight:600;">Select Level:</label>
+                <div class="toggle-group" id="exam-level-toggle">
+                    <button class="toggle-btn active" onclick="switchExamModalLevel('P4')">P4</button>
+                    <button class="toggle-btn" onclick="switchExamModalLevel('P5')">P5</button>
+                    <button class="toggle-btn" onclick="switchExamModalLevel('P6')">P6</button>
+                </div>
+            </div>
+
+            <div
+                style="display:grid; gap:15px; margin-bottom:25px; background:rgba(255,255,255,0.05); padding:20px; border-radius:12px; border:1px solid rgba(255,255,255,0.1);">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <label>WA1 Date:</label>
+                    <input type="date" id="modal-date-wa1" class="date-input" style="width:180px;">
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <label>WA2 Date:</label>
+                    <input type="date" id="modal-date-wa2" class="date-input" style="width:180px;">
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <label>EYE Date:</label>
+                    <input type="date" id="modal-date-eye" class="date-input" style="width:180px;">
+                </div>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <button class="btn-save" onclick="saveExamDates()" style="flex:1;">Save Settings</button>
+                <button class="btn-cancel" onclick="closeExamDatesModal()" style="flex:1;">Cancel</button>
+            </div>
         </div>
     </div>
 
@@ -1617,17 +1685,19 @@
         // User & Avatar Data
         let trackerData = {}; // Will be loaded from cloud or local storage
         let userAvatar = undefined; // undefined = not set, -1 = Google Photo, 0+ = Avatar Index
-        const avatars = [
-            "https://api.dicebear.com/7.x/adventurer/svg?seed=Felix",
-            "https://api.dicebear.com/7.x/adventurer/svg?seed=Aneka",
-            "https://api.dicebear.com/7.x/adventurer/svg?seed=Callie",
-            "https://api.dicebear.com/7.x/adventurer/svg?seed=Liam",
-            "https://api.dicebear.com/7.x/adventurer/svg?seed=Midnight",
-            "https://api.dicebear.com/7.x/adventurer/svg?seed=Pepper",
-            "https://api.dicebear.com/7.x/adventurer/svg?seed=Toby",
-            "https://api.dicebear.com/7.x/adventurer/svg?seed=Willow"
-        ];
+        const avatars = ["Felix", "Aneka", "Callie", "Liam", "Midnight", "Pepper", "Toby", "Willow"];
         let examPlanFilter = 'due'; // 'all' or 'due'
+        let examPlannerSettings = {
+            'P4': { 'WA1': '2026-03-01', 'WA2': '2026-05-01', 'EYE': '2026-11-01' },
+            'P5': { 'WA1': '2026-03-01', 'WA2': '2026-05-01', 'EYE': '2026-11-01' },
+            'P6': { 'WA1': '2026-03-01', 'WA2': '2026-05-01', 'EYE': '2026-11-01' }
+        };
+
+        const EXAM_TERM_MAPPING = {
+            'WA1': ['CA1', 'WA1'],
+            'WA2': ['CA2', 'WA2', 'SA1'],
+            'EYE': ['WA3', 'SA2', 'Prelim']
+        };
         let currentUrl = null;
         let filterStateChange = false; // Flag to track explicit user filter interactions
 
@@ -1987,22 +2057,57 @@
             return trackerData[url] && trackerData[url].notes && trackerData[url].notes.trim().length > 0;
         }
 
+        function getActiveExamInfo(level = 'P4') {
+            const now = new Date();
+            const milestones = ['WA1', 'WA2', 'EYE'];
+            const settings = examPlannerSettings[level] || examPlannerSettings['P4'];
+
+            // Find the first milestone that is in the future
+            let activeMilestone = 'EYE';
+            for (const m of milestones) {
+                if (new Date(settings[m]) >= now) {
+                    activeMilestone = m;
+                    break;
+                }
+            }
+
+            return {
+                milestone: activeMilestone,
+                date: settings[activeMilestone],
+                terms: EXAM_TERM_MAPPING[activeMilestone]
+            };
+        }
+
+        function getActiveLevel() {
+            if (filterState.level && filterState.level.length > 0) {
+                const lvl = filterState.level[0];
+                if (['P4', 'P5', 'P6'].includes(lvl)) return lvl;
+            }
+            return 'P4'; // Default
+        }
+
         function calculateExamPrepStats() {
+            const level = getActiveLevel();
+            const examInfo = getActiveExamInfo(level);
             const subjects = ['Maths', 'Science', 'English'];
             let totalDone = 0;
             let totalGoal = 0;
 
             subjects.forEach(s => {
-                const p4ExamPapers = allPapers.filter(p => (p.subject || 'Maths') === s && (p.level || 'P4') === 'P4' && ['WA1', 'CA1'].includes(p.term));
-                p4ExamPapers.sort((a, b) => (b.year || 0) - (a.year || 0));
+                const examPapers = allPapers.filter(p =>
+                    (p.subject || 'Maths') === s &&
+                    (p.level || 'P4') === level &&
+                    examInfo.terms.includes(p.term)
+                );
+                examPapers.sort((a, b) => (b.year || 0) - (a.year || 0));
 
                 if (examPlanFilter === 'due') {
-                    const goalPapers = p4ExamPapers.slice(0, 2);
+                    const goalPapers = examPapers.slice(0, 2);
                     totalDone += goalPapers.filter(p => isCompleted(p.url)).length;
                     totalGoal += 2;
                 } else {
-                    totalDone += p4ExamPapers.filter(p => isCompleted(p.url)).length;
-                    totalGoal += p4ExamPapers.length;
+                    totalDone += examPapers.filter(p => isCompleted(p.url)).length;
+                    totalGoal += examPapers.length;
                 }
             });
 
@@ -2216,6 +2321,7 @@
                     await db.collection('users').doc(auth.currentUser.uid).set({
                         tracker: trackerData,
                         userAvatar: userAvatar, // Save single userAvatar
+                        examPlannerSettings: examPlannerSettings, // Save exam planner settings
                         lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true });
                     document.getElementById('sync-status').innerText = "Cloud Synced";
@@ -2318,13 +2424,6 @@
             }
         }
 
-        function logoutGoogle() {
-            if (confirm("Sign out of Google?")) {
-                auth.signOut().then(() => {
-                    location.reload();
-                });
-            }
-        }
 
         if (auth) {
             auth.onAuthStateChanged(async (user) => {
@@ -2356,16 +2455,18 @@
                 if (!auth || !auth.currentUser) return;
                 const uid = auth.currentUser.uid;
 
-                document.getElementById('sync-status').innerText = 'Fetching Cloud Data...';
+                // document.getElementById('sync-status').innerText = 'Fetching Cloud Data...'; // Removed
                 try {
                     const doc = await db.collection('users').doc(uid).get();
                     let cloudTracker = {};
                     let cloudAvatar = 0;
+                    let cloudExamSettings = null;
 
                     if (doc.exists) {
                         const data = doc.data();
                         cloudTracker = data.trackerData || data.tracker || {};
                         cloudAvatar = data.userAvatar; // undefined if not present
+                        cloudExamSettings = data.examPlannerSettings || null;
                     }
 
                     // Check for legacy data to migrate (Unconditional merge)
@@ -2395,6 +2496,9 @@
 
                     trackerData = cloudTracker;
                     userAvatar = cloudAvatar; // Use cloud avatar, or default if not set
+                    if (cloudExamSettings) {
+                        examPlannerSettings = { ...examPlannerSettings, ...cloudExamSettings };
+                    }
 
                     if (needsSync) {
                         await save(); // Push merged data to Firestore
@@ -2468,16 +2572,24 @@
         }
 
         function updateAvatarDisplay(idx) {
-            const img = document.getElementById('user-photo');
+            const el = document.getElementById('user-photo');
             if (idx === -1 || idx === undefined) {
                 // Use Google Photo
                 if (auth.currentUser && auth.currentUser.photoURL) {
-                    img.src = auth.currentUser.photoURL;
+                    el.style.backgroundImage = `url('${auth.currentUser.photoURL}')`;
+                    el.style.backgroundSize = 'cover';
                 } else {
-                    img.src = avatars[0]; // Fallback
+                    // Fallback to first sprite
+                    el.style.backgroundImage = "url('avatars.png')";
+                    el.style.backgroundSize = '800% 800%';
+                    el.style.backgroundPosition = '0% 0%';
                 }
-            } else if (avatars[idx]) {
-                img.src = avatars[idx];
+            } else {
+                el.style.backgroundImage = "url('avatars.png')";
+                el.style.backgroundSize = '800% 800%';
+                const posX = (idx % 8) * (100 / 7);
+                const posY = Math.floor(idx / 8) * (100 / 7);
+                el.style.backgroundPosition = `${posX}% ${posY}%`;
             }
         }
 
@@ -2496,11 +2608,14 @@
             }
 
             // Option 2: Presets
-            avatars.forEach((url, i) => {
+            avatars.forEach((name, i) => {
                 const div = document.createElement('div');
                 div.className = `avatar-option ${userAvatar === i ? 'selected' : ''}`;
                 div.onclick = () => setAvatar(i);
-                div.innerHTML = `<img src="${url}" style="width:100%;">`;
+                const posX = (i % 8) * (100 / 7);
+                const posY = Math.floor(i / 8) * (100 / 7);
+                div.style.backgroundPosition = `${posX}% ${posY}%`;
+                div.title = name;
                 grid.appendChild(div);
             });
 
@@ -2655,13 +2770,48 @@
             try {
                 switchView('exam');
                 const examView = document.getElementById('exam-view');
-                if (examView.innerHTML.trim() === '' || examView.innerHTML.includes('Exam Plan')) {
-                    renderExamPlanMain(examView);
-                }
+                // Always refresh to show current milestone
+                renderExamPlanMain(examView);
             } catch (e) {
                 console.error("Error showing exam plan:", e);
                 alert("Error opening exam plan: " + e.message);
             }
+        }
+
+        let modalExamLevel = 'P4';
+
+        function openExamDatesModal() {
+            modalExamLevel = 'P4'; // Reset to P4 or current
+            updateExamModalUI();
+            document.getElementById('exam-dates-modal').style.display = 'flex';
+        }
+
+        function switchExamModalLevel(lvl) {
+            modalExamLevel = lvl;
+            const btns = document.querySelectorAll('#exam-level-toggle .toggle-btn');
+            btns.forEach(b => b.classList.toggle('active', b.innerText === lvl));
+            updateExamModalUI();
+        }
+
+        function updateExamModalUI() {
+            const settings = examPlannerSettings[modalExamLevel];
+            document.getElementById('modal-date-wa1').value = settings.WA1;
+            document.getElementById('modal-date-wa2').value = settings.WA2;
+            document.getElementById('modal-date-eye').value = settings.EYE;
+        }
+
+        function closeExamDatesModal() {
+            document.getElementById('exam-dates-modal').style.display = 'none';
+        }
+
+        async function saveExamDates() {
+            examPlannerSettings[modalExamLevel].WA1 = document.getElementById('modal-date-wa1').value;
+            examPlannerSettings[modalExamLevel].WA2 = document.getElementById('modal-date-wa2').value;
+            examPlannerSettings[modalExamLevel].EYE = document.getElementById('modal-date-eye').value;
+
+            await save();
+            closeExamDatesModal();
+            renderExamPlanMain(document.getElementById('exam-view'));
         }
 
         function setExamPlanFilter(filter) {
@@ -2671,14 +2821,21 @@
         }
 
         function renderExamPlanMain(container) {
-            const targetDate = new Date('2026-03-02');
+            const level = getActiveLevel();
+            const examInfo = getActiveExamInfo(level);
+            const targetDate = new Date(examInfo.date);
             const today = new Date();
+            today.setHours(0, 0, 0, 0);
             const diffTime = targetDate - today;
             const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
             const subjects = ['Maths', 'Science', 'English'];
             const subjectStats = subjects.map(s => {
-                const allSubjectPapers = allPapers.filter(p => (p.subject || 'Maths') === s && (p.level || 'P4') === 'P4' && ['WA1', 'CA1'].includes(p.term));
+                const allSubjectPapers = allPapers.filter(p =>
+                    (p.subject || 'Maths') === s &&
+                    (p.level || 'P4') === level &&
+                    examInfo.terms.includes(p.term)
+                );
                 // Sort by year desc
                 allSubjectPapers.sort((a, b) => (b.year || 0) - (a.year || 0));
 
@@ -2688,13 +2845,11 @@
 
                 if (examPlanFilter === 'due') {
                     const targetCount = 2;
-                    // For 'due', we define the goal as the 2 most recent papers
                     const goalPapers = allSubjectPapers.slice(0, targetCount);
                     done = goalPapers.filter(p => isCompleted(p.url)).length;
                     total = targetCount;
                     displayPapers = goalPapers.filter(p => !isCompleted(p.url));
                 } else {
-                    // 'all' - Show everything in the library for this goal
                     done = allSubjectPapers.filter(p => isCompleted(p.url)).length;
                     total = allSubjectPapers.length;
                     displayPapers = allSubjectPapers;
@@ -2711,8 +2866,11 @@
                 <div style="max-width:1200px; margin:0 auto;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
                         <div>
-                            <h1 style="margin:0; font-size:2.5rem; color:#fbbf24;">📅 Exam Plan</h1>
-                            <p style="opacity:0.7; font-size:1.1rem; margin-top:5px;">Target: P4 WA1/CA1 (March 2, 2026)</p>
+                            <div style="display:flex; align-items:center; gap:15px;">
+                                <h1 style="margin:0; font-size:2.5rem; color:#fbbf24;">📅 Exam Plan</h1>
+                                <button class="btn-action" onclick="openExamDatesModal()" style="background:rgba(251,191,36,0.1); border:1px solid #fbbf24; color:#fbbf24; padding:5px 12px; font-size:0.8rem; border-radius:8px;">⚙️ Update Dates</button>
+                            </div>
+                            <p style="opacity:0.7; font-size:1.1rem; margin-top:5px;">Target: ${level} ${examInfo.milestone} (${targetDate.toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' })})</p>
                         </div>
                         <div style="display:flex; align-items:center; gap:20px;">
                             <div class="toggle-group">
@@ -2892,8 +3050,7 @@
         const originalUpdateStats = updateStats;
         updateStats = function () {
             originalUpdateStats();
-            renderContributionGraph('sidebar-contrib', 2); // Current + 2 months back = 3 months range usually implied
-            renderContributionGraph('analytics-contrib', 11); // 12 months rolling
+            renderContributionGraph('sidebar-contrib', 11); // 12 months rolling
         };
 
         // Call init() 
