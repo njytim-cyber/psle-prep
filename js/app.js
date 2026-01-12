@@ -255,19 +255,36 @@ function createMultiSelect(id, label, options, stateKey, searchable = false) {
             `;
 }
 
-function filterDropdownOptions(input) {
-    const filter = input.value.toLowerCase();
-    const container = input.closest('.options-container');
-    const items = container.querySelectorAll('.option-item');
+// --- Debounce Utility ---
+function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+}
 
-    items.forEach(item => {
-        const text = item.querySelector('span').innerText.toLowerCase();
-        if (text.includes(filter)) {
-            item.classList.remove('hidden');
-        } else {
-            item.classList.add('hidden');
-        }
-    });
+function filterDropdownOptions(input) {
+    // Debounce actual filtering
+    if (!input.debouncedFilter) {
+        input.debouncedFilter = debounce((val) => {
+            const container = input.closest('.options-container');
+            const items = container.querySelectorAll('.option-item');
+            const filter = val.toLowerCase();
+
+            items.forEach(item => {
+                const text = item.querySelector('span').innerText.toLowerCase();
+                if (text.includes(filter)) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        }, 300);
+    }
+
+    input.debouncedFilter(input.value);
 }
 
 function toggleDropdown(key) {
@@ -371,43 +388,167 @@ function populateFilters() {
 
 
 // --- Core Render Logic ---
+// --- Lazy Rendering State ---
+let currentBucketedData = {};
+let renderedCounts = {};
+const BATCH_SIZE = 20;
+
+// --- Indexing Service ---
+const Indexer = {
+    bySubject: {},
+    byLevel: {},
+    byYear: {},
+    bySchool: {},
+    byTerm: {},
+
+    init(papers) {
+        // Reset
+        this.bySubject = {};
+        this.byLevel = {};
+        this.byYear = {};
+        this.bySchool = {};
+        this.byTerm = {};
+
+        papers.forEach((p, idx) => {
+            const s = p.subject || "Maths";
+            if (!this.bySubject[s]) this.bySubject[s] = new Set();
+            this.bySubject[s].add(idx);
+
+            const l = p.level || "P4";
+            if (!this.byLevel[l]) this.byLevel[l] = new Set();
+            this.byLevel[l].add(idx);
+
+            const y = String(p.year);
+            if (!this.byYear[y]) this.byYear[y] = new Set();
+            this.byYear[y].add(idx);
+
+            const sch = p.school || "Unknown";
+            if (!this.bySchool[sch]) this.bySchool[sch] = new Set();
+            this.bySchool[sch].add(idx);
+
+            const t = p.term || "Unknown";
+            if (!this.byTerm[t]) this.byTerm[t] = new Set();
+            this.byTerm[t].add(idx);
+        });
+        console.log("Indexing Complete", Object.keys(this.bySchool).length, "schools indexed.");
+    },
+
+    // Return a Set of indices that match criteria
+    filter(criteria) {
+        // Start with all indices (conceptually). 
+        // Better: Start with smaller set if possible, or lazy filter.
+        // For now, let's keep the existing filter structure but optimize calls?
+        // Actually, fully replacing the filter logic is complex. 
+        // Hybrid approach: Use Sets for O(1) membership checks inside the filter loop.
+        // The existing filter uses .includes() on the CRITERIA array, which is already fast (small N).
+        // BUT iterating 2000 items is the cost.
+
+        // Optimized Filter: Intersect Sets
+        // 1. Find the most restrictive criteria set to start with?
+        // Complex to implement perfectly without changing architecture.
+        // Let's stick to the Plan: "Lookup maps".
+        // Since we iterate filter inputs (user selections), we can union the sets.
+
+        let candidates = null;
+
+        // Helper to union sets for a category (OR logic within category)
+        const getUnion = (categoryMap, selectedValues) => {
+            const result = new Set();
+            selectedValues.forEach(val => {
+                if (categoryMap[val]) {
+                    for (const idx of categoryMap[val]) result.add(idx);
+                }
+            });
+            return result;
+        };
+
+        // 1. Subject
+        if (criteria.subject && criteria.subject.length > 0) {
+            candidates = getUnion(this.bySubject, criteria.subject);
+        }
+
+        // 2. Intersection with Level
+        if (criteria.level && criteria.level.length > 0) {
+            const levelSet = getUnion(this.byLevel, criteria.level);
+            if (candidates === null) candidates = levelSet;
+            else candidates = new Set([...candidates].filter(x => levelSet.has(x)));
+        }
+
+        // 3. Intersection with Year
+        if (criteria.year && criteria.year.length > 0) {
+            // Year needs string conversion handling if source is mix, but our index is String
+            const yearSet = getUnion(this.byYear, criteria.year.map(String));
+            if (candidates === null) candidates = yearSet;
+            else candidates = new Set([...candidates].filter(x => yearSet.has(x)));
+        }
+
+        // 4. Term
+        if (criteria.term && criteria.term.length > 0) {
+            const termSet = getUnion(this.byTerm, criteria.term);
+            if (candidates === null) candidates = termSet;
+            else candidates = new Set([...candidates].filter(x => termSet.has(x)));
+        }
+
+        // 5. School
+        if (criteria.school && criteria.school.length > 0) {
+            const schoolSet = getUnion(this.bySchool, criteria.school);
+            if (candidates === null) candidates = schoolSet;
+            else candidates = new Set([...candidates].filter(x => schoolSet.has(x)));
+        }
+
+        // If candidates is null, it means no 'indexed' filters were active.
+        // We fall back to all items (0 to N-1).
+        // However, status and notes are dynamic (change often), so check them last.
+
+        let resultIndices = [];
+        if (candidates === null) {
+            // No indexed filters active, check all
+            for (let i = 0; i < allPapers.length; i++) {
+                // Check dynamic status/notes if needed
+                if (this.checkDynamic(i, criteria)) resultIndices.push(i);
+            }
+        } else {
+            for (const i of candidates) {
+                if (this.checkDynamic(i, criteria)) resultIndices.push(i);
+            }
+        }
+
+        return resultIndices.map(i => allPapers[i]);
+    },
+
+    checkDynamic(idx, criteria) {
+        const p = allPapers[idx];
+        // Status
+        if (criteria.status && criteria.status.length > 0) {
+            const isDone = isCompleted(p.url);
+            const statusStr = isDone ? 'done' : 'todo';
+            if (!criteria.status.includes(statusStr)) return false;
+        }
+        // Notes
+        if (criteria.notes && criteria.notes.length > 0) {
+            const hasNotes = hasUserNotes(p.url);
+            const noteStr = hasNotes ? 'yes' : 'no';
+            if (!criteria.notes.includes(noteStr)) return false;
+        }
+        return true;
+    }
+};
+
 function renderList() {
-    const selectedSubjects = filterState.subject.length > 0 ? filterState.subject : null;
-    const selectedLevels = filterState.level.length > 0 ? filterState.level : null;
-    const selectedYears = filterState.year.length > 0 ? filterState.year : null;
-    const selectedSchools = filterState.school.length > 0 ? filterState.school : null;
-    const selectedTerms = filterState.term.length > 0 ? filterState.term : null;
-    const selectedStatus = filterState.status.length > 0 ? filterState.status : null;
-    const selectedNotes = filterState.notes.length > 0 ? filterState.notes : null;
+    const criteria = {
+        subject: filterState.subject.length > 0 ? filterState.subject : null,
+        level: filterState.level.length > 0 ? filterState.level : null,
+        year: filterState.year.length > 0 ? filterState.year : null,
+        school: filterState.school.length > 0 ? filterState.school : null,
+        term: filterState.term.length > 0 ? filterState.term : null,
+        status: filterState.status.length > 0 ? filterState.status : null,
+        notes: filterState.notes.length > 0 ? filterState.notes : null
+    };
 
     listEl.innerHTML = '';
 
-    const filtered = allPapers.filter(p => {
-        const pSubject = p.subject || "Maths";
-        if (selectedSubjects && !selectedSubjects.includes(pSubject)) return false;
-
-        const pLevel = p.level || "P4";
-        if (selectedLevels && !selectedLevels.includes(pLevel)) return false;
-
-        if (selectedYears && !selectedYears.includes(p.year) && !selectedYears.includes(String(p.year))) return false;
-
-        if (selectedSchools && !selectedSchools.includes(p.school)) return false;
-        if (selectedTerms && !selectedTerms.includes(p.term)) return false;
-
-        const isDone = isCompleted(p.url);
-        if (selectedStatus) {
-            const statusStr = isDone ? 'done' : 'todo';
-            if (!selectedStatus.includes(statusStr)) return false;
-        }
-
-        if (selectedNotes) {
-            const hasNotes = hasUserNotes(p.url);
-            const noteStr = hasNotes ? 'yes' : 'no';
-            if (!selectedNotes.includes(noteStr)) return false;
-        }
-
-        return true;
-    });
+    // USE INDEXER
+    const filtered = Indexer.filter(criteria);
 
     if (filtered.length === 0) {
         document.getElementById('filter-stats-display').innerText = `No papers found`;
@@ -419,32 +560,99 @@ function renderList() {
 
     // Bucket by subject
     const subjects = ['Maths', 'Science', 'English'];
-    const bucketed = { 'Maths': [], 'Science': [], 'English': [] };
+    currentBucketedData = { 'Maths': [], 'Science': [], 'English': [] };
+
+    // Reset counts
+    renderedCounts = { 'Maths': 0, 'Science': 0, 'English': 0 };
 
     filtered.forEach(p => {
         const s = p.subject || 'Maths';
-        if (bucketed[s]) bucketed[s].push(p);
-        else bucketed['Maths'].push(p); // Fallback
+        if (currentBucketedData[s]) currentBucketedData[s].push(p);
+        else currentBucketedData['Maths'].push(p); // Fallback
     });
 
-    // Render Grid
-    // map subjects to columns
+    // Loop to create Column Shells
     const columnsHtml = subjects.map(subj => {
-        const papers = bucketed[subj];
+        const papers = currentBucketedData[subj];
+        // Sort upfront
+        papers.sort((a, b) => (b.year || 0) - (a.year || 0));
+
         const total = papers.length;
         const done = papers.filter(p => isCompleted(p.url)).length;
         const pct = total > 0 ? (done / total) * 100 : 0;
         const colors = { 'Maths': '#3b82f6', 'Science': '#10b981', 'English': '#f43f5e' };
 
-        // Sort papers: Not fully requested but good UX: by year desc, then term
-        papers.sort((a, b) => (b.year || 0) - (a.year || 0));
+        return `
+            <div class="exam-subject-card" style="background: rgba(30, 41, 59, 0.5); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; max-height: 80vh;">
+                <div style="margin-bottom: 15px; flex-shrink: 0;">
+                    <h2 style="margin:0; font-size: 1.5rem; color: #f1f5f9; display:flex; align-items:center; justify-content:space-between;">
+                        ${subj}
+                        <span style="font-size:0.9rem; color:#94a3b8; font-weight:400;">${done} / ${total}</span>
+                    </h2>
+                    <div class="subject-progress" style="background:rgba(255,255,255,0.1); height:4px; border-radius:2px; margin-top:10px; width:100%;">
+                         <div class="subject-progress-bar" style="width:${pct}%; background:${colors[subj]}; height:100%; border-radius:2px; transition:width 1s;"></div>
+                    </div>
+                </div>
+                <!-- Scrollable List Container -->
+                <div id="list-container-${subj}" class="custom-scrollbar" style="overflow-y: auto; padding-right: 5px; flex: 1;">
+                    <!-- Items appended here by JS -->
+                </div>
+            </div>
+        `;
+    }).join('');
 
-        // Generate list
-        const listHtml = papers.map(p => {
-            const isDone = isCompleted(p.url);
-            const tooltipText = isDone ? `Completed on ${trackerData[p.url].date}` : `Click to open`;
+    listEl.innerHTML = `
+        <div class="responsive-grid" style="align-items: flex-start;">
+            ${columnsHtml}
+        </div>
+        `;
 
-            return `
+    // Initialize Batches & Events
+    subjects.forEach(subj => {
+        appendItems(subj);
+        const container = document.getElementById(`list-container-${subj}`);
+        if (container) {
+            container.addEventListener('scroll', () => {
+                if (container.scrollTop + container.clientHeight >= container.scrollHeight - 50) {
+                    appendItems(subj);
+                }
+            });
+        }
+    });
+
+    if (filterStateChange) {
+        ViewManager.show('results');
+        filterStateChange = false;
+    }
+}
+
+// Update renderList call in listener to populate index!
+const originalRenderApp = renderApp;
+renderApp = function () {
+    Indexer.init(allPapers);
+    populateFilters();
+    renderList();
+    updateStats();
+}
+
+
+function appendItems(subject) {
+    const container = document.getElementById(`list-container-${subject}`);
+    if (!container) return;
+
+    const allItems = currentBucketedData[subject];
+    const currentCount = renderedCounts[subject];
+
+    if (currentCount >= allItems.length) return; // All loaded
+
+    const nextBatch = allItems.slice(currentCount, currentCount + BATCH_SIZE);
+
+    // Generate HTML for batch
+    const batchHtml = nextBatch.map(p => {
+        const isDone = isCompleted(p.url);
+        const tooltipText = isDone ? `Completed on ${trackerData[p.url].date}` : `Click to open`;
+
+        return `
                 <div data-paper-url="${p.url}" title="${tooltipText}" style="font-size:0.9rem; padding:10px; background:rgba(0,0,0,0.2); border-radius:6px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px; transition: background 0.2s;">
                     <div style="flex:1; display: flex; align-items: center; gap: 8px; overflow: hidden; pointer-events: none;">
                         <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
@@ -455,44 +663,13 @@ function renderList() {
                     ${isDone ? '<span style="color:#10b981; font-weight:bold; pointer-events: none;">✓</span>' : '<span style="color:#fbbf24; pointer-events: none;">▶</span>'}
                 </div>
             `;
-        }).join('');
-
-        return `
-            <div class="exam-subject-card" style="background: rgba(30, 41, 59, 0.5); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.05);">
-                <div style="margin-bottom: 15px;">
-                    <h2 style="margin:0; font-size: 1.5rem; color: #f1f5f9; display:flex; align-items:center; justify-content:space-between;">
-                        ${subj}
-                        <span style="font-size:0.9rem; color:#94a3b8; font-weight:400;">${done} / ${total}</span>
-                    </h2>
-                    <div class="subject-progress" style="background:rgba(255,255,255,0.1); height:4px; border-radius:2px; margin-top:10px; width:100%;">
-                         <div class="subject-progress-bar" style="width:${pct}%; background:${colors[subj]}; height:100%; border-radius:2px; transition:width 1s;"></div>
-                    </div>
-                </div>
-                <!-- Scrollable List Container -->
-                <div class="custom-scrollbar" style="max-height: 400px; overflow-y: auto; padding-right: 5px;">
-                    ${listHtml}
-                </div>
-            </div>
-        `;
     }).join('');
 
-    listEl.innerHTML = `
-        <div class="responsive-grid">
-            ${columnsHtml}
-        </div>
-    `;
+    // Append to container (using insertAdjacentHTML is faster than innerHTML +=)
+    container.insertAdjacentHTML('beforeend', batchHtml);
 
-    // REMOVED: Auto-switch logic.
-    // renderList is now pure rendering.
-    // View switching happens only on user interaction (filter click, nav click, load).
-
-    if (filterStateChange) {
-        // If user explicitly changed a filter, make sure we show results
-        ViewManager.show('results');
-        filterStateChange = false;
-    }
+    renderedCounts[subject] += nextBatch.length;
 }
-        }
 
 function isCompleted(url) {
     return trackerData[url] && trackerData[url].date;
