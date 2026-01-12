@@ -1196,15 +1196,25 @@
             background: #334155;
             border-radius: 8px;
             overflow: hidden;
+            height: 34px;
+            /* Explicit height */
+            align-items: center;
         }
 
         .toggle-btn {
-            padding: 8px 16px;
+            padding: 0 12px;
+            /* Reduced vertical padding, rely on flex alignment */
+            height: 100%;
+            /* Fill the container */
             border: none;
             background: transparent;
             color: #94a3b8;
             cursor: pointer;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
         }
 
         .toggle-btn.active {
@@ -1351,19 +1361,25 @@
             border: 1px solid #334155;
             border-radius: 8px;
             overflow: hidden;
-            height: 48px;
+            height: 34px;
+            /* Reduced from 48px */
+            align-items: center;
         }
 
         .toggle-btn {
             background: none;
             border: none;
             color: #94a3b8;
-            padding: 0 15px;
+            padding: 0 12px;
             font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.2s;
             flex: 1;
             font-weight: 500;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .plan-subj {
@@ -1594,8 +1610,9 @@
                         title="Change Avatar"></div>
                     <div class="profile-info" onclick="showXPView()" style="cursor:pointer;" title="View XP System">
                         <div class="name-lvl-row">
-                            <span id="user-name"
-                                style="font-size:1.4rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Name</span>
+                            <span id="user-name" onclick="event.stopPropagation(); updateUserName()"
+                                title="Click to change name"
+                                style="font-size:1.4rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; text-decoration:underline; text-decoration-style:dotted; text-underline-offset:4px;">Name</span>
                             <span class="lvl-badge-mini" id="profile-level-badge">Lvl 1</span>
                         </div>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
@@ -3435,18 +3452,24 @@
 
             let startDate;
 
-            // Fixed Logic: Strictly display Jan-Aug 2026 (8 months)
-            // Rolling starts ONLY after August 2026.
-            if (today.getFullYear() > year2026 || (today.getFullYear() === year2026 && today.getMonth() > endMonthWindow)) {
-                startDate = new Date(today);
-                startDate.setMonth(today.getMonth() - 7);
-            } else {
-                startDate = new Date(year2026, startMonth2026, 1);
-            }
+            // Fixed Logic: Start Jan 2026.
+            // Rolling Logic: If today is beyond June 2026 (first 6 month window), roll forward.
+            // Actually, user requested: "starting from jan, we should show jan-jun, and when we reach july 2026, it should push one month forward (feb-jul)"
+            // Window size = 6 months.
+
+            const windowSize = 6;
+            const baseStart = new Date(year2026, 0, 1); // Jan 1 2026
+
+            // Calculate "ideal" start date: Today minus (WindowSize - 1) months
+            // e.g. If Today is July (Month 6), Ideal Start is Feb (Month 1).
+            const idealStart = new Date(today.getFullYear(), today.getMonth() - (windowSize - 1), 1);
+
+            // Use the later of BaseStart or IdealStart
+            startDate = idealStart > baseStart ? idealStart : baseStart;
 
             const endDate = new Date(startDate);
-            endDate.setMonth(startDate.getMonth() + 8); // Always show 8 months from start
-            endDate.setDate(0); // Last day of that 8th month
+            endDate.setMonth(startDate.getMonth() + windowSize);
+            endDate.setDate(0); // Last day of the window
 
             // Align start to Sunday (0)
             const dayOfWeek = startDate.getDay();
@@ -3476,7 +3499,8 @@
                     const monthName = current.toLocaleString('default', { month: 'short' });
                     const monthLabel = document.createElement('div');
                     monthLabel.innerText = monthName;
-                    monthLabel.style.width = '45px'; // Approx width of 4 weeks
+                    // Dynamic width calc is hard, keeping approx
+                    monthLabel.style.width = '45px';
                     monthsLabelRow.appendChild(monthLabel);
                 }
 
@@ -3536,8 +3560,28 @@
         const originalUpdateStats = updateStats;
         updateStats = function () {
             originalUpdateStats();
-            renderContributionGraph('sidebar-contrib', 8); // 9 months rolling (8 back + current)
+            renderContributionGraph('sidebar-contrib', 6);
         };
+
+        function updateUserName() {
+            const currentName = userPreferences.name || "Tim";
+            const newName = prompt("Enter your new display name:", currentName);
+            if (newName && newName.trim().length > 0) {
+                userPreferences.name = newName.trim();
+                saveUserData(); // Presumes this function exists and saves to localStorage/Firestore
+
+                // Update UI immediately
+                const nameEl = document.getElementById('user-name');
+                if (nameEl) nameEl.innerText = userPreferences.name;
+
+                // If not saved to cloud in saveUserData, might need explicit call
+                if (currentUser) {
+                    db.collection('users').doc(currentUser.uid).set({
+                        name: userPreferences.name
+                    }, { merge: true });
+                }
+            }
+        }
 
         // Call init() 
         init();
