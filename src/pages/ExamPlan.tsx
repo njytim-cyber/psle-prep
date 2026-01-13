@@ -300,5 +300,6 @@ export const ExamPlan = () => {
                 }
             `}</style>
             </div>
-            );
+        </div>
+    );
 };
