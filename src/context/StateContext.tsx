@@ -3,6 +3,7 @@ import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useAuth } from './AuthContext';
 import { DEFAULT_EXAM_SETTINGS } from '../data/constants';
+import { papers as papersData } from '../data/papers';
 
 export interface Paper {
     title: string;
@@ -108,22 +109,12 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     const [examPlannerSettings, setExamPlannerSettings] = useState(JSON.parse(JSON.stringify(DEFAULT_EXAM_SETTINGS)));
     const [loadingData, setLoadingData] = useState(true);
 
-    // Load papers data from JSON
+    // Load papers data from JSON (Static Import)
     useEffect(() => {
-        fetch('/data/papers.json')
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-                return res.json();
-            })
-            .then((data: Paper[]) => {
-                setPapers(data);
-                setPapersLoading(false);
-            })
-            .catch(err => {
-                console.error('Failed to load papers:', err);
-                setPapersError(err.message);
-                setPapersLoading(false);
-            });
+        // Simulating async to keep consistent behavior if needed, 
+        // but mostly we just set it immediately.
+        setPapers(papersData);
+        setPapersLoading(false);
     }, []);
 
     // Global Filters
