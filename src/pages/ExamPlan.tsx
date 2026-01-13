@@ -253,38 +253,45 @@ export const ExamPlan = () => {
                         {showAll && (
                             <div style={{
                                 marginTop: '20px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '24px',
+                                display: 'grid',
+                                gridTemplateColumns: '1fr 1fr 1fr',
+                                gap: '20px',
                                 animation: 'fadeIn 0.3s ease'
                             }}>
-                                {['Maths', 'English', 'Science'].map(subj => (
-                                    <div key={subj}>
-                                        <div style={{
-                                            fontSize: '0.8rem',
-                                            fontWeight: 700,
-                                            color: 'var(--md-sys-color-primary)',
-                                            marginBottom: '10px',
-                                            borderBottom: '2px solid var(--md-sys-color-primary-container)',
-                                            paddingBottom: '4px'
-                                        }}>
-                                            {subj}
+                                {['Maths', 'English', 'Science'].map(subj => {
+                                    const subjPapers = activeItem.papers.filter(p => (p.subject || 'Maths') === subj);
+                                    return (
+                                        <div key={subj}>
+                                            <div style={{
+                                                fontSize: '0.8rem',
+                                                fontWeight: 700,
+                                                color: 'var(--md-sys-color-primary)',
+                                                marginBottom: '10px',
+                                                borderBottom: '2px solid var(--md-sys-color-primary-container)',
+                                                paddingBottom: '4px',
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center'
+                                            }}>
+                                                <span>{subj}</span>
+                                                <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>({subjPapers.length})</span>
+                                            </div>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                                {subjPapers.map(p => {
+                                                    const done = trackerData[p.file_path]?.completed;
+                                                    return (
+                                                        <PaperCard
+                                                            key={p.file_path}
+                                                            paper={p}
+                                                            completed={done}
+                                                            onToggleComplete={() => markComplete(p.file_path, !done)}
+                                                        />
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                            {activeItem.papers.filter(p => (p.subject || 'Maths') === subj).map(p => {
-                                                const done = trackerData[p.file_path]?.completed;
-                                                return (
-                                                    <PaperCard
-                                                        key={p.file_path}
-                                                        paper={p}
-                                                        completed={done}
-                                                        onToggleComplete={() => markComplete(p.file_path, !done)}
-                                                    />
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         )}
                     </div>
