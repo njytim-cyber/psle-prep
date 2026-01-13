@@ -19,6 +19,14 @@ export const Home = () => {
             if (filters.level.length > 0 && !filters.level.includes(p.level || 'P4')) {
                 return false;
             }
+            // Year Filter
+            if (filters.year.length > 0 && !filters.year.includes(p.year)) {
+                return false;
+            }
+            // School Filter
+            if (filters.school.length > 0 && !filters.school.includes(p.school)) {
+                return false;
+            }
             return true;
         }).sort((a, b) => {
             // Basic Sorting
@@ -32,9 +40,9 @@ export const Home = () => {
     return (
         <div id="results-view" className="view-pane" style={{ overflowY: 'auto' }}>
             <div id="filter-stats-count" style={{ padding: '10px 0', margin: '0 auto', maxWidth: '1200px', fontSize: '1.1rem', fontWeight: 600, color: '#fbbf24', opacity: 0.9, textAlign: 'left' }}>
-                Found {filteredPapers.length} papers {filters.subject.length > 0 && `in ${filters.subject.join(', ')}`}
+                Found {filteredPapers.length} papers
             </div>
-            <div id="paper-list">
+            <div id="paper-list" style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '40px' }}>
                 {filteredPapers.map((paper, idx) => {
                     const isCompleted = trackerData[paper.file_path]?.completed;
                     return (

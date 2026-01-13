@@ -33,6 +33,8 @@ export interface Filters {
     subject: string[];
     term: string[];
     level: string[];
+    year: number[];
+    school: string[];
     sort: 'year_desc' | 'year_asc' | 'school';
 }
 
@@ -90,6 +92,8 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
         subject: [],
         term: [],
         level: [],
+        year: [],
+        school: [],
         sort: 'year_desc'
     });
 
@@ -196,7 +200,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
                 examPlannerSettings,
                 lastUpdated: serverTimestamp()
             }, { merge: true });
-            console.log("Data saved successfully");
+            // console.log("Data saved successfully");
         } catch (error) {
             console.error("Save failed:", error);
         }

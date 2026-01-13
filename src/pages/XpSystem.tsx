@@ -2,9 +2,22 @@ import React, { useState } from 'react';
 import { HelpCircle, X } from 'lucide-react';
 import { useStateContext } from '../context/StateContext';
 
+const LEVEL_TITLES = [
+    "Novice Scholar", "Paper Chaser", "Book Worm", "Smart Cookie", "Question Seeker",
+    "Answer Finder", "Math Explorer", "Problem Solver", "Deep Thinker", "Bronze Brain",
+    "Logic Learner", "Concept Keeper", "Formula Fan", "Equation Expert", "Syllabus Surfer",
+    "Silver Scholar", "Distinction Dreamer", "High Achiever", "Top Scorer", "Gold Genius",
+    "Platinum Pro", "Math Wizard", "Calculation King", "Logic Lord", "Diamond Mind",
+    "Master Mind", "Grandmaster", "Legend", "Mythic Scholar", "Divine Mathematician"
+];
+
 export const XpSystem = () => {
     const { xpStats } = useStateContext();
     const [showExplainer, setShowExplainer] = useState(false);
+
+    // Safe title lookup
+    const currentLevel = Math.max(1, Math.min(30, xpStats.overall.lvl));
+    const title = LEVEL_TITLES[currentLevel - 1] || "Scholar";
 
     return (
         <div id="xp-view" className="view-pane" style={{ overflowY: 'auto', padding: '20px', position: 'relative' }}>
@@ -28,16 +41,16 @@ export const XpSystem = () => {
                 <span style={{ fontSize: '0.9rem' }}>How it works</span>
             </button>
 
-            <div style={{ textAlign: 'center', marginBottom: '40px', marginTop: '20px' }}>
-                <div style={{ fontSize: '4rem', marginBottom: '10px' }}>🏆</div>
-                <h1 style={{ margin: 0, fontSize: '2.5rem', color: 'var(--md-sys-color-primary)' }}>Level {xpStats.overall.lvl}</h1>
-                <p style={{ opacity: 0.7, fontSize: '1.2rem' }}>Master Scholar</p>
+            <div style={{ textAlign: 'center', marginBottom: '40px', marginTop: '40px' }}>
+                <div style={{ fontSize: '4rem', marginBottom: '16px', lineHeight: 1 }}>🏆</div>
+                <h1 style={{ margin: '0 0 8px 0', fontSize: '2.5rem', color: 'var(--md-sys-color-primary)', lineHeight: 1.2 }}>Level {xpStats.overall.lvl}</h1>
+                <p style={{ opacity: 0.7, fontSize: '1.2rem', margin: 0 }}>{title}</p>
 
                 {/* Overall Progress */}
-                <div style={{ maxWidth: '400px', margin: '20px auto', background: 'rgba(255,255,255,0.1)', height: '10px', borderRadius: '5px', overflow: 'hidden' }}>
+                <div style={{ maxWidth: '400px', margin: '24px auto 12px', background: 'rgba(255,255,255,0.1)', height: '10px', borderRadius: '5px', overflow: 'hidden' }}>
                     <div style={{ width: `${xpStats.overall.pct}%`, background: 'var(--md-sys-color-tertiary)', height: '100%' }}></div>
                 </div>
-                <p style={{ fontFamily: 'monospace' }}>{Math.round(xpStats.overall.progress)} / 500 XP to next level</p>
+                <p style={{ fontFamily: 'monospace', margin: 0 }}>{Math.round(xpStats.overall.progress)} / 500 XP to next level</p>
             </div>
 
             <div className="xp-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', maxWidth: '1000px', margin: '0 auto' }}>

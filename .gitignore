@@ -15,7 +15,9 @@ exam_links.json
 
 # Node
 node_modules/
-package-lock.json
+# package-lock.json
+playwright-report/
+test-results/
 
 # Logs & Temp
 *.log

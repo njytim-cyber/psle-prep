@@ -38,6 +38,8 @@ export const Analytics = () => {
             subject: subject === 'All' ? [] : [subject],
             term: [term],
             level: level === 'All' ? [] : [level],
+            year: [],
+            school: [],
             sort: 'year_desc'
         });
         navigate('/');
@@ -48,6 +50,8 @@ export const Analytics = () => {
             subject: [subj],
             term: [],
             level: [],
+            year: [],
+            school: [],
             sort: 'year_desc'
         });
         navigate('/');

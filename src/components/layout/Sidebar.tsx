@@ -32,17 +32,18 @@ export const Sidebar = () => {
 
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [avatarModalOpen, setAvatarModalOpen] = useState(false);
+    const [xpModalOpen, setXpModalOpen] = useState(false);
 
-    // Filter State Helpers
-    // We derive unique values from 'papers' to populate dropdowns
-    const uniqueSubjects = ['Maths', 'Science', 'English'];
-    const uniqueLevels = ['P4']; // Could be derived: [...new Set(papers.map(p => p.level || 'P4'))]
+    const uniqueLevels = Array.from(new Set(papers.map(p => p.level || 'P4'))).sort();
     const uniqueTerms = ['CA1', 'CA2', 'WA1', 'WA2', 'WA3', 'SA1', 'SA2', 'Prelim'];
+    const uniqueYears = Array.from(new Set(papers.map(p => p.year))).sort((a, b) => b - a);
+    const uniqueSchools = Array.from(new Set(papers.map(p => p.school))).sort();
+    const uniqueSubjects = Array.from(new Set(papers.map(p => p.subject || 'Maths'))).sort();
 
-    const toggleFilter = (type: 'subject' | 'term' | 'level', value: string) => {
+    const toggleFilter = (type: 'subject' | 'term' | 'level' | 'year' | 'school', value: string | number) => {
         setFilters(prev => {
-            const current = prev[type];
-            const exists = current.includes(value);
+            const current = prev[type] as (string | number)[];
+            const exists = current.includes(value as never);
             return {
                 ...prev,
                 [type]: exists
@@ -115,7 +116,10 @@ export const Sidebar = () => {
                             )}
                         </div>
                         {!isCollapsed && (
-                            <div style={{ marginTop: '12px', background: 'rgba(255,255,255,0.1)', height: '4px', borderRadius: '2px', overflow: 'hidden' }}>
+                            <div style={{ marginTop: '12px', background: 'rgba(255,255,255,0.1)', height: '10px', borderRadius: '5px', overflow: 'hidden', cursor: 'pointer' }}
+                                onClick={(e) => { e.stopPropagation(); setXpModalOpen(true); }}
+                                title="View XP Details"
+                            >
                                 <div style={{ width: `${xpStats.overall.pct}%`, background: 'var(--md-sys-color-tertiary)', height: '100%' }} />
                             </div>
                         )}
@@ -220,6 +224,84 @@ export const Sidebar = () => {
                             </div>
                         </div>
 
+                        {/* Level Filter */}
+                        <div style={{ marginBottom: '16px' }}>
+                            <div style={{ fontSize: '0.8rem', marginBottom: '8px', opacity: 0.8 }}>Level</div>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                {uniqueLevels.map(l => (
+                                    <button
+                                        key={l}
+                                        onClick={() => toggleFilter('level', l)}
+                                        style={{
+                                            padding: '4px 10px',
+                                            borderRadius: '8px',
+                                            border: '1px solid var(--md-sys-color-outline)',
+                                            background: filters.level.includes(l) ? 'var(--md-sys-color-primary-container)' : 'transparent',
+                                            color: filters.level.includes(l) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
+                                            fontSize: '0.75rem',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        {l}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Year Filter */}
+                        <div style={{ marginBottom: '16px' }}>
+                            <div style={{ fontSize: '0.8rem', marginBottom: '8px', opacity: 0.8 }}>Year</div>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                {uniqueYears.map(y => (
+                                    <button
+                                        key={y}
+                                        onClick={() => toggleFilter('year', y.toString())} // Convert to string for helper, or handle generic
+                                        style={{
+                                            padding: '4px 10px',
+                                            borderRadius: '8px',
+                                            border: '1px solid var(--md-sys-color-outline)',
+                                            background: filters.year.includes(y) ? 'var(--md-sys-color-primary-container)' : 'transparent',
+                                            color: filters.year.includes(y) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
+                                            fontSize: '0.75rem',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        {y}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* School Filter */}
+                        <div style={{ marginBottom: '16px' }}>
+                            <div style={{ fontSize: '0.8rem', marginBottom: '8px', opacity: 0.8 }}>School</div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '200px', overflowY: 'auto' }}>
+                                {uniqueSchools.map(s => (
+                                    <button
+                                        key={s}
+                                        onClick={() => toggleFilter('school', s)}
+                                        style={{
+                                            padding: '6px 10px',
+                                            borderRadius: '8px',
+                                            border: 'none',
+                                            background: filters.school.includes(s) ? 'var(--md-sys-color-primary-container)' : 'transparent',
+                                            color: filters.school.includes(s) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
+                                            fontSize: '0.75rem',
+                                            cursor: 'pointer',
+                                            textAlign: 'left',
+                                            width: '100%',
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
+                                        }}
+                                        title={s}
+                                    >
+                                        {s}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
                     </div>
                 )}
             </nav>
@@ -280,6 +362,73 @@ export const Sidebar = () => {
                             onClick={() => setAvatarModalOpen(false)}
                         >
                             Cancel
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* XP Explainer Modal */}
+            {xpModalOpen && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0, left: 0, width: '100vw', height: '100vh',
+                    background: 'rgba(0,0,0,0.7)',
+                    zIndex: 9999,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }} onClick={() => setXpModalOpen(false)}>
+                    <div
+                        style={{
+                            background: 'var(--md-sys-color-surface-container)',
+                            padding: '24px',
+                            borderRadius: '24px',
+                            maxWidth: '400px',
+                            width: '90%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+                            border: '1px solid var(--md-sys-color-outline-variant)'
+                        }}
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <h2 style={{ marginTop: 0, color: 'var(--md-sys-color-on-surface)' }}>XP System</h2>
+                        <div style={{ color: 'var(--md-sys-color-on-surface-variant)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                            <p>Earn XP by completing papers to level up your avatar!</p>
+
+                            <h4 style={{ margin: '16px 0 8px', color: 'var(--md-sys-color-tertiary)' }}>Rewards</h4>
+                            <ul style={{ paddingLeft: '20px', margin: 0 }}>
+                                <li><strong>120 XP</strong> - Prelim / Final Exam</li>
+                                <li><strong>100 XP</strong> - SA1 / SA2</li>
+                                <li><strong>50 XP</strong> - WA / CA</li>
+                                <li><strong>30 XP</strong> - Practice Papers</li>
+                            </ul>
+
+                            <h4 style={{ margin: '16px 0 8px', color: 'var(--md-sys-color-tertiary)' }}>Bonuses</h4>
+                            <ul style={{ paddingLeft: '20px', margin: 0 }}>
+                                <li><strong>1.5x XP</strong> - Complete 2 papers of the same subject in one day!</li>
+                            </ul>
+
+                            <div style={{ marginTop: '20px', padding: '12px', background: 'var(--md-sys-color-secondary-container)', borderRadius: '12px', color: 'var(--md-sys-color-on-secondary-container)' }}>
+                                <strong>Current Level:</strong> {xpStats.overall.lvl}<br />
+                                <strong>Progress:</strong> {Math.round(xpStats.overall.progress)} / 500 XP
+                            </div>
+                        </div>
+
+                        <button
+                            style={{
+                                marginTop: '20px',
+                                padding: '10px',
+                                background: 'var(--md-sys-color-primary)',
+                                border: 'none',
+                                color: 'var(--md-sys-color-on-primary)',
+                                borderRadius: '100px',
+                                cursor: 'pointer',
+                                fontWeight: 600
+                            }}
+                            onClick={() => setXpModalOpen(false)}
+                        >
+                            Got it!
                         </button>
                     </div>
                 </div>
