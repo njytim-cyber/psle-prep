@@ -6,7 +6,6 @@ import { Analytics } from './pages/Analytics';
 import { ExamPlan } from './pages/ExamPlan';
 import { XpSystem } from './pages/XpSystem';
 import { PdfView } from './pages/PdfView';
-import { StudyHub } from './pages/StudyHub';
 
 import { LoginOverlay } from './components/auth/LoginOverlay';
 import { useAuth } from './context/AuthContext';
@@ -25,7 +24,6 @@ function AppContent() {
                     <Route path="analytics" element={<Analytics />} />
                     <Route path="exam" element={<ExamPlan />} />
                     <Route path="xp" element={<XpSystem />} />
-                    <Route path="study" element={<StudyHub />} />
                     <Route path="paper/*" element={<PdfView />} />
                 </Route>
             </Routes>

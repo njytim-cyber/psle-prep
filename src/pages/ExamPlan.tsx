@@ -143,6 +143,15 @@ export const ExamPlan = () => {
     };
 
     const activeItem = timeline[currentIndex];
+
+    // Auto-save settings when changed
+    React.useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            saveData();
+        }, 1000);
+        return () => clearTimeout(timeoutId);
+    }, [examPlannerSettings]);
+
     if (!activeItem) return null;
 
     return (
@@ -151,6 +160,42 @@ export const ExamPlan = () => {
 
                 <div style={{ textAlign: 'center', marginBottom: '30px' }}>
                     <h1 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '8px' }}>🎓 Your Exam Journey</h1>
+                    <p style={{ opacity: 0.7 }}>Plan your milestones and track your progress</p>
+                </div>
+
+                {/* Date Settings for Current Milestone */}
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginBottom: '24px'
+                }}>
+                    <div style={{
+                        background: 'var(--md-sys-color-surface-container)',
+                        padding: '12px 20px',
+                        borderRadius: '16px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        border: '1px solid var(--md-sys-color-outline-variant)'
+                    }}>
+                        <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>
+                            Target Date:
+                        </span>
+                        <input
+                            type="date"
+                            value={activeItem.date}
+                            onChange={(e) => handleDateChange(activeItem.level, activeItem.exam, e.target.value)}
+                            style={{
+                                background: 'transparent',
+                                border: '1px solid var(--md-sys-color-outline)',
+                                borderRadius: '8px',
+                                padding: '6px 10px',
+                                color: 'var(--md-sys-color-on-surface)',
+                                fontFamily: 'inherit',
+                                fontSize: '0.9rem'
+                            }}
+                        />
+                    </div>
                 </div>
 
                 {/* Carousel Navigation */}

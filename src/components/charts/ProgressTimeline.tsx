@@ -73,33 +73,62 @@ export const ProgressTimeline: React.FC = () => {
     }, [milestones, papers, trackerData]);
 
     // Find today's position on the timeline
+    // Start from Jan 1, 2026
+    const startDate = new Date('2026-01-01');
     const today = new Date();
-    const firstDate = milestones[0]?.date || today;
-    const lastDate = milestones[milestones.length - 1]?.date || today;
-    const totalDuration = lastDate.getTime() - firstDate.getTime();
+
+    // End date is the last milestone date or today, whichever is later
+    const lastMilestoneDate = milestones[milestones.length - 1]?.date || today;
+    const endDate = lastMilestoneDate > today ? lastMilestoneDate : today;
+
+    const totalDuration = endDate.getTime() - startDate.getTime();
+
+    // If today is before start date (unlikely), clamp to 0. 
+    // If today is after end date, clamp to 100.
     const todayPosition = totalDuration > 0
-        ? Math.min(100, Math.max(0, ((today.getTime() - firstDate.getTime()) / totalDuration) * 100))
+        ? Math.min(100, Math.max(0, ((today.getTime() - startDate.getTime()) / totalDuration) * 100))
         : 0;
 
     // Chart dimensions
     const width = 800;
     const height = 300;
-    const padding = { top: 40, right: 40, bottom: 60, left: 60 };
+    const padding = { top: 40, right: 60, bottom: 60, left: 60 };
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
 
     // Scale functions
-    const xScale = (idx: number) => padding.left + (idx / (progressData.length - 1)) * chartWidth;
+    // X scale based on time
+    const xScale = (date: Date) => {
+        const time = date.getTime();
+        const start = startDate.getTime();
+        const duration = totalDuration;
+        const pct = duration > 0 ? (time - start) / duration : 0;
+        return padding.left + pct * chartWidth;
+    };
+
     const yScale = (pct: number) => padding.top + chartHeight - (pct / 100) * chartHeight;
 
     // Build SVG paths
-    const targetPath = progressData.map((d, i) =>
-        `${i === 0 ? 'M' : 'L'} ${xScale(i)} ${yScale(d.targetPct)}`
-    ).join(' ');
+    const targetPath = milestones.length > 0 ? (
+        `M ${padding.left} ${yScale(0)} ` + // Start at 0,0 (approx Jan 1)
+        milestones.map(m => `L ${xScale(m.date)} ${yScale(m.targetPct)}`).join(' ')
+    ) : '';
 
-    const actualPath = progressData.map((d, i) =>
-        `${i === 0 ? 'M' : 'L'} ${xScale(i)} ${yScale(d.actualPct)}`
-    ).join(' ');
+    // Actual path needs to be a step line or direct? Let's keep direct but maybe add intermediate points if we had historical data.
+    // For now, we only have 'current' completion for each milestone.
+    // To visualize 'actual' progress over time properly, we'd need historical snapshots.
+    // Since we don't have that, we plot the 'current status' points at the milestone dates.
+    // This is a bit weird because we are plotting 'current completion' at 'future dates'.
+    // A better interpretation for "Actual":
+    // Plot points at today's X for each milestone component? No.
+    // Let's plot the "Current Actual" at "Today" for the overall?
+    // Or, as implemented before: Plot "Available/Done" ratio for that bucket at the bucket's date.
+    // This shows "When we reach Date X, we expect Y% done. Currently we have Z% done of that bucket."
+
+    const actualPath = milestones.length > 0 ? (
+        `M ${padding.left} ${yScale(0)} ` +
+        progressData.map(m => `L ${xScale(m.date)} ${yScale(m.actualPct)}`).join(' ')
+    ) : '';
 
     // Calculate overall progress
     const overallProgress = useMemo(() => {
@@ -110,15 +139,20 @@ export const ProgressTimeline: React.FC = () => {
         return totalPapers > 0 ? (completedPapers / totalPapers) * 100 : 0;
     }, [papers, trackerData]);
 
-    const todayX = padding.left + (todayPosition / 100) * chartWidth;
+    const todayX = xScale(today);
+
+    // Tooltip state
+    const [hoveredData, setHoveredData] = React.useState<any | null>(null);
 
     return (
         <div style={{
             background: 'var(--md-sys-color-surface-container)',
             borderRadius: 'var(--md-sys-shape-corner-extra-large)',
             padding: '24px',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            position: 'relative' // for tooltip context if needed
         }}>
+            {/* Header ... */}
             <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -138,7 +172,7 @@ export const ProgressTimeline: React.FC = () => {
                         font: 'var(--md-sys-typescale-body-medium)',
                         color: 'var(--md-sys-color-on-surface-variant)'
                     }}>
-                        Progress towards 100% completion
+                        Starting Jan 2026 • Target: PSLE 2028
                     </p>
                 </div>
                 <div style={{
@@ -195,6 +229,23 @@ export const ProgressTimeline: React.FC = () => {
                     </g>
                 ))}
 
+                {/* Date Axis (approximate years) */}
+                {[new Date('2026-01-01'), new Date('2027-01-01'), new Date('2028-01-01')].map(d => {
+                    const x = xScale(d);
+                    if (x >= padding.left && x <= width - padding.right) {
+                        return (
+                            <g key={d.toISOString()}>
+                                <line x1={x} y1={padding.top} x2={x} y2={height - padding.bottom}
+                                    stroke="var(--md-sys-color-outline-variant)" strokeOpacity="0.5" strokeDasharray="2 2" />
+                                <text x={x} y={height - padding.bottom + 20} textAnchor="middle" fontSize="11" fill="var(--md-sys-color-on-surface-variant)">
+                                    {d.getFullYear()}
+                                </text>
+                            </g>
+                        );
+                    }
+                    return null;
+                })}
+
                 {/* Target line (expected progress) */}
                 <path
                     d={targetPath}
@@ -214,70 +265,104 @@ export const ProgressTimeline: React.FC = () => {
                     strokeLinejoin="round"
                 />
 
-                {/* Milestone dots and labels */}
+                {/* Today marker */}
+                {todayX >= padding.left && todayX <= width - padding.right && (
+                    <g>
+                        <line
+                            x1={todayX}
+                            y1={padding.top}
+                            x2={todayX}
+                            y2={height - padding.bottom}
+                            stroke="var(--md-sys-color-tertiary)"
+                            strokeWidth="2"
+                            strokeDasharray="4 2"
+                        />
+                        <text
+                            x={todayX}
+                            y={padding.top - 10}
+                            fill="var(--md-sys-color-tertiary)"
+                            fontSize="11"
+                            fontWeight="600"
+                            textAnchor="middle"
+                        >
+                            TODAY
+                        </text>
+                    </g>
+                )}
+
+                {/* Milestone dots and hover target */}
                 {progressData.map((d, i) => (
                     <g key={i}>
                         {/* Target dot */}
                         <circle
-                            cx={xScale(i)}
+                            cx={xScale(d.date)}
                             cy={yScale(d.targetPct)}
                             r="4"
                             fill="var(--md-sys-color-outline)"
                         />
                         {/* Actual dot */}
                         <circle
-                            cx={xScale(i)}
+                            cx={xScale(d.date)}
                             cy={yScale(d.actualPct)}
                             r="6"
                             fill="var(--md-sys-color-primary)"
                             stroke="var(--md-sys-color-surface)"
                             strokeWidth="2"
+                            style={{ cursor: 'pointer' }}
+                            onMouseEnter={(e) => {
+                                const rect = e.currentTarget.getBoundingClientRect();
+                                setHoveredData({ ...d, x: rect.left, y: rect.top });
+                            }}
+                            onMouseLeave={() => setHoveredData(null)}
                         />
-                        {/* Label */}
-                        <text
-                            x={xScale(i)}
-                            y={height - padding.bottom + 20}
-                            fill="var(--md-sys-color-on-surface-variant)"
-                            fontSize="11"
-                            textAnchor="middle"
-                            transform={`rotate(-30, ${xScale(i)}, ${height - padding.bottom + 20})`}
-                        >
-                            {d.label}
-                        </text>
                     </g>
                 ))}
-
-                {/* Today marker */}
-                <line
-                    x1={todayX}
-                    y1={padding.top}
-                    x2={todayX}
-                    y2={height - padding.bottom}
-                    stroke="var(--md-sys-color-tertiary)"
-                    strokeWidth="2"
-                    strokeDasharray="4 2"
-                />
-                <rect
-                    x={todayX - 28}
-                    y={padding.top - 25}
-                    width="56"
-                    height="20"
-                    rx="10"
-                    fill="var(--md-sys-color-tertiary)"
-                />
-                <text
-                    x={todayX}
-                    y={padding.top - 12}
-                    fill="var(--md-sys-color-on-tertiary)"
-                    fontSize="11"
-                    fontWeight="600"
-                    textAnchor="middle"
-                >
-                    TODAY
-                </text>
             </svg>
 
-            {/* Legend */}
+            {/* Tooltip Overlay */}
+            {hoveredData && (
+                <div style={{
+                    position: 'fixed',
+                    left: hoveredData.x,
+                    top: hoveredData.y - 120,
+                    transform: 'translateX(-50%)',
+                    background: 'var(--md-sys-color-inverse-surface)',
+                    color: 'var(--md-sys-color-inverse-on-surface)',
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    pointerEvents: 'none',
+                    zIndex: 1000,
+                    fontSize: '0.8rem',
+                    boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+                    minWidth: '150px'
+                }}>
+                    <div style={{ fontWeight: 700, marginBottom: '4px' }}>{hoveredData.label}</div>
+                    <div style={{ opacity: 0.9 }}>{hoveredData.date.toLocaleDateString()}</div>
+                    <div style={{ marginTop: '8px', display: 'flex', justifyContent: 'space-between' }}>
+                        <span>Progress:</span>
+                        <span style={{ fontWeight: 600 }}>{Math.round(hoveredData.actualPct)}%</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', opacity: 0.8 }}>
+                        <span>Target:</span>
+                        <span>{Math.round(hoveredData.targetPct)}%</span>
+                    </div>
+                    <div style={{ marginTop: '4px', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '4px' }}>
+                        {hoveredData.completed}/{hoveredData.total} papers
+                    </div>
+                    {/* Triangle pointer */}
+                    <div style={{
+                        position: 'absolute',
+                        bottom: '-6px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        borderLeft: '6px solid transparent',
+                        borderRight: '6px solid transparent',
+                        borderTop: '6px solid var(--md-sys-color-inverse-surface)'
+                    }} />
+                </div>
+            )}
+
+            {/* Legend ... same as before */}
             <div style={{
                 display: 'flex',
                 gap: '24px',

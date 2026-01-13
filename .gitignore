@@ -12,7 +12,7 @@ env/
 !public/papers/**/*.pdf
 papers.js.tmp
 papers.js_extracted
-papers.json
+# papers.json
 exam_links.json
 
 # Node

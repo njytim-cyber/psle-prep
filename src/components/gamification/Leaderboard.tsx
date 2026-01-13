@@ -1,5 +1,7 @@
 import React from 'react';
 import { Trophy, Medal, Award, TrendingUp } from 'lucide-react';
+import { Avatar } from '../ui/Avatar';
+import { AVATARS } from '../../data/constants';
 
 interface LeaderboardEntry {
     rank: number;
@@ -41,7 +43,8 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
         {
             rank: userRank,
             name: currentUserName || 'You',
-            avatar: currentUserAvatar || 'Felix',
+            // If currentUserAvatar is an ID (number string), look up name, otherwise use it directly or default
+            avatar: isNaN(parseInt(currentUserAvatar)) ? currentUserAvatar : AVATARS[parseInt(currentUserAvatar)] || 'Felix',
             papersCompleted: currentUserPapers,
             xp: currentUserXp,
             isCurrentUser: true
@@ -55,6 +58,14 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
             case 3: return <Award size={18} style={{ color: '#CD7F32' }} />;
             default: return <span style={{ width: 18, textAlign: 'center' }}>{rank}</span>;
         }
+    };
+
+    const getAvatarId = (nameOrId: string) => {
+        // specific check for number string which is already an ID
+        if (!isNaN(parseInt(nameOrId))) return nameOrId;
+
+        const idx = AVATARS.indexOf(nameOrId);
+        return idx !== -1 ? idx.toString() : '0';
     };
 
     return (
@@ -106,18 +117,10 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
                         </div>
 
                         {/* Avatar */}
-                        <img
-                            src={`/avatars/${entry.avatar}.png`}
-                            alt={entry.name}
-                            style={{
-                                width: '36px',
-                                height: '36px',
-                                borderRadius: '50%',
-                                background: 'var(--md-sys-color-surface-variant)'
-                            }}
-                            onError={(e) => {
-                                (e.target as HTMLImageElement).src = '/avatars/Felix.png';
-                            }}
+                        <Avatar
+                            avatarId={getAvatarId(entry.avatar)}
+                            size={36}
+                            highlight={false}
                         />
 
                         {/* Name */}

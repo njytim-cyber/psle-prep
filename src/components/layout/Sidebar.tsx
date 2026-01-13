@@ -53,7 +53,6 @@ export const Sidebar = () => {
         { to: '/', icon: <LayoutDashboard size={20} />, label: 'Papers' },
         { to: '/analytics', icon: <BarChart2 size={20} />, label: 'Analytics' },
         { to: '/exam', icon: <Calendar size={20} />, label: 'Exam Plan' },
-        { to: '/study', icon: <Timer size={20} />, label: 'Study Hub' },
         { to: '/xp', icon: <Award size={20} />, label: 'Achievements' },
     ];
 
@@ -179,7 +178,7 @@ export const Sidebar = () => {
                         </div>
 
                         {/* Milestone Progress Card */}
-                        {!isCollapsed && milestoneStats && (
+                        {!isCollapsed && (
                             <NavLink to="/exam" style={{ textDecoration: 'none', color: 'inherit' }}>
                                 <div style={{
                                     background: 'var(--md-sys-color-primary-container)',
@@ -192,35 +191,48 @@ export const Sidebar = () => {
                                     cursor: 'pointer',
                                     border: '1px solid var(--md-sys-color-outline-variant)'
                                 }}>
-                                    <div style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        fontSize: '0.8rem',
-                                        fontWeight: 700,
-                                        opacity: 0.9
-                                    }}>
-                                        <span>Current Focus</span>
-                                        <span>{Math.round(milestoneStats.pct)}%</span>
-                                    </div>
-                                    <div style={{ fontSize: '0.95rem', fontWeight: 800 }}>
-                                        {milestoneStats.title}
-                                    </div>
-                                    <div style={{
-                                        height: '8px',
-                                        background: 'rgba(255,255,255,0.2)',
-                                        borderRadius: '4px',
-                                        overflow: 'hidden'
-                                    }}>
+                                    {milestoneStats ? (
+                                        <>
+                                            <div style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                fontSize: '0.8rem',
+                                                fontWeight: 700,
+                                                opacity: 0.9
+                                            }}>
+                                                <span>Current Focus</span>
+                                                <span>{Math.round(milestoneStats.pct)}%</span>
+                                            </div>
+                                            <div style={{ fontSize: '0.95rem', fontWeight: 800 }}>
+                                                {milestoneStats.title}
+                                            </div>
+                                            <div style={{
+                                                height: '8px',
+                                                background: 'rgba(255,255,255,0.2)',
+                                                borderRadius: '4px',
+                                                overflow: 'hidden'
+                                            }}>
+                                                <div style={{
+                                                    width: `${milestoneStats.pct}%`,
+                                                    background: 'var(--md-sys-color-primary)',
+                                                    height: '100%'
+                                                }} />
+                                            </div>
+                                            <div style={{ fontSize: '0.75rem', opacity: 0.8 }}>
+                                                {milestoneStats.done} / {milestoneStats.total} papers completed
+                                            </div>
+                                        </>
+                                    ) : (
                                         <div style={{
-                                            width: `${milestoneStats.pct}%`,
-                                            background: 'var(--md-sys-color-primary)',
-                                            height: '100%'
-                                        }} />
-                                    </div>
-                                    <div style={{ fontSize: '0.75rem', opacity: 0.8 }}>
-                                        {milestoneStats.done} / {milestoneStats.total} papers completed
-                                    </div>
+                                            textAlign: 'center',
+                                            padding: '8px 0',
+                                            fontSize: '0.9rem',
+                                            fontWeight: 600
+                                        }}>
+                                            Set up Exam Plan 📅
+                                        </div>
+                                    )}
                                 </div>
                             </NavLink>
                         )}

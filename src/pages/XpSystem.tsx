@@ -1,8 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { HelpCircle, X } from 'lucide-react';
 import { useStateContext } from '../context/StateContext';
+import { useAuth } from '../context/AuthContext';
 import { FloatingParticles } from '../components/effects/FloatingParticles';
 import { MilestoneBadges } from '../components/ui/MilestoneBadges';
+import { Leaderboard } from '../components/gamification/Leaderboard';
+import { WeeklyChallenges } from '../components/gamification/WeeklyChallenges';
+import { SeasonalEvents } from '../components/gamification/SeasonalEvents';
 
 const LEVEL_TITLES = [
     "Novice Scholar", "Paper Chaser", "Book Worm", "Smart Cookie", "Question Seeker",
@@ -14,7 +18,8 @@ const LEVEL_TITLES = [
 ];
 
 export const XpSystem = () => {
-    const { xpStats, trackerData, papers, totalCompleted } = useStateContext();
+    const { user } = useAuth();
+    const { xpStats, trackerData, papers, totalCompleted, userAvatar } = useStateContext();
     const [showExplainer, setShowExplainer] = useState(false);
 
     // Calculate subject counts for badges
@@ -164,8 +169,40 @@ export const XpSystem = () => {
                 </div>
 
                 {/* Milestone Badges */}
-                <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                <div style={{ maxWidth: '1000px', margin: '0 auto 48px' }}>
                     <MilestoneBadges totalCompleted={totalCompleted} subjectCounts={subjectCounts} />
+                </div>
+
+                {/* Engagement Section */}
+                <div style={{
+                    maxWidth: '1200px',
+                    margin: '0 auto',
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+                    gap: '24px'
+                }}>
+                    <div style={{ animation: 'slideUpFadeIn 0.3s ease-out 0.1s both' }}>
+                        <Leaderboard
+                            currentUserName={user?.displayName || 'Scholar'}
+                            currentUserAvatar={userAvatar || '0'}
+                            currentUserPapers={totalCompleted}
+                            currentUserXp={Math.round(xpStats.overall.progress + (500 * (xpStats.overall.lvl - 1)))} // Estimate total XP or just pass progress
+                        />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', animation: 'slideUpFadeIn 0.3s ease-out 0.2s both' }}>
+                        <WeeklyChallenges
+                            totalCompleted={totalCompleted}
+                            weeklyCompleted={papers.filter(p => {
+                                const data = trackerData[p.file_path];
+                                if (!data?.completed || !data.date) return false;
+                                const date = new Date(data.date);
+                                const now = new Date();
+                                const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                                return date >= oneWeekAgo;
+                            }).length}
+                        />
+                        <SeasonalEvents />
+                    </div>
                 </div>
             </div>
 
