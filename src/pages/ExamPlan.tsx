@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useStateContext, Paper } from '../context/StateContext';
-import { ChevronLeft, ChevronRight, CheckCircle2, Circle, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { PaperCard } from '../components/ui/PaperCard';
 
@@ -31,9 +31,7 @@ interface Milestone {
 
 export const ExamPlan = () => {
     const { papers, trackerData, examPlannerSettings, setExamPlannerSettings, saveData, markComplete } = useStateContext();
-    const navigate = useNavigate();
 
-    const [editingId, setEditingId] = useState<string | null>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showAll, setShowAll] = useState(false);
 
@@ -132,7 +130,6 @@ export const ExamPlan = () => {
     };
 
     const handleSave = async () => {
-        setEditingId(null);
         await saveData();
     };
 

@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useStateContext, Paper } from '../context/StateContext';
+import { useStateContext } from '../context/StateContext';
 
 const SCHOOL_SLUGS: Record<string, string> = {
     'Raffles Girls': 'Raffles',
@@ -97,9 +97,9 @@ export const PdfView = () => {
                     const sub = paper.subject || 'Maths';
 
                     // Strategy A: Level_Subject_Year_Term_School
-                    let fbA = `https://www.testpapersfree.com/pdfs/${paper.level}_${sub}_${paper.year}_${paper.term}_${slug}.pdf`;
+                    const fbA = `https://www.testpapersfree.com/pdfs/${paper.level}_${sub}_${paper.year}_${paper.term}_${slug}.pdf`;
                     // Strategy B: Level_Subject_Term_Year_School
-                    let fbB = `https://www.testpapersfree.com/pdfs/${paper.level}_${sub}_${paper.term}_${paper.year}_${slug}.pdf`;
+                    const fbB = `https://www.testpapersfree.com/pdfs/${paper.level}_${sub}_${paper.term}_${paper.year}_${slug}.pdf`;
 
                     try {
                         const resA = await fetch(fbA, { method: 'HEAD' });
