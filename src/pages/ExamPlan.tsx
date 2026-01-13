@@ -74,17 +74,21 @@ export const ExamPlan = () => {
                     };
                 });
 
-                // Pick deterministic Daily Tasks: 2 papers that are either uncompleted
-                // OR were completed today (stays there for the day)
+                // Pick deterministic Daily Tasks: 2 papers per subject
+                // that are either uncompleted OR were completed today
                 const todayStr = new Date().toISOString().split('T')[0];
-                const pool = milestonePapers.filter(p =>
-                    !trackerData[p.file_path]?.completed ||
-                    trackerData[p.file_path]?.date === todayStr
-                );
 
-                // Deterministic sort to keep selection stable (by title/path)
-                const selection = pool.slice(0, 2);
-                cta.push(...selection);
+                ['Maths', 'English', 'Science'].forEach(s => {
+                    const subjPapers = milestonePapers.filter(p => (p.subject || 'Maths') === s);
+                    const pool = subjPapers.filter(p =>
+                        !trackerData[p.file_path]?.completed ||
+                        trackerData[p.file_path]?.date === todayStr
+                    );
+
+                    // Take first 2 for each subject
+                    const selection = pool.slice(0, 2);
+                    cta.push(...selection);
+                });
 
                 const isPast = dateObj ? dateObj < now : false;
                 let isNext = false;
@@ -215,35 +219,45 @@ export const ExamPlan = () => {
                     </h3>
                     <div style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(2, 1fr)',
+                        gridTemplateColumns: 'repeat(3, 1fr)',
                         gap: '16px'
                     }}>
-                        {globalCta.map((paper, idx) => (
-                            <div key={paper.file_path} style={{ minWidth: 0, position: 'relative' }}>
-                                {idx === 1 && (
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: '-8px',
-                                        right: '20px',
-                                        background: 'var(--md-sys-color-tertiary)',
-                                        color: 'var(--md-sys-color-on-tertiary)',
-                                        padding: '2px 10px',
-                                        borderRadius: '10px',
-                                        fontSize: '0.65rem',
-                                        fontWeight: 800,
-                                        zIndex: 2,
-                                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
-                                    }}>
-                                        STRETCH GOAL 🔥
-                                    </div>
-                                )}
-                                <PaperCard
-                                    paper={paper}
-                                    completed={trackerData[paper.file_path]?.completed}
-                                    onToggleComplete={() => markComplete(paper.file_path, !trackerData[paper.file_path]?.completed)}
-                                />
-                            </div>
-                        ))}
+                        {['Maths', 'English', 'Science'].map(subj => {
+                            const subjCta = globalCta.filter(p => (p.subject || 'Maths') === subj);
+                            if (subjCta.length === 0) return null;
+
+                            return (
+                                <div key={subj} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                    <div style={{ fontSize: '0.75rem', fontWeight: 700, opacity: 0.7, marginBottom: '4px' }}>{subj}</div>
+                                    {subjCta.map((paper, idx) => (
+                                        <div key={paper.file_path} style={{ minWidth: 0, position: 'relative' }}>
+                                            {idx === 1 && (
+                                                <div style={{
+                                                    position: 'absolute',
+                                                    top: '-8px',
+                                                    right: '20px',
+                                                    background: 'var(--md-sys-color-tertiary)',
+                                                    color: 'var(--md-sys-color-on-tertiary)',
+                                                    padding: '2px 10px',
+                                                    borderRadius: '10px',
+                                                    fontSize: '0.65rem',
+                                                    fontWeight: 800,
+                                                    zIndex: 2,
+                                                    boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                                                }}>
+                                                    STRETCH 🔥
+                                                </div>
+                                            )}
+                                            <PaperCard
+                                                paper={paper}
+                                                completed={trackerData[paper.file_path]?.completed}
+                                                onToggleComplete={() => markComplete(paper.file_path, !trackerData[paper.file_path]?.completed)}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            );
+                        })}
                         {globalCta.length === 0 && (
                             <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '30px', opacity: 0.8 }}>
                                 🎉 No pending tasks! You're all caught up.
