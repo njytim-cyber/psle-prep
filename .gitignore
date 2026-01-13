@@ -6,8 +6,10 @@ venv/
 env/
 
 # Data
-papers/
-*.pdf
+# papers/
+# *.pdf
+!public/papers/**
+!public/papers/**/*.pdf
 papers.js.tmp
 papers.js_extracted
 papers.json
