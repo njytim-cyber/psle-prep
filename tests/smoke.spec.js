@@ -4,7 +4,7 @@ test('has title', async ({ page }) => {
     await page.goto('/');
 
     // Expect a title "to contain" a substring.
-    await expect(page).toHaveTitle(/Our PSLE Adventure/);
+    await expect(page).toHaveTitle(/PSLE Prep/);
 });
 
 test('shows login overlay with M3 styles', async ({ page }) => {

@@ -1,10 +1,12 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useStateContext } from '../context/StateContext';
 
 const TERM_ORDER = ['CA1', 'CA2', 'WA1', 'WA2', 'WA3', 'SA1', 'SA2', 'Prelim'];
 
 export const Analytics = () => {
-    const { papers, trackerData } = useStateContext();
+    const { papers, trackerData, setFilters } = useStateContext();
+    const navigate = useNavigate();
 
     // Local UI State
     const [subject, setSubject] = useState('All');
@@ -28,6 +30,28 @@ export const Analytics = () => {
     }, [papers, subject, level]);
 
     const isCompleted = (url: string) => !!trackerData[url]?.completed;
+
+    // Drill Down Handler
+    const handleDrillDown = (term: string) => {
+        // Reset filters first
+        setFilters({
+            subject: subject === 'All' ? [] : [subject],
+            term: [term],
+            level: level === 'All' ? [] : [level],
+            sort: 'year_desc'
+        });
+        navigate('/');
+    };
+
+    const handleSubjectSummaryClick = (subj: string) => {
+        setFilters({
+            subject: [subj],
+            term: [],
+            level: [],
+            sort: 'year_desc'
+        });
+        navigate('/');
+    }
 
     // Summary Stats
     const totalPapers = filteredPapers.length;
@@ -92,7 +116,7 @@ export const Analytics = () => {
                         const subDone = subPapers.filter(p => isCompleted(p.file_path)).length;
                         const subPct = subPapers.length > 0 ? Math.round((subDone / subPapers.length) * 100) : 0;
                         return (
-                            <div className="summary-card" key={s}>
+                            <div className="summary-card" key={s} onClick={() => handleSubjectSummaryClick(s)} style={{ cursor: 'pointer' }}>
                                 <div className="value">
                                     {displayMode === 'percent' ? `${subPct}%` : `${subDone}/${subPapers.length}`}
                                 </div>
@@ -121,7 +145,13 @@ export const Analytics = () => {
                                 else if (tPct >= 40) colorClass = 'medium';
 
                                 return (
-                                    <div className="term-card" key={term} title={`Show incomplete ${term} papers`}>
+                                    <div
+                                        className="term-card"
+                                        key={term}
+                                        title={`Show ${term} papers`}
+                                        onClick={() => handleDrillDown(term)}
+                                        style={{ cursor: 'pointer' }}
+                                    >
                                         <div className="term-name">{term}</div>
                                         <div className={`term-value ${tTotal > 0 ? colorClass : ''}`}>
                                             {tTotal > 0

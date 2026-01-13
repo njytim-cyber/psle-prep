@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useAuth } from './AuthContext';
@@ -29,6 +29,28 @@ export interface TrackerData {
     [key: string]: TrackerItem;
 }
 
+export interface Filters {
+    subject: string[];
+    term: string[];
+    level: string[];
+    sort: 'year_desc' | 'year_asc' | 'school';
+}
+
+export interface XPStats {
+    overall: { lvl: number; progress: number; pct: number };
+    subjects: {
+        Maths: { lvl: number; progress: number; pct: number };
+        Science: { lvl: number; progress: number; pct: number };
+        English: { lvl: number; progress: number; pct: number };
+    };
+}
+
+const XP_WEIGHTS: { [key: string]: number } = {
+    'SA1': 100, 'SA2': 100, 'Prelim': 120, 'Final Exam': 120,
+    'WA1': 50, 'WA2': 50, 'WA3': 50, 'CA1': 50, 'CA2': 50
+};
+const DEFAULT_XP = 30;
+
 interface StateContextType {
     papers: Paper[];
     trackerData: TrackerData;
@@ -41,6 +63,10 @@ interface StateContextType {
     loadingData: boolean;
     markComplete: (paperId: string, completed: boolean) => void;
     saveNotes: (paperId: string, notes: string) => void;
+    // New Fields
+    filters: Filters;
+    setFilters: React.Dispatch<React.SetStateAction<Filters>>;
+    xpStats: XPStats;
 }
 
 const StateContext = createContext<StateContextType | null>(null);
@@ -58,6 +84,64 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     const [userAvatar, setUserAvatar] = useState<string | undefined>(undefined);
     const [examPlannerSettings, setExamPlannerSettings] = useState(JSON.parse(JSON.stringify(DEFAULT_EXAM_SETTINGS)));
     const [loadingData, setLoadingData] = useState(true);
+
+    // Global Filters
+    const [filters, setFilters] = useState<Filters>({
+        subject: [],
+        term: [],
+        level: [],
+        sort: 'year_desc'
+    });
+
+    // Calculate XP Stats (Memoized)
+    const xpStats = useMemo(() => {
+        let totalXP = 0;
+        const subjectXP: { [key: string]: number } = { 'Maths': 0, 'Science': 0, 'English': 0 };
+        const dailySubjectCompletions: { [date: string]: { [subj: string]: number } } = {};
+
+        for (const filePath in trackerData) {
+            const item = trackerData[filePath];
+            if (item.date && item.completed) {
+                let paper = papers.find(p => p.file_path === filePath);
+                // Fallback for mock papers if not found in list
+                const subj = paper?.subject || 'Maths';
+                const term = paper?.term || '';
+
+                // Streak Logic
+                const date = item.date;
+                if (!dailySubjectCompletions[date]) dailySubjectCompletions[date] = {};
+                if (!dailySubjectCompletions[date][subj]) dailySubjectCompletions[date][subj] = 0;
+                dailySubjectCompletions[date][subj]++;
+
+                let xp = XP_WEIGHTS[term] || DEFAULT_XP;
+
+                // Bonus for 2nd paper in same subject same day
+                if (dailySubjectCompletions[date][subj] === 2) {
+                    xp = Math.round(xp * 1.5);
+                }
+
+                totalXP += xp;
+                if (subjectXP[subj] !== undefined) subjectXP[subj] += xp;
+            }
+        }
+
+        const getLevelInfo = (xp: number) => {
+            const lvl = Math.floor(xp / 500) + 1;
+            const progress = xp % 500;
+            return { lvl, progress, pct: (progress / 500) * 100 };
+        };
+
+        return {
+            overall: getLevelInfo(totalXP),
+            subjects: {
+                Maths: getLevelInfo(subjectXP['Maths']),
+                Science: getLevelInfo(subjectXP['Science']),
+                English: getLevelInfo(subjectXP['English'])
+            }
+        };
+
+    }, [papers, trackerData]);
+
 
     // Load Data
     useEffect(() => {
@@ -151,7 +235,10 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
             saveData,
             loadingData,
             markComplete,
-            saveNotes
+            saveNotes,
+            filters,
+            setFilters,
+            xpStats
         }}>
             {children}
         </StateContext.Provider>
