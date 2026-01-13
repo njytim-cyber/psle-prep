@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useStateContext, Paper } from '../context/StateContext';
 import { ChevronLeft, ChevronRight, CheckCircle2, Circle, Clock } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const EXAM_TERM_MAPPING: { [key: string]: string[] } = {
     'WA1': ['CA1', 'WA1'],
@@ -30,6 +30,7 @@ interface Milestone {
 
 export const ExamPlan = () => {
     const { papers, trackerData, examPlannerSettings, setExamPlannerSettings, saveData, markComplete } = useStateContext();
+    const navigate = useNavigate();
 
     const [editingId, setEditingId] = useState<string | null>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -214,11 +215,11 @@ export const ExamPlan = () => {
                             border: '1px solid var(--md-sys-color-outline-variant)',
                             transition: 'transform 0.2s',
                             cursor: 'pointer'
-                        }} onClick={() => window.location.hash = `/view/${encodeURIComponent(paper.file_path)}`}>
+                        }} onClick={() => navigate(`/paper/${encodeURIComponent(paper.file_path)}`)}>
                             <div style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-tertiary)', fontWeight: 800, marginBottom: '8px', letterSpacing: '0.5px' }}>{paper.subject.toUpperCase()}</div>
                             <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '16px', color: 'var(--md-sys-color-on-surface)' }}>{paper.school} ({paper.year})</div>
                             <Link
-                                to={`/view/${encodeURIComponent(paper.file_path)}`}
+                                to={`/paper/${encodeURIComponent(paper.file_path)}`}
                                 onClick={(e) => e.stopPropagation()}
                                 style={{
                                     display: 'block',
@@ -305,7 +306,7 @@ export const ExamPlan = () => {
                                                     <div onClick={() => markComplete(p.file_path, !done)} style={{ cursor: 'pointer', flexShrink: 0 }}>
                                                         {done ? <CheckCircle2 size={16} color="var(--md-sys-color-success)" /> : <Circle size={16} />}
                                                     </div>
-                                                    <Link to={`/view/${encodeURIComponent(p.file_path)}`} style={{ textDecoration: 'none', color: 'inherit', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                    <Link to={`/paper/${encodeURIComponent(p.file_path)}`} style={{ textDecoration: 'none', color: 'inherit', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                                         {p.year} {p.school}
                                                     </Link>
                                                 </div>

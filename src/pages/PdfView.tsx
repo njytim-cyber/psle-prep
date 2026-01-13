@@ -1,6 +1,30 @@
-import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useStateContext } from '../context/StateContext';
+import { useStateContext, Paper } from '../context/StateContext';
+
+const SCHOOL_SLUGS: Record<string, string> = {
+    'Raffles Girls': 'Raffles',
+    'Nanyang': 'Nanyang',
+    'Tao Nan': 'Taonan',
+    'Henry Park': 'henrypark',
+    'Nan Hua': 'Nanhua',
+    'Catholic High': 'catholic',
+    'Ai Tong': 'Aitong',
+    'ACS': 'ACS',
+    'ACS Junior': 'ACSj',
+    'Maris Stella': 'MarisStella',
+    'Red Swastika': 'Red_Swastika',
+    'Rosyth': 'Rosyth',
+    'Maha Bodhi': 'Mahabodhi',
+    'Methodist Girls': 'MGS',
+    'Pei Chun': 'Pei_Chun',
+    'CHIJ': 'CHIJ',
+    'Singapore Chinese Girls': 'SCGS',
+    'Anglo Chinese': 'ACS',
+    'Methodist Paya Lebar': 'PLMGS',
+    'Nan Chiau': 'NanChiau',
+    'St Nicholas': 'StNick',
+    'River Valley': 'RV'
+};
 
 export const PdfView = () => {
     // Determine ID from URL. We used encodeURIComponent(file_path) as ID
@@ -66,8 +90,36 @@ export const PdfView = () => {
 
                     setPdfUrl(targetUrl);
                 } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-                    console.error("PDF Load Error:", err);
-                    setError(err.message || "Failed to load PDF");
+                    console.warn("Local PDF Load failed, trying patterns:", err.message);
+
+                    // FALLBACK: Try constructed remote links
+                    const slug = SCHOOL_SLUGS[paper.school] || paper.school.replace(/\s+/g, '');
+                    const sub = paper.subject || 'Maths';
+
+                    // Strategy A: Level_Subject_Year_Term_School
+                    let fbA = `https://www.testpapersfree.com/pdfs/${paper.level}_${sub}_${paper.year}_${paper.term}_${slug}.pdf`;
+                    // Strategy B: Level_Subject_Term_Year_School
+                    let fbB = `https://www.testpapersfree.com/pdfs/${paper.level}_${sub}_${paper.term}_${paper.year}_${slug}.pdf`;
+
+                    try {
+                        const resA = await fetch(fbA, { method: 'HEAD' });
+                        if (resA.ok && resA.headers.get('Content-Type')?.includes('pdf')) {
+                            setPdfUrl(`https://docs.google.com/viewer?url=${encodeURIComponent(fbA)}&embedded=true`);
+                            setLoading(false);
+                            return;
+                        }
+
+                        const resB = await fetch(fbB, { method: 'HEAD' });
+                        if (resB.ok && resB.headers.get('Content-Type')?.includes('pdf')) {
+                            setPdfUrl(`https://docs.google.com/viewer?url=${encodeURIComponent(fbB)}&embedded=true`);
+                            setLoading(false);
+                            return;
+                        }
+
+                        throw new Error("Could not locate PDF via local or remote fallback patterns.");
+                    } catch (fbErr: any) {
+                        setError(fbErr.message || "Failed to load PDF");
+                    }
                 }
             } else {
                 // Remote
