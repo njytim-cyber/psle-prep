@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Play, Pause, RotateCcw, Coffee, BookOpen } from 'lucide-react';
 import { ShareButton } from '../social/ShareButton';
+import { DailyTipIcon } from '../ui/DailyTip';
 
 const CompactPomodoro = () => {
     const [timeLeft, setTimeLeft] = useState(25 * 60);
@@ -138,6 +139,7 @@ export const Header = () => {
         }}>
             <CompactPomodoro />
             <div style={{ width: '1px', height: '24px', background: 'var(--md-sys-color-outline-variant)' }}></div>
+            <DailyTipIcon />
             <ShareButton
                 totalCompleted={totalCompleted}
                 level={Math.floor(xpStats.overall.lvl)}

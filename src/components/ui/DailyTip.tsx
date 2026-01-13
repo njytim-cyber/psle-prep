@@ -55,39 +55,7 @@ export const DailyTip: React.FC = () => {
             position: 'relative',
             overflow: 'hidden'
         }}>
-            <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                marginBottom: '12px',
-                color: 'var(--md-sys-color-on-tertiary-container)'
-            }}>
-                <Lightbulb size={20} style={{ color: 'var(--md-sys-color-tertiary)' }} />
-                <span style={{ fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.5px' }}>
-                    TIP OF THE DAY
-                </span>
-                <button
-                    onClick={refreshTip}
-                    style={{
-                        marginLeft: 'auto',
-                        background: 'transparent',
-                        border: 'none',
-                        color: 'var(--md-sys-color-tertiary)',
-                        cursor: 'pointer',
-                        padding: '4px',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        transition: 'transform 0.2s'
-                    }}
-                    title="Get another tip"
-                >
-                    <RefreshCw size={16} style={{
-                        transform: isAnimating ? 'rotate(180deg)' : 'rotate(0deg)',
-                        transition: 'transform 0.3s ease'
-                    }} />
-                </button>
-            </div>
-
+            {/* ... content ... */}
             <div style={{
                 display: 'flex',
                 gap: '12px',
@@ -112,6 +80,68 @@ export const DailyTip: React.FC = () => {
                 fontWeight: 600
             }}>
                 {encouragement}
+            </div>
+        </div>
+    );
+};
+
+export const DailyTipIcon: React.FC = () => {
+    const [tip, setTip] = useState<{ emoji: string, text: string }>(TIPS[0]);
+    const [showTooltip, setShowTooltip] = useState(false);
+
+    useEffect(() => {
+        const today = new Date().toDateString();
+        const hash = today.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+        setTip(TIPS[hash % TIPS.length]);
+    }, []);
+
+    return (
+        <div
+            style={{ position: 'relative', display: 'flex', alignItems: 'center' }}
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+        >
+            <button style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--md-sys-color-on-surface-variant)',
+                cursor: 'pointer',
+                padding: '8px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                <Lightbulb size={20} />
+            </button>
+
+            {/* Tooltip */}
+            <div style={{
+                position: 'absolute',
+                top: '120%',
+                right: 0,
+                width: '280px',
+                background: 'var(--md-sys-color-tertiary-container)',
+                color: 'var(--md-sys-color-on-tertiary-container)',
+                padding: '16px',
+                borderRadius: '16px',
+                boxShadow: 'var(--md-sys-elevation-3)',
+                opacity: showTooltip ? 1 : 0,
+                visibility: showTooltip ? 'visible' : 'hidden',
+                transform: showTooltip ? 'translateY(0)' : 'translateY(-10px)',
+                transition: 'all 0.2s ease',
+                zIndex: 100,
+                pointerEvents: 'none'
+            }}>
+                <div style={{ display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'center' }}>
+                    <span style={{ fontSize: '1.2rem' }}>{tip.emoji}</span>
+                    <span style={{ fontWeight: 700, fontSize: '0.8rem', letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--md-sys-color-tertiary)' }}>
+                        Tip of the Day
+                    </span>
+                </div>
+                <p style={{ margin: 0, fontSize: '0.9rem', lineHeight: 1.4 }}>
+                    {tip.text}
+                </p>
             </div>
         </div>
     );

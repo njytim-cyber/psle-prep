@@ -1,7 +1,6 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { useStateContext } from '../context/StateContext';
 import { PaperCard } from '../components/ui/PaperCard';
-import { DailyTip } from '../components/ui/DailyTip';
 import { Confetti } from '../components/effects/Confetti';
 import { GridSkeleton } from '../components/ui/Skeleton';
 import { useToast } from '../components/effects/Toast';
@@ -67,10 +66,7 @@ export const Home = () => {
             <Confetti trigger={showConfetti} onComplete={() => setShowConfetti(false)} />
 
             <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                {/* Daily Tip */}
-                <div style={{ marginBottom: '24px' }}>
-                    <DailyTip />
-                </div>
+
 
                 {/* Paper Count */}
                 <div style={{
