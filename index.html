@@ -17,7 +17,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body>
@@ -86,6 +86,26 @@
 
         <!-- Guest Profile Removed (Auth is Mandatory) -->
         <div id="guest-profile" style="display:none;"></div>
+
+        <!-- Navigation Drawer (M3) -->
+        <nav id="nav-drawer" class="nav-drawer">
+            <div class="nav-item active" onclick="switchView('results'); highlightNav(this, 'results')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </div>
+            <div class="nav-item" onclick="openAnalytics(); highlightNav(this, 'analytics')">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Analytics</span>
+            </div>
+            <div class="nav-item" onclick="showExamPlanView(); highlightNav(this, 'exam')">
+                <span class="nav-icon">📅</span>
+                <span class="nav-label">Exam Plan</span>
+            </div>
+            <div class="nav-item" onclick="showXPView(); highlightNav(this, 'xp')">
+                <span class="nav-icon">🏆</span>
+                <span class="nav-label">Achievements</span>
+            </div>
+        </nav>
 
         <!-- Stats Grid -->
         <div id="stats-grid">
@@ -320,7 +340,7 @@
     <!-- Analytics Modal -->
     <!-- Analytics Modal REMOVED (Moved to Main View) -->
     <!-- Script with cache-busting -->
-    <script type="module" src="js/app.js"></script>
+    <script type="module" src="/js/app.js"></script>
 </body>
 
 </html>

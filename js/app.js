@@ -171,6 +171,18 @@ window.loginGoogle = function () {
     }
 };
 
+// For Playwright Testing
+window.signInAnonymously = async function () {
+    try {
+        if (!auth) return { error: "Auth not init" };
+        await auth.signInAnonymously();
+        return { success: true };
+    } catch (e) {
+        console.error(e);
+        return { error: e.message };
+    }
+};
+
 window.openAvatarModal = function () {
     const modal = document.getElementById('avatar-modal');
     const grid = document.getElementById('avatar-grid');

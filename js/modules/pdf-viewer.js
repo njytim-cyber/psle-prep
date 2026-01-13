@@ -98,6 +98,20 @@ function resetViewer() {
     document.getElementById('open-btn').href = '#';
 }
 
+// --- Navigation Helpers ---
+export function highlightNav(element, viewName) {
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    if (element) {
+        element.classList.add('active');
+    } else if (viewName) {
+        // Try to find by content? Or maybe add IDs to nav items.
+        // For now, relies on manual click. 
+        // If programmatic, we might need a mapping.
+        // Let's iterate and check simple logic or just wait for explicit click.
+    }
+}
+window.highlightNav = highlightNav;
+
 export function updateMainButton() {
     const btn = document.getElementById('mark-btn');
     const currentUrl = getCurrentUrl();
