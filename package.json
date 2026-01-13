@@ -4,5 +4,9 @@
   "devDependencies": {
     "@playwright/test": "^1.57.0",
     "firebase-tools": "^15.2.1"
+  },
+  "scripts": {
+    "start": "python -m http.server 5000",
+    "test": "playwright test"
   }
 }

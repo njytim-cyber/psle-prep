@@ -232,12 +232,12 @@ export function renderList() {
     const isCompleted = (url) => trackerData[url] && trackerData[url].date;
 
     if (filtered.length === 0) {
-        document.getElementById('filter-stats-display').innerText = `No papers found`;
+        document.getElementById('filter-stats-count').innerText = `No papers found`;
         listEl.innerHTML = '<div style="text-align:center; padding: 50px; opacity:0.5; font-size: 1.2rem;">No papers found for these filters! 🕵️</div>';
         return;
     }
 
-    document.getElementById('filter-stats-display').innerText = `Found ${filtered.length} papers`;
+    document.getElementById('filter-stats-count').innerText = `Found ${filtered.length} papers`;
 
     const subjects = ['Maths', 'Science', 'English'];
     currentBucketedData = { 'Maths': [], 'Science': [], 'English': [] };
