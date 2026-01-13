@@ -149,12 +149,26 @@ export const PdfView = () => {
         <div id="pdf-view" className="view-pane" style={{ backgroundColor: 'var(--bg-dark)', display: 'flex', flexDirection: 'column', height: '100%' }}>
             {/* Toolbar */}
             <div id="top-toolbar">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <button className="btn-action" style={{ background: '#334155', color: 'white', padding: '8px 12px' }} onClick={() => navigate('/')}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <button
+                        className="btn-action"
+                        style={{
+                            background: 'var(--md-sys-color-surface-container-high)',
+                            color: 'var(--md-sys-color-on-surface)',
+                            padding: '8px 16px',
+                            borderRadius: '100px',
+                            border: '1px solid var(--md-sys-color-outline-variant)',
+                            fontWeight: 600,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                        }}
+                        onClick={() => navigate(-1)}
+                    >
                         ◀ Back
                     </button>
                     <div id="paper-info">
-                        <h2 id="current-title">{paper.title}</h2>
+                        <h2 id="current-title" style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600 }}>{paper.title}</h2>
                     </div>
                 </div>
                 <div>

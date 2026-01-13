@@ -140,164 +140,165 @@ export const ExamPlan = () => {
     if (!activeItem) return null;
 
     return (
-        <div id="exam-view" className="view-pane" style={{ overflowY: 'auto', padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
+        <div id="exam-view" className="view-pane" style={{ overflowY: 'auto' }}>
+            <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '20px' }}>
 
-            <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-                <h1 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '8px' }}>🎓 Your Exam Journey</h1>
-            </div>
-
-            {/* Carousel Navigation */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', marginBottom: '30px' }}>
-                <button
-                    onClick={() => setCurrentIndex(Math.max(0, currentIndex - 1))}
-                    disabled={currentIndex === 0}
-                    style={{
-                        background: 'var(--md-sys-color-surface-container)',
-                        border: 'none',
-                        borderRadius: '50%',
-                        padding: '12px',
-                        cursor: currentIndex === 0 ? 'default' : 'pointer',
-                        opacity: currentIndex === 0 ? 0.3 : 1,
-                        color: 'var(--md-sys-color-on-surface)'
-                    }}
-                >
-                    <ChevronLeft size={24} />
-                </button>
-
-                <div style={{ textAlign: 'center', minWidth: '200px' }}>
-                    <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--md-sys-color-primary)' }}>{activeItem.title}</div>
-                    <div style={{ display: 'flex', justifyContent: 'center', gap: '4px', marginTop: '8px' }}>
-                        {timeline.map((_, i) => (
-                            <div key={i} style={{
-                                width: i === currentIndex ? '20px' : '6px',
-                                height: '6px',
-                                borderRadius: '3px',
-                                background: i === currentIndex ? 'var(--md-sys-color-primary)' : 'var(--md-sys-color-outline-variant)',
-                                transition: 'all 0.3s'
-                            }} />
-                        ))}
-                    </div>
+                <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+                    <h1 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '8px' }}>🎓 Your Exam Journey</h1>
                 </div>
 
-                <button
-                    onClick={() => setCurrentIndex(Math.min(timeline.length - 1, currentIndex + 1))}
-                    disabled={currentIndex === timeline.length - 1}
-                    style={{
-                        background: 'var(--md-sys-color-surface-container)',
-                        border: 'none',
-                        borderRadius: '50%',
-                        padding: '12px',
-                        cursor: currentIndex === timeline.length - 1 ? 'default' : 'pointer',
-                        opacity: currentIndex === timeline.length - 1 ? 0.3 : 1,
-                        color: 'var(--md-sys-color-on-surface)'
-                    }}
-                >
-                    <ChevronRight size={24} />
-                </button>
-            </div>
-
-            {/* CALL TO ACTION - Target Papers (Always visible for current focus) */}
-            <div style={{
-                marginBottom: '30px',
-                background: 'var(--md-sys-color-secondary-container)',
-                padding: '24px',
-                borderRadius: '24px',
-                color: 'var(--md-sys-color-on-secondary-container)'
-            }}>
-                <h3 style={{ fontSize: '1.2rem', marginBottom: '15px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    🚀 High Priority Tasks
-                </h3>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
-                    {globalCta.map(paper => (
-                        <PaperCard
-                            key={paper.file_path}
-                            paper={paper}
-                            completed={trackerData[paper.file_path]?.completed}
-                            onToggleComplete={() => markComplete(paper.file_path, !trackerData[paper.file_path]?.completed)}
-                        />
-                    ))}
-                    {globalCta.length === 0 && (
-                        <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '30px', opacity: 0.8 }}>
-                            🎉 No pending tasks! You're all caught up.
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Main Content Card (Milestone specific) */}
-            <div style={{
-                background: 'var(--md-sys-color-surface-container-high)',
-                borderRadius: '24px',
-                padding: '30px',
-                border: '1px solid var(--md-sys-color-outline-variant)',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
-            }}>
-
-                {/* Content Breakdown Header */}
-                <div style={{ marginBottom: '20px' }}>
-                    <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>Progress Breakdown</h3>
-                    <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>Track your completion across subjects.</p>
-                </div>
-
-
-                {/* Expand All Papers Toggle */}
-                <div style={{ borderTop: '1px solid var(--md-sys-color-outline-variant)', paddingTop: '20px' }}>
-                    <div
-                        onClick={() => setShowAll(!showAll)}
-                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', userSelect: 'none' }}
+                {/* Carousel Navigation */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', marginBottom: '30px' }}>
+                    <button
+                        onClick={() => setCurrentIndex(Math.max(0, currentIndex - 1))}
+                        disabled={currentIndex === 0}
+                        style={{
+                            background: 'var(--md-sys-color-surface-container)',
+                            border: 'none',
+                            borderRadius: '50%',
+                            padding: '12px',
+                            cursor: currentIndex === 0 ? 'default' : 'pointer',
+                            opacity: currentIndex === 0 ? 0.3 : 1,
+                            color: 'var(--md-sys-color-on-surface)'
+                        }}
                     >
-                        <span style={{ fontWeight: 600, opacity: 0.8 }}>Full Breakdown ({activeItem.papers.length} Papers)</span>
-                        <span style={{ background: 'var(--md-sys-color-surface-variant)', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem' }}>
-                            {showAll ? 'Hide All' : 'Show All'}
-                        </span>
-                    </div>
+                        <ChevronLeft size={24} />
+                    </button>
 
-                    {showAll && (
-                        <div style={{
-                            marginTop: '20px',
-                            display: 'grid',
-                            gridTemplateColumns: '1fr 1fr 1fr',
-                            gap: '20px',
-                            animation: 'fadeIn 0.3s ease'
-                        }}>
-                            {['Maths', 'English', 'Science'].map(subj => (
-                                <div key={subj}>
-                                    <div style={{
-                                        fontSize: '0.8rem',
-                                        fontWeight: 700,
-                                        color: 'var(--md-sys-color-primary)',
-                                        marginBottom: '10px',
-                                        borderBottom: '2px solid var(--md-sys-color-primary-container)',
-                                        paddingBottom: '4px'
-                                    }}>
-                                        {subj}
-                                    </div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                        {activeItem.papers.filter(p => (p.subject || 'Maths') === subj).map(p => {
-                                            const done = trackerData[p.file_path]?.completed;
-                                            return (
-                                                <PaperCard
-                                                    key={p.file_path}
-                                                    paper={p}
-                                                    completed={done}
-                                                    onToggleComplete={() => markComplete(p.file_path, !done)}
-                                                />
-                                            );
-                                        })}
-                                    </div>
-                                </div>
+                    <div style={{ textAlign: 'center', minWidth: '200px' }}>
+                        <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--md-sys-color-primary)' }}>{activeItem.title}</div>
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '4px', marginTop: '8px' }}>
+                            {timeline.map((_, i) => (
+                                <div key={i} style={{
+                                    width: i === currentIndex ? '20px' : '6px',
+                                    height: '6px',
+                                    borderRadius: '3px',
+                                    background: i === currentIndex ? 'var(--md-sys-color-primary)' : 'var(--md-sys-color-outline-variant)',
+                                    transition: 'all 0.3s'
+                                }} />
                             ))}
                         </div>
-                    )}
-                </div>
-            </div>
+                    </div>
 
-            <style>{`
+                    <button
+                        onClick={() => setCurrentIndex(Math.min(timeline.length - 1, currentIndex + 1))}
+                        disabled={currentIndex === timeline.length - 1}
+                        style={{
+                            background: 'var(--md-sys-color-surface-container)',
+                            border: 'none',
+                            borderRadius: '50%',
+                            padding: '12px',
+                            cursor: currentIndex === timeline.length - 1 ? 'default' : 'pointer',
+                            opacity: currentIndex === timeline.length - 1 ? 0.3 : 1,
+                            color: 'var(--md-sys-color-on-surface)'
+                        }}
+                    >
+                        <ChevronRight size={24} />
+                    </button>
+                </div>
+
+                {/* CALL TO ACTION - Target Papers (Always visible for current focus) */}
+                <div style={{
+                    marginBottom: '30px',
+                    background: 'var(--md-sys-color-secondary-container)',
+                    padding: '24px',
+                    borderRadius: '24px',
+                    color: 'var(--md-sys-color-on-secondary-container)'
+                }}>
+                    <h3 style={{ fontSize: '1.2rem', marginBottom: '15px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        🚀 High Priority Tasks
+                    </h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {globalCta.map(paper => (
+                            <PaperCard
+                                key={paper.file_path}
+                                paper={paper}
+                                completed={trackerData[paper.file_path]?.completed}
+                                onToggleComplete={() => markComplete(paper.file_path, !trackerData[paper.file_path]?.completed)}
+                            />
+                        ))}
+                        {globalCta.length === 0 && (
+                            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '30px', opacity: 0.8 }}>
+                                🎉 No pending tasks! You're all caught up.
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Main Content Card (Milestone specific) */}
+                <div style={{
+                    background: 'var(--md-sys-color-surface-container-high)',
+                    borderRadius: '24px',
+                    padding: '30px',
+                    border: '1px solid var(--md-sys-color-outline-variant)',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+                }}>
+
+                    {/* Content Breakdown Header */}
+                    <div style={{ marginBottom: '20px' }}>
+                        <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>Progress Breakdown</h3>
+                        <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>Track your completion across subjects.</p>
+                    </div>
+
+
+                    {/* Expand All Papers Toggle */}
+                    <div style={{ borderTop: '1px solid var(--md-sys-color-outline-variant)', paddingTop: '20px' }}>
+                        <div
+                            onClick={() => setShowAll(!showAll)}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', userSelect: 'none' }}
+                        >
+                            <span style={{ fontWeight: 600, opacity: 0.8 }}>Full Breakdown ({activeItem.papers.length} Papers)</span>
+                            <span style={{ background: 'var(--md-sys-color-surface-variant)', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem' }}>
+                                {showAll ? 'Hide All' : 'Show All'}
+                            </span>
+                        </div>
+
+                        {showAll && (
+                            <div style={{
+                                marginTop: '20px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '24px',
+                                animation: 'fadeIn 0.3s ease'
+                            }}>
+                                {['Maths', 'English', 'Science'].map(subj => (
+                                    <div key={subj}>
+                                        <div style={{
+                                            fontSize: '0.8rem',
+                                            fontWeight: 700,
+                                            color: 'var(--md-sys-color-primary)',
+                                            marginBottom: '10px',
+                                            borderBottom: '2px solid var(--md-sys-color-primary-container)',
+                                            paddingBottom: '4px'
+                                        }}>
+                                            {subj}
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                            {activeItem.papers.filter(p => (p.subject || 'Maths') === subj).map(p => {
+                                                const done = trackerData[p.file_path]?.completed;
+                                                return (
+                                                    <PaperCard
+                                                        key={p.file_path}
+                                                        paper={p}
+                                                        completed={done}
+                                                        onToggleComplete={() => markComplete(p.file_path, !done)}
+                                                    />
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <style>{`
                 @keyframes fadeIn {
                     from { opacity: 0; transform: translateY(10px); }
                     to { opacity: 1; transform: translateY(0); }
                 }
             `}</style>
-        </div>
-    );
+            </div>
+            );
 };
