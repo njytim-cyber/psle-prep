@@ -47,6 +47,21 @@ export interface XPStats {
     };
 }
 
+export interface MilestoneProgress {
+    title: string;
+    total: number;
+    done: number;
+    pct: number;
+    level: string;
+    exam: string;
+}
+
+const EXAM_TERM_MAPPING: { [key: string]: string[] } = {
+    'WA1': ['CA1', 'WA1'],
+    'WA2': ['CA2', 'WA2', 'SA1'],
+    'EYE': ['WA3', 'SA2', 'Prelim']
+};
+
 const XP_WEIGHTS: { [key: string]: number } = {
     'SA1': 100, 'SA2': 100, 'Prelim': 120, 'Final Exam': 120,
     'WA1': 50, 'WA2': 50, 'WA3': 50, 'CA1': 50, 'CA2': 50
@@ -69,6 +84,8 @@ interface StateContextType {
     filters: Filters;
     setFilters: React.Dispatch<React.SetStateAction<Filters>>;
     xpStats: XPStats;
+    milestoneStats: MilestoneProgress | null;
+    totalCompleted: number;
 }
 
 const StateContext = createContext<StateContextType | null>(null);
@@ -146,6 +163,47 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
         };
 
     }, [papers, trackerData]);
+
+    const totalCompleted = useMemo(() => {
+        return Object.values(trackerData).filter(item => item.completed).length;
+    }, [trackerData]);
+
+    // Calculate Milestone Stats (Memoized)
+    const milestoneStats = useMemo(() => {
+        const levels = ['P4', 'P5', 'P6'];
+        const exams = ['WA1', 'WA2', 'EYE'];
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+
+        for (const level of levels) {
+            for (const exam of exams) {
+                const settings = examPlannerSettings[level] || {};
+                const dateStr = settings[exam] || '';
+                const dateObj = dateStr ? new Date(dateStr) : null;
+
+                if (dateObj && dateObj >= now) {
+                    const terms = EXAM_TERM_MAPPING[exam] || [];
+                    const milestonePapers = papers.filter(p =>
+                        (p.level || 'P4') === level &&
+                        terms.includes(p.term)
+                    );
+
+                    const total = milestonePapers.length;
+                    const done = milestonePapers.filter(p => trackerData[p.file_path]?.completed).length;
+
+                    return {
+                        title: `${level} ${exam === 'EYE' ? (level === 'P6' ? 'PSLE' : 'End Year Exam') : exam}`,
+                        total,
+                        done,
+                        pct: total > 0 ? (done / total) * 100 : 0,
+                        level,
+                        exam
+                    };
+                }
+            }
+        }
+        return null;
+    }, [papers, trackerData, examPlannerSettings]);
 
 
     // Load Data
@@ -243,7 +301,9 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
             saveNotes,
             filters,
             setFilters,
-            xpStats
+            xpStats,
+            milestoneStats,
+            totalCompleted
         }}>
             {children}
         </StateContext.Provider>

@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useStateContext, Paper } from '../context/StateContext';
 import { ChevronLeft, ChevronRight, CheckCircle2, Circle, Clock } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { PaperCard } from '../components/ui/PaperCard';
 
 const EXAM_TERM_MAPPING: { [key: string]: string[] } = {
     'WA1': ['CA1', 'WA1'],
@@ -208,34 +209,12 @@ export const ExamPlan = () => {
                 </h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
                     {globalCta.map(paper => (
-                        <div key={paper.file_path} style={{
-                            background: 'var(--md-sys-color-surface-container-highest)',
-                            padding: '20px',
-                            borderRadius: '20px',
-                            border: '1px solid var(--md-sys-color-outline-variant)',
-                            transition: 'transform 0.2s',
-                            cursor: 'pointer'
-                        }} onClick={() => navigate(`/paper/${encodeURIComponent(paper.file_path)}`)}>
-                            <div style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-tertiary)', fontWeight: 800, marginBottom: '8px', letterSpacing: '0.5px' }}>{paper.subject.toUpperCase()}</div>
-                            <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '16px', color: 'var(--md-sys-color-on-surface)' }}>{paper.school} ({paper.year})</div>
-                            <Link
-                                to={`/paper/${encodeURIComponent(paper.file_path)}`}
-                                onClick={(e) => e.stopPropagation()}
-                                style={{
-                                    display: 'block',
-                                    textAlign: 'center',
-                                    padding: '10px',
-                                    background: 'var(--md-sys-color-primary)',
-                                    color: 'var(--md-sys-color-on-primary)',
-                                    textDecoration: 'none',
-                                    borderRadius: '12px',
-                                    fontSize: '0.9rem',
-                                    fontWeight: 700
-                                }}
-                            >
-                                Solve Now
-                            </Link>
-                        </div>
+                        <PaperCard
+                            key={paper.file_path}
+                            paper={paper}
+                            completed={trackerData[paper.file_path]?.completed}
+                            onToggleComplete={() => markComplete(paper.file_path, !trackerData[paper.file_path]?.completed)}
+                        />
                     ))}
                     {globalCta.length === 0 && (
                         <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '30px', opacity: 0.8 }}>
@@ -254,15 +233,10 @@ export const ExamPlan = () => {
                 boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
             }}>
 
-                {/* Progress Visual */}
-                <div style={{ marginBottom: '40px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '0.9rem' }}>
-                        <span>Overall Milestone Progress</span>
-                        <span style={{ fontWeight: 700 }}>{Math.round(activeItem.stats.pct)}% ({activeItem.stats.done}/{activeItem.stats.total})</span>
-                    </div>
-                    <div style={{ height: '12px', background: 'var(--md-sys-color-surface-variant)', borderRadius: '6px', overflow: 'hidden' }}>
-                        <div style={{ width: `${activeItem.stats.pct}%`, height: '100%', background: 'var(--md-sys-color-primary)', transition: 'width 0.8s ease' }} />
-                    </div>
+                {/* Content Breakdown Header */}
+                <div style={{ marginBottom: '20px' }}>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>Progress Breakdown</h3>
+                    <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>Track your completion across subjects.</p>
                 </div>
 
 
@@ -302,14 +276,12 @@ export const ExamPlan = () => {
                                         {activeItem.papers.filter(p => (p.subject || 'Maths') === subj).map(p => {
                                             const done = trackerData[p.file_path]?.completed;
                                             return (
-                                                <div key={p.file_path} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', opacity: done ? 0.6 : 1 }}>
-                                                    <div onClick={() => markComplete(p.file_path, !done)} style={{ cursor: 'pointer', flexShrink: 0 }}>
-                                                        {done ? <CheckCircle2 size={16} color="var(--md-sys-color-success)" /> : <Circle size={16} />}
-                                                    </div>
-                                                    <Link to={`/paper/${encodeURIComponent(p.file_path)}`} style={{ textDecoration: 'none', color: 'inherit', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                                        {p.year} {p.school}
-                                                    </Link>
-                                                </div>
+                                                <PaperCard
+                                                    key={p.file_path}
+                                                    paper={p}
+                                                    completed={done}
+                                                    onToggleComplete={() => markComplete(p.file_path, !done)}
+                                                />
                                             );
                                         })}
                                     </div>

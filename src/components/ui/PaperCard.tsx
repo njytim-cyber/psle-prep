@@ -23,39 +23,44 @@ export const PaperCard: React.FC<PaperCardProps> = ({ paper, completed, onToggle
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '12px 16px',
-                background: 'var(--md-sys-color-surface-container)', // Lighter/Cleaner surface
+                padding: '10px 12px',
+                background: 'var(--md-sys-color-surface-container)',
                 marginBottom: '8px',
                 borderRadius: '8px',
                 border: '1px solid var(--md-sys-color-outline-variant)',
                 cursor: 'pointer',
-                transition: 'background 0.2s'
+                transition: 'background 0.2s',
+                width: '100%',
+                boxSizing: 'border-box'
             }}
             onMouseEnter={e => e.currentTarget.style.background = 'var(--md-sys-color-surface-container-high)'}
             onMouseLeave={e => e.currentTarget.style.background = 'var(--md-sys-color-surface-container)'}
         >
             {/* Left Info */}
-            <div style={{ flex: 1, minWidth: 0, paddingRight: '16px' }}>
+            <div style={{ flex: 1, minWidth: 0, paddingRight: '8px' }}>
                 <div style={{
-                    fontSize: '1rem',
-                    fontWeight: 500,
+                    fontSize: '0.9rem',
+                    fontWeight: 600,
                     color: completed ? 'var(--md-sys-color-on-surface-variant)' : 'var(--md-sys-color-on-surface)',
                     marginBottom: '4px',
                     textDecoration: completed ? 'line-through' : 'none',
-                    opacity: completed ? 0.7 : 1
+                    opacity: completed ? 0.7 : 1,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
                 }}>
                     {paper.title}
                 </div>
 
                 {/* Minimal Meta Data */}
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', fontSize: '0.8rem', color: 'var(--md-sys-color-on-surface-variant)' }}>
-                    <span style={{ fontWeight: 600, color: 'var(--md-sys-color-primary)' }}>{paper.school}</span>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'nowrap', overflow: 'hidden', fontSize: '0.75rem', color: 'var(--md-sys-color-on-surface-variant)' }}>
+                    <span style={{ fontWeight: 700, color: 'var(--md-sys-color-primary)', whiteSpace: 'nowrap' }}>{paper.school}</span>
                     <span>•</span>
-                    <span>{paper.year}</span>
+                    <span style={{ whiteSpace: 'nowrap' }}>{paper.year}</span>
                     <span>•</span>
                     <span style={{
                         display: 'inline-block',
-                        padding: '0 6px',
+                        padding: '0 4px',
                         borderRadius: '4px',
                         background: 'var(--md-sys-color-secondary-container)',
                         color: 'var(--md-sys-color-on-secondary-container)',
