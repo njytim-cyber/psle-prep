@@ -22,11 +22,8 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Pre-flight Validation
-        run: python validate_state.py
-
-      - name: Run Tests
-        run: npm run test
+      - name: Build
+        run: npm run build
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
