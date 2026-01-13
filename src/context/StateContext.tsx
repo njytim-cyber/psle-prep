@@ -77,6 +77,8 @@ interface StateContextType {
     setExamPlannerSettings: (settings: Record<string, Record<string, string>>) => void;
     saveData: () => Promise<void>;
     loadingData: boolean;
+    papersLoading: boolean;
+    papersError: string | null;
     markComplete: (paperId: string, completed: boolean) => void;
     saveNotes: (paperId: string, notes: string) => void;
     // New Fields
@@ -100,6 +102,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     const { user } = useAuth();
     const [papers, setPapers] = useState<Paper[]>([]);
     const [papersLoading, setPapersLoading] = useState(true);
+    const [papersError, setPapersError] = useState<string | null>(null);
     const [trackerData, setTrackerData] = useState<TrackerData>({});
     const [userAvatar, setUserAvatar] = useState<string | undefined>(undefined);
     const [examPlannerSettings, setExamPlannerSettings] = useState(JSON.parse(JSON.stringify(DEFAULT_EXAM_SETTINGS)));
@@ -107,14 +110,20 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Load papers data from JSON
     useEffect(() => {
+        console.log('Fetching papers from /data/papers.json...');
         fetch('/data/papers.json')
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                return res.json();
+            })
             .then((data: Paper[]) => {
+                console.log('Papers loaded:', data.length);
                 setPapers(data);
                 setPapersLoading(false);
             })
             .catch(err => {
                 console.error('Failed to load papers:', err);
+                setPapersError(err.message);
                 setPapersLoading(false);
             });
     }, []);
@@ -320,6 +329,8 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
             setExamPlannerSettings,
             saveData,
             loadingData,
+            papersLoading,
+            papersError,
             markComplete,
             saveNotes,
             filters,

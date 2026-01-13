@@ -17,7 +17,7 @@ const ENCOURAGEMENTS = [
 ];
 
 export const Home = () => {
-    const { papers, trackerData, markComplete, filters, loadingData } = useStateContext();
+    const { papers, trackerData, markComplete, filters, loadingData, papersLoading, papersError } = useStateContext();
     const { showToast } = useToast();
     const [showConfetti, setShowConfetti] = useState(false);
 
@@ -83,8 +83,13 @@ export const Home = () => {
                 </div>
 
                 {/* Paper List with Loading State */}
-                {loadingData ? (
+                {loadingData || papersLoading ? (
                     <GridSkeleton count={6} />
+                ) : papersError ? (
+                    <div style={{ textAlign: 'center', color: 'red', marginTop: '40px' }}>
+                        <h3>Error loading papers</h3>
+                        <p>{papersError}</p>
+                    </div>
                 ) : (
                     <div id="paper-list" style={{ maxWidth: '1000px', paddingBottom: '40px' }}>
                         {filteredPapers.map((paper) => {
@@ -109,6 +114,9 @@ export const Home = () => {
                                 </h3>
                                 <p style={{ font: 'var(--md-sys-typescale-body-medium)' }}>
                                     Try clearing some filters in the sidebar.
+                                </p>
+                                <p style={{ fontSize: '0.8rem', opacity: 0.7, marginTop: '10px' }}>
+                                    (Debug: {papers.length} total papers loaded. Active filters: {JSON.stringify(filters).length})
                                 </p>
                             </div>
                         )}
