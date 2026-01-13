@@ -103,9 +103,6 @@ export const PdfView = () => {
                     </button>
                     <div id="paper-info">
                         <h2 id="current-title">{paper.title}</h2>
-                        <p id="current-details" style={{ opacity: 0.7, fontSize: '0.8rem' }}>
-                            {paper.subject} | {paper.level} | {paper.year} | {paper.term} | {paper.school}
-                        </p>
                     </div>
                 </div>
                 <div>

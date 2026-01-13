@@ -34,6 +34,7 @@ export const Sidebar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [avatarModalOpen, setAvatarModalOpen] = useState(false);
     const [xpModalOpen, setXpModalOpen] = useState(false);
+    const [isSchoolDropdownOpen, setIsSchoolDropdownOpen] = useState(false);
 
     const uniqueLevels = Array.from(new Set(papers.map(p => p.level || 'P4'))).sort();
     const uniqueTerms = ['CA1', 'CA2', 'WA1', 'WA2', 'WA3', 'SA1', 'SA2', 'Prelim'];
@@ -291,51 +292,146 @@ export const Sidebar = () => {
                                 </div>
 
                                 {/* School Filter */}
-                                <div style={{ marginBottom: '16px' }}>
+                                <div style={{ marginBottom: '16px', position: 'relative' }}>
                                     <div style={{ fontSize: '0.8rem', marginBottom: '8px', opacity: 0.8 }}>School</div>
-                                    <input
-                                        type="text"
-                                        placeholder="Search schools..."
-                                        value={schoolSearch}
-                                        onChange={(e) => setSchoolSearch(e.target.value)}
+                                    <button
+                                        onClick={() => setIsSchoolDropdownOpen(!isSchoolDropdownOpen)}
                                         style={{
                                             width: '100%',
-                                            padding: '8px',
-                                            marginBottom: '8px',
-                                            borderRadius: '8px',
+                                            padding: '10px 12px',
+                                            borderRadius: '12px',
                                             border: '1px solid var(--md-sys-color-outline)',
                                             background: 'var(--md-sys-color-surface-container-high)',
                                             color: 'var(--md-sys-color-on-surface)',
-                                            fontSize: '0.75rem'
+                                            fontSize: '0.85rem',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            textAlign: 'left'
                                         }}
-                                    />
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '200px', overflowY: 'auto' }}>
-                                        {uniqueSchools
-                                            .filter(s => s.toLowerCase().includes(schoolSearch.toLowerCase()))
-                                            .map(s => (
+                                    >
+                                        <span style={{
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            marginRight: '8px'
+                                        }}>
+                                            {filters.school.length === 0
+                                                ? 'All Schools'
+                                                : filters.school.length === 1
+                                                    ? filters.school[0]
+                                                    : `${filters.school.length} Schools selected`}
+                                        </span>
+                                        <ChevronRight size={16} style={{
+                                            transform: isSchoolDropdownOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+                                            transition: 'transform 0.2s',
+                                            flexShrink: 0
+                                        }} />
+                                    </button>
+
+                                    {isSchoolDropdownOpen && (
+                                        <div style={{
+                                            position: 'absolute',
+                                            top: '100%',
+                                            left: 0,
+                                            right: 0,
+                                            marginTop: '4px',
+                                            background: 'var(--md-sys-color-surface-container-highest)',
+                                            border: '1px solid var(--md-sys-color-outline-variant)',
+                                            borderRadius: '12px',
+                                            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                                            padding: '12px',
+                                            zIndex: 100
+                                        }}>
+                                            <input
+                                                type="text"
+                                                placeholder="Search schools..."
+                                                value={schoolSearch}
+                                                onChange={(e) => setSchoolSearch(e.target.value)}
+                                                autoFocus
+                                                style={{
+                                                    width: '100%',
+                                                    padding: '8px 12px',
+                                                    marginBottom: '10px',
+                                                    borderRadius: '8px',
+                                                    border: '1px solid var(--md-sys-color-outline)',
+                                                    background: 'var(--md-sys-color-surface)',
+                                                    color: 'var(--md-sys-color-on-surface)',
+                                                    fontSize: '0.8rem'
+                                                }}
+                                            />
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', maxHeight: '200px', overflowY: 'auto', paddingRight: '4px' }}>
+                                                {uniqueSchools
+                                                    .filter(s => s.toLowerCase().includes(schoolSearch.toLowerCase()))
+                                                    .map(s => {
+                                                        const isSelected = filters.school.includes(s);
+                                                        return (
+                                                            <button
+                                                                key={s}
+                                                                onClick={() => toggleFilter('school', s)}
+                                                                style={{
+                                                                    padding: '8px 10px',
+                                                                    borderRadius: '8px',
+                                                                    border: 'none',
+                                                                    background: isSelected ? 'var(--md-sys-color-primary-container)' : 'transparent',
+                                                                    color: isSelected ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
+                                                                    fontSize: '0.8rem',
+                                                                    cursor: 'pointer',
+                                                                    textAlign: 'left',
+                                                                    width: '100%',
+                                                                    whiteSpace: 'nowrap',
+                                                                    overflow: 'hidden',
+                                                                    textOverflow: 'ellipsis',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    gap: '8px'
+                                                                }}
+                                                                title={s}
+                                                            >
+                                                                <div style={{
+                                                                    width: '14px',
+                                                                    height: '14px',
+                                                                    borderRadius: '3px',
+                                                                    border: `1.5px solid ${isSelected ? 'var(--md-sys-color-primary)' : 'var(--md-sys-color-outline)'}`,
+                                                                    background: isSelected ? 'var(--md-sys-color-primary)' : 'transparent',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                    flexShrink: 0
+                                                                }}>
+                                                                    {isSelected && <div style={{ width: '6px', height: '6px', background: 'white', borderRadius: '1px' }} />}
+                                                                </div>
+                                                                {s}
+                                                            </button>
+                                                        );
+                                                    })}
+                                                {uniqueSchools.filter(s => s.toLowerCase().includes(schoolSearch.toLowerCase())).length === 0 && (
+                                                    <div style={{ padding: '12px', textAlign: 'center', fontSize: '0.8rem', opacity: 0.6 }}>
+                                                        No schools found
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {filters.school.length > 0 && (
                                                 <button
-                                                    key={s}
-                                                    onClick={() => toggleFilter('school', s)}
+                                                    onClick={() => setFilters(prev => ({ ...prev, school: [] }))}
                                                     style={{
-                                                        padding: '6px 10px',
-                                                        borderRadius: '8px',
-                                                        border: 'none',
-                                                        background: filters.school.includes(s) ? 'var(--md-sys-color-primary-container)' : 'transparent',
-                                                        color: filters.school.includes(s) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
-                                                        fontSize: '0.75rem',
-                                                        cursor: 'pointer',
-                                                        textAlign: 'left',
+                                                        marginTop: '8px',
                                                         width: '100%',
-                                                        whiteSpace: 'nowrap',
-                                                        overflow: 'hidden',
-                                                        textOverflow: 'ellipsis'
+                                                        padding: '6px',
+                                                        background: 'transparent',
+                                                        border: '1px solid var(--md-sys-color-outline-variant)',
+                                                        color: 'var(--md-sys-color-primary)',
+                                                        borderRadius: '8px',
+                                                        fontSize: '0.75rem',
+                                                        cursor: 'pointer'
                                                     }}
-                                                    title={s}
                                                 >
-                                                    {s}
+                                                    Clear selection
                                                 </button>
-                                            ))}
-                                    </div>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </>
                         )}

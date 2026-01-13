@@ -109,6 +109,11 @@ export const ExamPlan = () => {
         return result;
     }, [papers, trackerData, examPlannerSettings]);
 
+    const globalCta = useMemo(() => {
+        const nextMilestone = timeline.find(m => m.isNext) || timeline.find(m => !m.isPast) || timeline[0];
+        return nextMilestone?.cta || [];
+    }, [timeline]);
+
     // Set initial index to next milestone
     const [prevTimeline, setPrevTimeline] = useState(timeline);
     if (timeline !== prevTimeline) {
@@ -132,14 +137,11 @@ export const ExamPlan = () => {
     const activeItem = timeline[currentIndex];
     if (!activeItem) return null;
 
-    const daysLeft = activeItem.date ? Math.ceil((new Date(activeItem.date).getTime() - new Date().setHours(0, 0, 0, 0)) / (86400000)) : null;
-
     return (
         <div id="exam-view" className="view-pane" style={{ overflowY: 'auto', padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
 
             <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-                <h1 style={{ fontSize: '2rem', marginBottom: '8px' }}>🎓 Your Exam Journey</h1>
-                <p style={{ opacity: 0.7 }}>Personalized roadmap to {activeItem.level === 'P6' ? 'PSLE' : 'success'}</p>
+                <h1 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '8px' }}>🎓 Your Exam Journey</h1>
             </div>
 
             {/* Carousel Navigation */}
@@ -161,8 +163,7 @@ export const ExamPlan = () => {
                 </button>
 
                 <div style={{ textAlign: 'center', minWidth: '200px' }}>
-                    <div style={{ fontSize: '0.8rem', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '1px' }}>Current Milestone</div>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{activeItem.title}</div>
+                    <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--md-sys-color-primary)' }}>{activeItem.title}</div>
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '4px', marginTop: '8px' }}>
                         {timeline.map((_, i) => (
                             <div key={i} style={{
@@ -193,7 +194,57 @@ export const ExamPlan = () => {
                 </button>
             </div>
 
-            {/* Main Content Card */}
+            {/* CALL TO ACTION - Target Papers (Always visible for current focus) */}
+            <div style={{
+                marginBottom: '30px',
+                background: 'var(--md-sys-color-secondary-container)',
+                padding: '24px',
+                borderRadius: '24px',
+                color: 'var(--md-sys-color-on-secondary-container)'
+            }}>
+                <h3 style={{ fontSize: '1.2rem', marginBottom: '15px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    🚀 High Priority Tasks
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
+                    {globalCta.map(paper => (
+                        <div key={paper.file_path} style={{
+                            background: 'var(--md-sys-color-surface-container-highest)',
+                            padding: '20px',
+                            borderRadius: '20px',
+                            border: '1px solid var(--md-sys-color-outline-variant)',
+                            transition: 'transform 0.2s',
+                            cursor: 'pointer'
+                        }} onClick={() => window.location.hash = `/view/${encodeURIComponent(paper.file_path)}`}>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-tertiary)', fontWeight: 800, marginBottom: '8px', letterSpacing: '0.5px' }}>{paper.subject.toUpperCase()}</div>
+                            <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '16px', color: 'var(--md-sys-color-on-surface)' }}>{paper.school} ({paper.year})</div>
+                            <Link
+                                to={`/view/${encodeURIComponent(paper.file_path)}`}
+                                onClick={(e) => e.stopPropagation()}
+                                style={{
+                                    display: 'block',
+                                    textAlign: 'center',
+                                    padding: '10px',
+                                    background: 'var(--md-sys-color-primary)',
+                                    color: 'var(--md-sys-color-on-primary)',
+                                    textDecoration: 'none',
+                                    borderRadius: '12px',
+                                    fontSize: '0.9rem',
+                                    fontWeight: 700
+                                }}
+                            >
+                                Solve Now
+                            </Link>
+                        </div>
+                    ))}
+                    {globalCta.length === 0 && (
+                        <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '30px', opacity: 0.8 }}>
+                            🎉 No pending tasks! You're all caught up.
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Main Content Card (Milestone specific) */}
             <div style={{
                 background: 'var(--md-sys-color-surface-container-high)',
                 borderRadius: '24px',
@@ -201,40 +252,6 @@ export const ExamPlan = () => {
                 border: '1px solid var(--md-sys-color-outline-variant)',
                 boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
             }}>
-                {/* Milestone Header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '30px' }}>
-                    <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <h2 style={{ margin: 0, fontSize: '1.5rem' }}>🎯 Focus Status</h2>
-                            {activeItem.isNext && <span style={{ background: 'var(--md-sys-color-tertiary-container)', color: 'var(--md-sys-color-on-tertiary-container)', padding: '2px 10px', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 700 }}>NEXT UP</span>}
-                        </div>
-
-                        {editingId === activeItem.id ? (
-                            <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-                                <input
-                                    type="date"
-                                    value={activeItem.date}
-                                    onChange={(e) => handleDateChange(activeItem.level, activeItem.exam, e.target.value)}
-                                    style={{ padding: '6px', borderRadius: '8px', border: '1px solid var(--md-sys-color-outline)', background: 'var(--md-sys-color-surface)', color: 'var(--md-sys-color-on-surface)' }}
-                                />
-                                <button onClick={handleSave} style={{ background: 'var(--md-sys-color-primary)', color: 'var(--md-sys-color-on-primary)', border: 'none', padding: '6px 15px', borderRadius: '8px', cursor: 'pointer' }}>Set Date</button>
-                            </div>
-                        ) : (
-                            <div onClick={() => setEditingId(activeItem.id)} style={{ marginTop: '8px', opacity: 0.8, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <Clock size={16} />
-                                <span>{activeItem.date ? new Date(activeItem.date).toLocaleDateString(undefined, { dateStyle: 'long' }) : 'Set Date'}</span>
-                                <span style={{ fontSize: '0.8rem' }}>✏️</span>
-                            </div>
-                        )}
-                    </div>
-
-                    {daysLeft !== null && (
-                        <div style={{ background: 'var(--md-sys-color-secondary-container)', padding: '10px 20px', borderRadius: '16px', textAlign: 'center' }}>
-                            <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--md-sys-color-on-secondary-container)' }}>{daysLeft}</div>
-                            <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: 600 }}>Days Left</div>
-                        </div>
-                    )}
-                </div>
 
                 {/* Progress Visual */}
                 <div style={{ marginBottom: '40px' }}>
@@ -247,45 +264,6 @@ export const ExamPlan = () => {
                     </div>
                 </div>
 
-                {/* CALL TO ACTION - Target Papers */}
-                <div style={{ marginBottom: '40px' }}>
-                    <h3 style={{ fontSize: '1.1rem', marginBottom: '15px', opacity: 0.9 }}>📋 High Priority Tasks</h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
-                        {activeItem.cta.map(paper => (
-                            <div key={paper.file_path} style={{
-                                background: 'var(--md-sys-color-surface-container-highest)',
-                                padding: '15px',
-                                borderRadius: '16px',
-                                border: '1px solid var(--md-sys-color-outline-variant)',
-                                position: 'relative'
-                            }}>
-                                <div style={{ fontSize: '0.7rem', color: 'var(--md-sys-color-tertiary)', fontWeight: 700, marginBottom: '5px' }}>{paper.subject.toUpperCase()}</div>
-                                <div style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '12px', lineHeight: 1.3 }}>{paper.school} ({paper.year})</div>
-                                <Link
-                                    to={`/view/${encodeURIComponent(paper.file_path)}`}
-                                    style={{
-                                        display: 'block',
-                                        textAlign: 'center',
-                                        padding: '8px',
-                                        background: 'var(--md-sys-color-primary)',
-                                        color: 'var(--md-sys-color-on-primary)',
-                                        textDecoration: 'none',
-                                        borderRadius: '8px',
-                                        fontSize: '0.8rem',
-                                        fontWeight: 600
-                                    }}
-                                >
-                                    Solve Now
-                                </Link>
-                            </div>
-                        ))}
-                        {activeItem.cta.length === 0 && (
-                            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '20px', background: 'var(--md-sys-color-surface-container)', borderRadius: '16px', opacity: 0.7 }}>
-                                🎉 All high priority papers for this milestone are done!
-                            </div>
-                        )}
-                    </div>
-                </div>
 
                 {/* Expand All Papers Toggle */}
                 <div style={{ borderTop: '1px solid var(--md-sys-color-outline-variant)', paddingTop: '20px' }}>
