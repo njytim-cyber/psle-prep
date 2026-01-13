@@ -205,14 +205,19 @@ export const ExamPlan = () => {
                     <h3 style={{ fontSize: '1.2rem', marginBottom: '15px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px' }}>
                         🚀 High Priority Tasks
                     </h3>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(3, 1fr)',
+                        gap: '16px'
+                    }}>
                         {globalCta.map(paper => (
-                            <PaperCard
-                                key={paper.file_path}
-                                paper={paper}
-                                completed={trackerData[paper.file_path]?.completed}
-                                onToggleComplete={() => markComplete(paper.file_path, !trackerData[paper.file_path]?.completed)}
-                            />
+                            <div key={paper.file_path} style={{ minWidth: 0 }}>
+                                <PaperCard
+                                    paper={paper}
+                                    completed={trackerData[paper.file_path]?.completed}
+                                    onToggleComplete={() => markComplete(paper.file_path, !trackerData[paper.file_path]?.completed)}
+                                />
+                            </div>
                         ))}
                         {globalCta.length === 0 && (
                             <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '30px', opacity: 0.8 }}>
@@ -261,7 +266,7 @@ export const ExamPlan = () => {
                                 {['Maths', 'English', 'Science'].map(subj => {
                                     const subjPapers = activeItem.papers.filter(p => (p.subject || 'Maths') === subj);
                                     return (
-                                        <div key={subj}>
+                                        <div key={subj} style={{ minWidth: 0 }}>
                                             <div style={{
                                                 fontSize: '0.8rem',
                                                 fontWeight: 700,
