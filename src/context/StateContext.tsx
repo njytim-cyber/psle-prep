@@ -110,14 +110,12 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Load papers data from JSON
     useEffect(() => {
-        console.log('Fetching papers from /data/papers.json...');
         fetch('/data/papers.json')
             .then(res => {
                 if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
                 return res.json();
             })
             .then((data: Paper[]) => {
-                console.log('Papers loaded:', data.length);
                 setPapers(data);
                 setPapersLoading(false);
             })

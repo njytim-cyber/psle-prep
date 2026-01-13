@@ -115,9 +115,6 @@ export const Home = () => {
                                 <p style={{ font: 'var(--md-sys-typescale-body-medium)' }}>
                                     Try clearing some filters in the sidebar.
                                 </p>
-                                <p style={{ fontSize: '0.8rem', opacity: 0.7, marginTop: '10px' }}>
-                                    (Debug: {papers.length} total papers loaded. Active filters: {JSON.stringify(filters).length})
-                                </p>
                             </div>
                         )}
                     </div>
