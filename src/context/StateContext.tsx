@@ -3,7 +3,7 @@ import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useAuth } from './AuthContext';
 import { papers as initialPapers } from '../data/papers';
-import { DEFAULT_EXAM_SETTINGS, AVATARS } from '../data/constants';
+import { DEFAULT_EXAM_SETTINGS } from '../data/constants';
 
 export interface Paper {
     title: string;
@@ -73,6 +73,7 @@ interface StateContextType {
 
 const StateContext = createContext<StateContextType | null>(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useStateContext = () => {
     const context = useContext(StateContext);
     if (!context) throw new Error("useStateContext must be used within a StateProvider");
@@ -106,7 +107,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
         for (const filePath in trackerData) {
             const item = trackerData[filePath];
             if (item.date && item.completed) {
-                let paper = papers.find(p => p.file_path === filePath);
+                const paper = papers.find(p => p.file_path === filePath);
                 // Fallback for mock papers if not found in list
                 const subj = paper?.subject || 'Maths';
                 const term = paper?.term || '';

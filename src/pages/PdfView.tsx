@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useStateContext } from '../context/StateContext';
 
@@ -65,7 +65,7 @@ export const PdfView = () => {
                     }
 
                     setPdfUrl(targetUrl);
-                } catch (err: any) {
+                } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
                     console.error("PDF Load Error:", err);
                     setError(err.message || "Failed to load PDF");
                 }
@@ -81,6 +81,7 @@ export const PdfView = () => {
         };
 
         loadPdf();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [paper]);
 
     if (!paper) {

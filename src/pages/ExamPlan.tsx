@@ -28,7 +28,7 @@ interface Milestone {
 
 export const ExamPlan = () => {
     const { papers, trackerData, examPlannerSettings, setExamPlannerSettings, saveData } = useStateContext();
-    const navigate = useNavigate();
+    // const navigate = useNavigate(); // Unused
     const nextMilestoneRef = useRef<HTMLDivElement>(null);
 
     const [editingId, setEditingId] = useState<string | null>(null);
@@ -57,10 +57,10 @@ export const ExamPlan = () => {
                 ).sort((a, b) => b.year - a.year);
 
                 // Stats
-                let total = milestonePapers.length;
-                let done = milestonePapers.filter(p => trackerData[p.file_path]?.completed).length;
+                const total = milestonePapers.length;
+                const done = milestonePapers.filter(p => trackerData[p.file_path]?.completed).length;
 
-                const subjStats: any = {};
+                const subjStats: Record<string, { total: number; done: number }> = {};
                 ['Maths', 'Science', 'English'].forEach(s => {
                     const sp = milestonePapers.filter(p => (p.subject || 'Maths') === s);
                     subjStats[s] = {
@@ -140,7 +140,7 @@ export const ExamPlan = () => {
                     borderRadius: '2px'
                 }} />
 
-                {timeline.map((item, idx) => {
+                {timeline.map((item) => {
                     const daysLeft = item.date ? Math.ceil((new Date(item.date).getTime() - new Date().setHours(0, 0, 0, 0)) / (86400000)) : null;
                     const isEditing = editingId === item.id;
 

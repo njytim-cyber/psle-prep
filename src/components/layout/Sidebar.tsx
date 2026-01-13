@@ -7,20 +7,17 @@ import {
     Award,
     ChevronLeft,
     ChevronRight,
-    Search,
     BookOpen,
     Filter
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useStateContext } from '../../context/StateContext';
 import { Avatar } from '../ui/Avatar';
-import { AVATARS } from '../../data/constants';
 
 export const Sidebar = () => {
-    const { user, signInWithGoogle, signOut } = useAuth();
+    const { user, signInWithGoogle } = useAuth();
     const {
         papers,
-        trackerData,
         userAvatar,
         setUserAvatar,
         saveData,

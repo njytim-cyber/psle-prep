@@ -73,7 +73,7 @@ export const PaperCard: React.FC<PaperCardProps> = ({ paper, completed, onToggle
             <div
                 onClick={(e) => {
                     e.stopPropagation();
-                    onToggleComplete && onToggleComplete(e);
+                    onToggleComplete?.(e);
                 }}
                 style={{
                     display: 'flex',
