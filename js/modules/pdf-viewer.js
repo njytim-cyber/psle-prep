@@ -31,26 +31,57 @@ export function loadPaper(paperOrUrl) {
     // Priority: PDF Link (Remote) > File Path (Local) > Source URL (Page)
     let targetUrl = paper.pdf_link || paper.file_path || paper.url;
 
-    const isSelfLink = targetUrl.includes(window.location.hostname) && (targetUrl.includes('index.html') || targetUrl.endsWith('/') || targetUrl.endsWith('.php'));
-    const isRelative = targetUrl === './' || targetUrl === '/' || targetUrl.startsWith('./');
+    const isRemoteViewer = targetUrl.includes('docs.google.com') || targetUrl.includes('drive.google.com');
 
-    if (!targetUrl || targetUrl.trim() === '' || isSelfLink || isRelative) {
-        viewerEl.removeAttribute('srcdoc');
-        viewerEl.src = '';
-        alert("No PDF document found for this paper. Link might be broken or leads back to the app.");
+    if (!targetUrl || targetUrl.trim() === '') {
+        resetViewer();
+        alert("No PDF document found for this paper.");
         return;
     }
 
-    // Use Google Docs Viewer for remote PDFs
-    if (paper.pdf_link) {
-        viewerEl.removeAttribute('srcdoc');
-        viewerEl.src = `https://docs.google.com/viewer?url=${encodeURIComponent(paper.pdf_link)}&embedded=true`;
-    } else {
-        viewerEl.removeAttribute('srcdoc');
-        viewerEl.src = targetUrl;
+    // Prevent immediate recursion for obvious self-links
+    if (targetUrl === './' || targetUrl === '/' || (targetUrl.includes(window.location.hostname) && !targetUrl.endsWith('.pdf'))) {
+        resetViewer();
+        alert("Invalid document link.");
+        return;
     }
 
-    document.getElementById('open-btn').href = targetUrl;
+    // For local files, verify existence to prevent SPA 404 fallback (Recursion)
+    if (!isRemoteViewer && !paper.pdf_link) {
+        // Show loading state?
+        viewerEl.src = 'about:blank';
+
+        fetch(targetUrl, { method: 'HEAD' })
+            .then(response => {
+                const contentType = response.headers.get('Content-Type');
+                if (contentType && contentType.includes('text/html')) {
+                    // It's a 404 rewrite to index.html
+                    throw new Error("File not found (HTML fallback detected)");
+                }
+                if (!response.ok) {
+                    throw new Error(`File load failed: ${response.status}`);
+                }
+                // Allowed
+                viewerEl.src = targetUrl;
+                document.getElementById('open-btn').href = targetUrl;
+            })
+            .catch(err => {
+                console.error("PDF Load Error:", err);
+                resetViewer();
+                alert(`Error loading paper: The PDF file is missing or inaccessible.\n(${err.message})`);
+            });
+
+    } else {
+        // Remote (Google Docs) or explicitly trusted
+        if (paper.pdf_link) {
+            viewerEl.removeAttribute('srcdoc');
+            viewerEl.src = `https://docs.google.com/viewer?url=${encodeURIComponent(paper.pdf_link)}&embedded=true`;
+        } else {
+            viewerEl.removeAttribute('srcdoc');
+            viewerEl.src = targetUrl;
+        }
+        document.getElementById('open-btn').href = targetUrl;
+    }
 
     // Notes
     const trackerData = getTrackerData();
@@ -58,6 +89,13 @@ export function loadPaper(paperOrUrl) {
     notesInput.value = savedData.notes || '';
 
     updateMainButton();
+}
+
+function resetViewer() {
+    const viewerEl = document.getElementById('pdf-viewer');
+    viewerEl.removeAttribute('srcdoc');
+    viewerEl.src = '';
+    document.getElementById('open-btn').href = '#';
 }
 
 export function updateMainButton() {
