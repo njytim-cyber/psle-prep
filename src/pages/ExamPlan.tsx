@@ -67,15 +67,24 @@ export const ExamPlan = () => {
 
                 ['Maths', 'Science', 'English'].forEach(s => {
                     const sp = milestonePapers.filter(p => (p.subject || 'Maths') === s);
+                    const completedInSubj = sp.filter(p => trackerData[p.file_path]?.completed).length;
                     subjStats[s] = {
                         total: sp.length,
-                        done: sp.filter(p => trackerData[p.file_path]?.completed).length
+                        done: completedInSubj
                     };
-
-                    // Pick top uncompleted paper for CTA
-                    const pending = sp.find(p => !trackerData[p.file_path]?.completed);
-                    if (pending) cta.push(pending);
                 });
+
+                // Pick deterministic Daily Tasks: 2 papers that are either uncompleted
+                // OR were completed today (stays there for the day)
+                const todayStr = new Date().toISOString().split('T')[0];
+                const pool = milestonePapers.filter(p =>
+                    !trackerData[p.file_path]?.completed ||
+                    trackerData[p.file_path]?.date === todayStr
+                );
+
+                // Deterministic sort to keep selection stable (by title/path)
+                const selection = pool.slice(0, 2);
+                cta.push(...selection);
 
                 const isPast = dateObj ? dateObj < now : false;
                 let isNext = false;
@@ -194,7 +203,6 @@ export const ExamPlan = () => {
                     </button>
                 </div>
 
-                {/* CALL TO ACTION - Target Papers (Always visible for current focus) */}
                 <div style={{
                     marginBottom: '30px',
                     background: 'var(--md-sys-color-secondary-container)',
@@ -203,15 +211,32 @@ export const ExamPlan = () => {
                     color: 'var(--md-sys-color-on-secondary-container)'
                 }}>
                     <h3 style={{ fontSize: '1.2rem', marginBottom: '15px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        🚀 High Priority Tasks
+                        📅 Daily Tasks
                     </h3>
                     <div style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(3, 1fr)',
+                        gridTemplateColumns: 'repeat(2, 1fr)',
                         gap: '16px'
                     }}>
-                        {globalCta.map(paper => (
-                            <div key={paper.file_path} style={{ minWidth: 0 }}>
+                        {globalCta.map((paper, idx) => (
+                            <div key={paper.file_path} style={{ minWidth: 0, position: 'relative' }}>
+                                {idx === 1 && (
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '-8px',
+                                        right: '20px',
+                                        background: 'var(--md-sys-color-tertiary)',
+                                        color: 'var(--md-sys-color-on-tertiary)',
+                                        padding: '2px 10px',
+                                        borderRadius: '10px',
+                                        fontSize: '0.65rem',
+                                        fontWeight: 800,
+                                        zIndex: 2,
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                                    }}>
+                                        STRETCH GOAL 🔥
+                                    </div>
+                                )}
                                 <PaperCard
                                     paper={paper}
                                     completed={trackerData[paper.file_path]?.completed}
@@ -265,21 +290,26 @@ export const ExamPlan = () => {
                             }}>
                                 {['Maths', 'English', 'Science'].map(subj => {
                                     const subjPapers = activeItem.papers.filter(p => (p.subject || 'Maths') === subj);
+                                    const stats = activeItem.stats.subjects[subj] || { done: 0, total: 0 };
+                                    const isAllDone = stats.done === stats.total && stats.total > 0;
+
                                     return (
                                         <div key={subj} style={{ minWidth: 0 }}>
                                             <div style={{
                                                 fontSize: '0.8rem',
                                                 fontWeight: 700,
-                                                color: 'var(--md-sys-color-primary)',
+                                                color: isAllDone ? 'var(--md-sys-color-tertiary)' : 'var(--md-sys-color-primary)',
                                                 marginBottom: '10px',
-                                                borderBottom: '2px solid var(--md-sys-color-primary-container)',
+                                                borderBottom: `2px solid ${isAllDone ? 'var(--md-sys-color-tertiary-container)' : 'var(--md-sys-color-primary-container)'}`,
                                                 paddingBottom: '4px',
                                                 display: 'flex',
                                                 justifyContent: 'space-between',
                                                 alignItems: 'center'
                                             }}>
                                                 <span>{subj}</span>
-                                                <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>({subjPapers.length})</span>
+                                                <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>
+                                                    {isAllDone ? 'Done! ✨' : `(${stats.done}/${stats.total})`}
+                                                </span>
                                             </div>
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                                 {subjPapers.map(p => {

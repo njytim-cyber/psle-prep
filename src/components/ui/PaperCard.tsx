@@ -42,7 +42,6 @@ export const PaperCard: React.FC<PaperCardProps> = ({ paper, completed, onToggle
                     fontSize: '0.9rem',
                     fontWeight: 600,
                     color: completed ? 'var(--md-sys-color-on-surface-variant)' : 'var(--md-sys-color-on-surface)',
-                    marginBottom: '4px',
                     textDecoration: completed ? 'line-through' : 'none',
                     opacity: completed ? 0.7 : 1,
                     whiteSpace: 'nowrap',
@@ -50,27 +49,6 @@ export const PaperCard: React.FC<PaperCardProps> = ({ paper, completed, onToggle
                     textOverflow: 'ellipsis'
                 }}>
                     {paper.title}
-                </div>
-
-                {/* Minimal Meta Data */}
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'nowrap', overflow: 'hidden', fontSize: '0.75rem', color: 'var(--md-sys-color-on-surface-variant)' }}>
-                    <span style={{ fontWeight: 700, color: 'var(--md-sys-color-primary)', whiteSpace: 'nowrap' }}>{paper.school}</span>
-                    <span>•</span>
-                    <span style={{ whiteSpace: 'nowrap' }}>{paper.year}</span>
-                    <span>•</span>
-                    <span style={{
-                        display: 'inline-block',
-                        padding: '0 4px',
-                        borderRadius: '4px',
-                        background: 'var(--md-sys-color-secondary-container)',
-                        color: 'var(--md-sys-color-on-secondary-container)',
-                        fontSize: '0.75rem',
-                        fontWeight: 600
-                    }}>
-                        {paper.term}
-                    </span>
-                    <span>•</span>
-                    <span>{paper.subject || 'Maths'}</span>
                 </div>
             </div>
 
