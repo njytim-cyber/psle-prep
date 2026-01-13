@@ -8,11 +8,36 @@ import { XpSystem } from './pages/XpSystem';
 import { PdfView } from './pages/PdfView';
 
 import { LoginOverlay } from './components/auth/LoginOverlay';
+import { useAuth } from './context/AuthContext';
 
 function App() {
+    const { user, loading } = useAuth();
+
+    if (loading) {
+        return (
+            <div style={{
+                height: '100vh',
+                width: '100vw',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'var(--md-sys-color-surface)'
+            }}>
+                <div className="loading-spinner"></div>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return (
+            <BrowserRouter>
+                <LoginOverlay />
+            </BrowserRouter>
+        );
+    }
+
     return (
         <BrowserRouter>
-            <LoginOverlay />
             <Routes>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<Home />} />

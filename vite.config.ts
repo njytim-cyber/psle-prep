@@ -15,7 +15,7 @@ export default defineConfig({
         content: ['papers.js'], // Ensure we don't clobber papers if they were in dist (they aren't)
     },
     server: {
-        port: 5000,
+        port: 5173,
         open: true,
     }
 });

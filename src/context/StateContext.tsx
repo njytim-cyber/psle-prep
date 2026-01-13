@@ -59,8 +59,8 @@ interface StateContextType {
     setTrackerData: React.Dispatch<React.SetStateAction<TrackerData>>;
     userAvatar: string | undefined;
     setUserAvatar: (avatar: string) => void;
-    examPlannerSettings: any;
-    setExamPlannerSettings: (settings: any) => void;
+    examPlannerSettings: Record<string, Record<string, string>>;
+    setExamPlannerSettings: (settings: Record<string, Record<string, string>>) => void;
     saveData: () => Promise<void>;
     loadingData: boolean;
     markComplete: (paperId: string, completed: boolean) => void;

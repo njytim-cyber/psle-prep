@@ -25,6 +25,10 @@ export const Sidebar = () => {
         filters,
         setFilters
     } = useStateContext();
+
+    // UI State
+    const [isFiltersExpanded, setIsFiltersExpanded] = useState(true);
+    const [schoolSearch, setSchoolSearch] = useState('');
     const location = useLocation();
 
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -168,136 +172,173 @@ export const Sidebar = () => {
                 {/* Filters - Only visible on Home and when expanded */}
                 {!isCollapsed && location.pathname === '/' && (
                     <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid var(--md-sys-color-outline-variant)' }}>
-                        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--md-sys-color-tertiary)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <Filter size={14} /> FILTERS
-                        </div>
-
-                        {/* Subject Filter */}
-                        <div style={{ marginBottom: '16px' }}>
-                            <div style={{ fontSize: '0.8rem', marginBottom: '8px', opacity: 0.8 }}>Subject</div>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                                {uniqueSubjects.map(s => (
-                                    <button
-                                        key={s}
-                                        onClick={() => toggleFilter('subject', s)}
-                                        style={{
-                                            padding: '4px 10px',
-                                            borderRadius: '8px',
-                                            border: '1px solid var(--md-sys-color-outline)',
-                                            background: filters.subject.includes(s) ? 'var(--md-sys-color-primary-container)' : 'transparent',
-                                            color: filters.subject.includes(s) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
-                                            fontSize: '0.75rem',
-                                            cursor: 'pointer'
-                                        }}
-                                    >
-                                        {s}
-                                    </button>
-                                ))}
+                        <div
+                            onClick={() => setIsFiltersExpanded(!isFiltersExpanded)}
+                            style={{
+                                fontSize: '0.8rem',
+                                fontWeight: 600,
+                                color: 'var(--md-sys-color-tertiary)',
+                                marginBottom: '12px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                cursor: 'pointer',
+                                userSelect: 'none'
+                            }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <Filter size={14} /> FILTERS
                             </div>
+                            <ChevronRight size={14} style={{ transform: isFiltersExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
                         </div>
 
-                        {/* Term Filter */}
-                        <div style={{ marginBottom: '16px' }}>
-                            <div style={{ fontSize: '0.8rem', marginBottom: '8px', opacity: 0.8 }}>Term</div>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px' }}>
-                                {uniqueTerms.map(t => (
-                                    <button
-                                        key={t}
-                                        onClick={() => toggleFilter('term', t)}
-                                        style={{
-                                            padding: '4px 6px',
-                                            borderRadius: '8px',
-                                            border: '1px solid var(--md-sys-color-outline)',
-                                            background: filters.term.includes(t) ? 'var(--md-sys-color-primary-container)' : 'transparent',
-                                            color: filters.term.includes(t) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
-                                            fontSize: '0.75rem',
-                                            cursor: 'pointer',
-                                            textAlign: 'center'
-                                        }}
-                                    >
-                                        {t}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
+                        {isFiltersExpanded && (
+                            <>
+                                {/* Subject Filter */}
+                                <div style={{ marginBottom: '16px' }}>
+                                    <div style={{ fontSize: '0.8rem', marginBottom: '8px', opacity: 0.8 }}>Subject</div>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                        {uniqueSubjects.map(s => (
+                                            <button
+                                                key={s}
+                                                onClick={() => toggleFilter('subject', s)}
+                                                style={{
+                                                    padding: '4px 10px',
+                                                    borderRadius: '8px',
+                                                    border: '1px solid var(--md-sys-color-outline)',
+                                                    background: filters.subject.includes(s) ? 'var(--md-sys-color-primary-container)' : 'transparent',
+                                                    color: filters.subject.includes(s) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
+                                                    fontSize: '0.75rem',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                {s}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
 
-                        {/* Level Filter */}
-                        <div style={{ marginBottom: '16px' }}>
-                            <div style={{ fontSize: '0.8rem', marginBottom: '8px', opacity: 0.8 }}>Level</div>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                                {uniqueLevels.map(l => (
-                                    <button
-                                        key={l}
-                                        onClick={() => toggleFilter('level', l)}
-                                        style={{
-                                            padding: '4px 10px',
-                                            borderRadius: '8px',
-                                            border: '1px solid var(--md-sys-color-outline)',
-                                            background: filters.level.includes(l) ? 'var(--md-sys-color-primary-container)' : 'transparent',
-                                            color: filters.level.includes(l) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
-                                            fontSize: '0.75rem',
-                                            cursor: 'pointer'
-                                        }}
-                                    >
-                                        {l}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
+                                {/* Term Filter */}
+                                <div style={{ marginBottom: '16px' }}>
+                                    <div style={{ fontSize: '0.8rem', marginBottom: '8px', opacity: 0.8 }}>Term</div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px' }}>
+                                        {uniqueTerms.map(t => (
+                                            <button
+                                                key={t}
+                                                onClick={() => toggleFilter('term', t)}
+                                                style={{
+                                                    padding: '4px 6px',
+                                                    borderRadius: '8px',
+                                                    border: '1px solid var(--md-sys-color-outline)',
+                                                    background: filters.term.includes(t) ? 'var(--md-sys-color-primary-container)' : 'transparent',
+                                                    color: filters.term.includes(t) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
+                                                    fontSize: '0.75rem',
+                                                    cursor: 'pointer',
+                                                    textAlign: 'center'
+                                                }}
+                                            >
+                                                {t}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
 
-                        {/* Year Filter */}
-                        <div style={{ marginBottom: '16px' }}>
-                            <div style={{ fontSize: '0.8rem', marginBottom: '8px', opacity: 0.8 }}>Year</div>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                                {uniqueYears.map(y => (
-                                    <button
-                                        key={y}
-                                        onClick={() => toggleFilter('year', y.toString())} // Convert to string for helper, or handle generic
-                                        style={{
-                                            padding: '4px 10px',
-                                            borderRadius: '8px',
-                                            border: '1px solid var(--md-sys-color-outline)',
-                                            background: filters.year.includes(y) ? 'var(--md-sys-color-primary-container)' : 'transparent',
-                                            color: filters.year.includes(y) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
-                                            fontSize: '0.75rem',
-                                            cursor: 'pointer'
-                                        }}
-                                    >
-                                        {y}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
+                                {/* Level Filter */}
+                                <div style={{ marginBottom: '16px' }}>
+                                    <div style={{ fontSize: '0.8rem', marginBottom: '8px', opacity: 0.8 }}>Level</div>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                        {uniqueLevels.map(l => (
+                                            <button
+                                                key={l}
+                                                onClick={() => toggleFilter('level', l)}
+                                                style={{
+                                                    padding: '4px 10px',
+                                                    borderRadius: '8px',
+                                                    border: '1px solid var(--md-sys-color-outline)',
+                                                    background: filters.level.includes(l) ? 'var(--md-sys-color-primary-container)' : 'transparent',
+                                                    color: filters.level.includes(l) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
+                                                    fontSize: '0.75rem',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                {l}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
 
-                        {/* School Filter */}
-                        <div style={{ marginBottom: '16px' }}>
-                            <div style={{ fontSize: '0.8rem', marginBottom: '8px', opacity: 0.8 }}>School</div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '200px', overflowY: 'auto' }}>
-                                {uniqueSchools.map(s => (
-                                    <button
-                                        key={s}
-                                        onClick={() => toggleFilter('school', s)}
+                                {/* Year Filter */}
+                                <div style={{ marginBottom: '16px' }}>
+                                    <div style={{ fontSize: '0.8rem', marginBottom: '8px', opacity: 0.8 }}>Year</div>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                        {uniqueYears.map(y => (
+                                            <button
+                                                key={y}
+                                                onClick={() => toggleFilter('year', y)}
+                                                style={{
+                                                    padding: '4px 10px',
+                                                    borderRadius: '8px',
+                                                    border: '1px solid var(--md-sys-color-outline)',
+                                                    background: filters.year.includes(y) ? 'var(--md-sys-color-primary-container)' : 'transparent',
+                                                    color: filters.year.includes(y) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
+                                                    fontSize: '0.75rem',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                {y}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* School Filter */}
+                                <div style={{ marginBottom: '16px' }}>
+                                    <div style={{ fontSize: '0.8rem', marginBottom: '8px', opacity: 0.8 }}>School</div>
+                                    <input
+                                        type="text"
+                                        placeholder="Search schools..."
+                                        value={schoolSearch}
+                                        onChange={(e) => setSchoolSearch(e.target.value)}
                                         style={{
-                                            padding: '6px 10px',
-                                            borderRadius: '8px',
-                                            border: 'none',
-                                            background: filters.school.includes(s) ? 'var(--md-sys-color-primary-container)' : 'transparent',
-                                            color: filters.school.includes(s) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
-                                            fontSize: '0.75rem',
-                                            cursor: 'pointer',
-                                            textAlign: 'left',
                                             width: '100%',
-                                            whiteSpace: 'nowrap',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis'
+                                            padding: '8px',
+                                            marginBottom: '8px',
+                                            borderRadius: '8px',
+                                            border: '1px solid var(--md-sys-color-outline)',
+                                            background: 'var(--md-sys-color-surface-container-high)',
+                                            color: 'var(--md-sys-color-on-surface)',
+                                            fontSize: '0.75rem'
                                         }}
-                                        title={s}
-                                    >
-                                        {s}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
+                                    />
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '200px', overflowY: 'auto' }}>
+                                        {uniqueSchools
+                                            .filter(s => s.toLowerCase().includes(schoolSearch.toLowerCase()))
+                                            .map(s => (
+                                                <button
+                                                    key={s}
+                                                    onClick={() => toggleFilter('school', s)}
+                                                    style={{
+                                                        padding: '6px 10px',
+                                                        borderRadius: '8px',
+                                                        border: 'none',
+                                                        background: filters.school.includes(s) ? 'var(--md-sys-color-primary-container)' : 'transparent',
+                                                        color: filters.school.includes(s) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
+                                                        fontSize: '0.75rem',
+                                                        cursor: 'pointer',
+                                                        textAlign: 'left',
+                                                        width: '100%',
+                                                        whiteSpace: 'nowrap',
+                                                        overflow: 'hidden',
+                                                        textOverflow: 'ellipsis'
+                                                    }}
+                                                    title={s}
+                                                >
+                                                    {s}
+                                                </button>
+                                            ))}
+                                    </div>
+                                </div>
+                            </>
+                        )}
 
                     </div>
                 )}

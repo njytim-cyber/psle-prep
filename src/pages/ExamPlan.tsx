@@ -1,6 +1,7 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useStateContext, Paper } from '../context/StateContext';
-import { useNavigate } from 'react-router-dom';
+import { ChevronLeft, ChevronRight, CheckCircle2, Circle, Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const EXAM_TERM_MAPPING: { [key: string]: string[] } = {
     'WA1': ['CA1', 'WA1'],
@@ -9,10 +10,10 @@ const EXAM_TERM_MAPPING: { [key: string]: string[] } = {
 };
 
 interface Milestone {
-    id: string; // "P4-WA1"
+    id: string;
     level: string;
-    exam: string; // "WA1"
-    date: string; // YYYY-MM-DD
+    exam: string;
+    date: string;
     title: string;
     terms: string[];
     papers: Paper[];
@@ -22,16 +23,17 @@ interface Milestone {
         pct: number;
         subjects: { [key: string]: { total: number, done: number } };
     };
+    cta: Paper[];
     isPast: boolean;
     isNext: boolean;
 }
 
 export const ExamPlan = () => {
-    const { papers, trackerData, examPlannerSettings, setExamPlannerSettings, saveData } = useStateContext();
-    // const navigate = useNavigate(); // Unused
-    const nextMilestoneRef = useRef<HTMLDivElement>(null);
+    const { papers, trackerData, examPlannerSettings, setExamPlannerSettings, saveData, markComplete } = useStateContext();
 
     const [editingId, setEditingId] = useState<string | null>(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [showAll, setShowAll] = useState(false);
 
     // 1. Construct Timeline Data
     const timeline = useMemo(() => {
@@ -61,12 +63,18 @@ export const ExamPlan = () => {
                 const done = milestonePapers.filter(p => trackerData[p.file_path]?.completed).length;
 
                 const subjStats: Record<string, { total: number; done: number }> = {};
+                const cta: Paper[] = [];
+
                 ['Maths', 'Science', 'English'].forEach(s => {
                     const sp = milestonePapers.filter(p => (p.subject || 'Maths') === s);
                     subjStats[s] = {
                         total: sp.length,
                         done: sp.filter(p => trackerData[p.file_path]?.completed).length
                     };
+
+                    // Pick top uncompleted paper for CTA
+                    const pending = sp.find(p => !trackerData[p.file_path]?.completed);
+                    if (pending) cta.push(pending);
                 });
 
                 const isPast = dateObj ? dateObj < now : false;
@@ -91,22 +99,23 @@ export const ExamPlan = () => {
                         pct: total > 0 ? (done / total) * 100 : 0,
                         subjects: subjStats
                     },
+                    cta,
                     isPast,
                     isNext
                 });
             });
         });
 
-        // If no "next" found (all past or no dates), maybe default to first or last?
         return result;
     }, [papers, trackerData, examPlannerSettings]);
 
-    // Scroll to next
-    useEffect(() => {
-        if (nextMilestoneRef.current) {
-            nextMilestoneRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }, []);
+    // Set initial index to next milestone
+    const [prevTimeline, setPrevTimeline] = useState(timeline);
+    if (timeline !== prevTimeline) {
+        setPrevTimeline(timeline);
+        const nextIdx = timeline.findIndex(m => m.isNext);
+        if (nextIdx !== -1) setCurrentIndex(nextIdx);
+    }
 
     const handleDateChange = (level: string, exam: string, val: string) => {
         const newSettings = JSON.parse(JSON.stringify(examPlannerSettings));
@@ -120,125 +129,224 @@ export const ExamPlan = () => {
         await saveData();
     };
 
+    const activeItem = timeline[currentIndex];
+    if (!activeItem) return null;
+
+    const daysLeft = activeItem.date ? Math.ceil((new Date(activeItem.date).getTime() - new Date().setHours(0, 0, 0, 0)) / (86400000)) : null;
+
     return (
-        <div id="exam-view" className="view-pane" style={{ overflowY: 'auto', padding: '20px 20px 100px 20px', maxWidth: '800px', margin: '0 auto' }}>
+        <div id="exam-view" className="view-pane" style={{ overflowY: 'auto', padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
 
-            <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                <h1 style={{ fontSize: '2rem', marginBottom: '10px' }}>🎓 Your Exam Journey</h1>
-                <p style={{ opacity: 0.7 }}>Track your progress from P4 to PSLE</p>
+            <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+                <h1 style={{ fontSize: '2rem', marginBottom: '8px' }}>🎓 Your Exam Journey</h1>
+                <p style={{ opacity: 0.7 }}>Personalized roadmap to {activeItem.level === 'P6' ? 'PSLE' : 'success'}</p>
             </div>
 
-            <div className="timeline-container" style={{ position: 'relative', paddingLeft: '30px' }}>
-                {/* Vertical Line */}
-                <div style={{
-                    position: 'absolute',
-                    left: '14px',
-                    top: '20px',
-                    bottom: '0',
-                    width: '4px',
-                    background: 'var(--md-sys-color-outline-variant)',
-                    borderRadius: '2px'
-                }} />
+            {/* Carousel Navigation */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', marginBottom: '30px' }}>
+                <button
+                    onClick={() => setCurrentIndex(Math.max(0, currentIndex - 1))}
+                    disabled={currentIndex === 0}
+                    style={{
+                        background: 'var(--md-sys-color-surface-container)',
+                        border: 'none',
+                        borderRadius: '50%',
+                        padding: '12px',
+                        cursor: currentIndex === 0 ? 'default' : 'pointer',
+                        opacity: currentIndex === 0 ? 0.3 : 1,
+                        color: 'var(--md-sys-color-on-surface)'
+                    }}
+                >
+                    <ChevronLeft size={24} />
+                </button>
 
-                {timeline.map((item) => {
-                    const daysLeft = item.date ? Math.ceil((new Date(item.date).getTime() - new Date().setHours(0, 0, 0, 0)) / (86400000)) : null;
-                    const isEditing = editingId === item.id;
-
-                    return (
-                        <div
-                            key={item.id}
-                            ref={item.isNext ? nextMilestoneRef : null}
-                            style={{
-                                marginBottom: '40px',
-                                position: 'relative',
-                                opacity: item.isPast ? 0.7 : 1,
-                                filter: item.isPast ? 'grayscale(0.5)' : 'none'
-                            }}
-                        >
-                            {/* Dot */}
-                            <div style={{
-                                position: 'absolute',
-                                left: '-23px',
-                                top: '20px',
-                                width: '16px',
-                                height: '16px',
-                                borderRadius: '50%',
-                                background: item.isNext ? 'var(--md-sys-color-primary)' : (item.stats.pct >= 100 ? 'var(--md-sys-color-success)' : 'var(--md-sys-color-surface-variant)'),
-                                border: `4px solid var(--md-sys-color-surface)`,
-                                zIndex: 2,
-                                boxShadow: item.isNext ? '0 0 0 4px var(--md-sys-color-tertiary-container)' : 'none'
+                <div style={{ textAlign: 'center', minWidth: '200px' }}>
+                    <div style={{ fontSize: '0.8rem', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '1px' }}>Current Milestone</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{activeItem.title}</div>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: '4px', marginTop: '8px' }}>
+                        {timeline.map((_, i) => (
+                            <div key={i} style={{
+                                width: i === currentIndex ? '20px' : '6px',
+                                height: '6px',
+                                borderRadius: '3px',
+                                background: i === currentIndex ? 'var(--md-sys-color-primary)' : 'var(--md-sys-color-outline-variant)',
+                                transition: 'all 0.3s'
                             }} />
+                        ))}
+                    </div>
+                </div>
 
-                            {/* Card */}
-                            <div style={{
-                                background: item.isNext ? 'var(--md-sys-color-secondary-container)' : 'var(--md-sys-color-surface-container)',
-                                padding: '20px',
-                                borderRadius: '16px',
-                                border: item.isNext ? '2px solid var(--md-sys-color-primary)' : '1px solid var(--md-sys-color-outline-variant)',
-                                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-                            }}>
-                                {/* Header */}
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
-                                    <div>
-                                        <h2 style={{ margin: 0, fontSize: '1.3rem', color: item.isNext ? 'var(--md-sys-color-on-secondary-container)' : 'var(--md-sys-color-on-surface)' }}>{item.title}</h2>
-
-                                        {!isEditing ? (
-                                            <div
-                                                style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px', cursor: 'pointer', opacity: 0.8 }}
-                                                onClick={() => setEditingId(item.id)}
-                                                title="Click to edit date"
-                                            >
-                                                <span style={{ fontSize: '0.9rem', color: item.isNext ? 'var(--md-sys-color-on-secondary-container)' : 'var(--md-sys-color-on-surface-variant)' }}>
-                                                    {item.date ? new Date(item.date).toLocaleDateString(undefined, { dateStyle: 'long' }) : 'Set Date'}
-                                                </span>
-                                                <span style={{ fontSize: '0.8rem' }}>✏️</span>
-                                            </div>
-                                        ) : (
-                                            <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
-                                                <input
-                                                    type="date"
-                                                    value={item.date}
-                                                    onChange={(e) => handleDateChange(item.level, item.exam, e.target.value)}
-                                                    style={{ padding: '4px', borderRadius: '4px', border: 'none', background: 'var(--md-sys-color-surface-container-high)', color: 'var(--md-sys-color-on-surface)' }}
-                                                />
-                                                <button onClick={handleSave} style={{ fontSize: '0.8rem', padding: '4px 8px', borderRadius: '4px', border: 'none', background: 'var(--md-sys-color-success)', color: 'var(--md-sys-color-on-success)', cursor: 'pointer' }}>Save</button>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {daysLeft !== null && (
-                                        <div style={{ textAlign: 'center', background: 'rgba(0,0,0,0.1)', padding: '8px 12px', borderRadius: '12px' }}>
-                                            <div style={{ fontSize: '1.2rem', fontWeight: 700, lineHeight: 1, color: item.isNext ? 'var(--md-sys-color-on-secondary-container)' : 'var(--md-sys-color-on-surface)' }}>{daysLeft}</div>
-                                            <div style={{ fontSize: '0.7rem', color: item.isNext ? 'var(--md-sys-color-on-secondary-container)' : 'var(--md-sys-color-on-surface-variant)' }}>{daysLeft === 1 ? 'Day Left' : 'Days Left'}</div>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Stats Bar */}
-                                <div style={{ marginBottom: '15px' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '4px' }}>
-                                        <span style={{ color: item.isNext ? 'var(--md-sys-color-on-secondary-container)' : 'var(--md-sys-color-on-surface-variant)' }}>Progress</span>
-                                        <span style={{ color: item.isNext ? 'var(--md-sys-color-on-secondary-container)' : 'var(--md-sys-color-on-surface-variant)' }}>{Math.round(item.stats.pct)}% ({item.stats.done}/{item.stats.total})</span>
-                                    </div>
-                                    <div style={{ height: '8px', background: 'var(--md-sys-color-surface-variant)', borderRadius: '4px', overflow: 'hidden' }}>
-                                        <div style={{ width: `${item.stats.pct}%`, height: '100%', background: item.isNext ? 'var(--md-sys-color-primary)' : 'var(--md-sys-color-success)', transition: 'width 0.5s' }} />
-                                    </div>
-                                </div>
-
-                                {/* Subjects Breakdown */}
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
-                                    {Object.entries(item.stats.subjects).map(([subj, data]: [string, any]) => (
-                                        <div key={subj} style={{ background: 'rgba(255,255,255,0.05)', padding: '8px', borderRadius: '8px', textAlign: 'center' }}>
-                                            <div style={{ fontSize: '0.7rem', opacity: 0.7, color: item.isNext ? 'var(--md-sys-color-on-secondary-container)' : 'var(--md-sys-color-on-surface)' }}>{subj}</div>
-                                            <div style={{ fontWeight: 600, color: item.isNext ? 'var(--md-sys-color-on-secondary-container)' : 'var(--md-sys-color-on-surface)' }}>{data.done}/{data.total}</div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    );
-                })}
+                <button
+                    onClick={() => setCurrentIndex(Math.min(timeline.length - 1, currentIndex + 1))}
+                    disabled={currentIndex === timeline.length - 1}
+                    style={{
+                        background: 'var(--md-sys-color-surface-container)',
+                        border: 'none',
+                        borderRadius: '50%',
+                        padding: '12px',
+                        cursor: currentIndex === timeline.length - 1 ? 'default' : 'pointer',
+                        opacity: currentIndex === timeline.length - 1 ? 0.3 : 1,
+                        color: 'var(--md-sys-color-on-surface)'
+                    }}
+                >
+                    <ChevronRight size={24} />
+                </button>
             </div>
+
+            {/* Main Content Card */}
+            <div style={{
+                background: 'var(--md-sys-color-surface-container-high)',
+                borderRadius: '24px',
+                padding: '30px',
+                border: '1px solid var(--md-sys-color-outline-variant)',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+            }}>
+                {/* Milestone Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '30px' }}>
+                    <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <h2 style={{ margin: 0, fontSize: '1.5rem' }}>🎯 Focus Status</h2>
+                            {activeItem.isNext && <span style={{ background: 'var(--md-sys-color-tertiary-container)', color: 'var(--md-sys-color-on-tertiary-container)', padding: '2px 10px', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 700 }}>NEXT UP</span>}
+                        </div>
+
+                        {editingId === activeItem.id ? (
+                            <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+                                <input
+                                    type="date"
+                                    value={activeItem.date}
+                                    onChange={(e) => handleDateChange(activeItem.level, activeItem.exam, e.target.value)}
+                                    style={{ padding: '6px', borderRadius: '8px', border: '1px solid var(--md-sys-color-outline)', background: 'var(--md-sys-color-surface)', color: 'var(--md-sys-color-on-surface)' }}
+                                />
+                                <button onClick={handleSave} style={{ background: 'var(--md-sys-color-primary)', color: 'var(--md-sys-color-on-primary)', border: 'none', padding: '6px 15px', borderRadius: '8px', cursor: 'pointer' }}>Set Date</button>
+                            </div>
+                        ) : (
+                            <div onClick={() => setEditingId(activeItem.id)} style={{ marginTop: '8px', opacity: 0.8, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <Clock size={16} />
+                                <span>{activeItem.date ? new Date(activeItem.date).toLocaleDateString(undefined, { dateStyle: 'long' }) : 'Set Date'}</span>
+                                <span style={{ fontSize: '0.8rem' }}>✏️</span>
+                            </div>
+                        )}
+                    </div>
+
+                    {daysLeft !== null && (
+                        <div style={{ background: 'var(--md-sys-color-secondary-container)', padding: '10px 20px', borderRadius: '16px', textAlign: 'center' }}>
+                            <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--md-sys-color-on-secondary-container)' }}>{daysLeft}</div>
+                            <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: 600 }}>Days Left</div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Progress Visual */}
+                <div style={{ marginBottom: '40px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '0.9rem' }}>
+                        <span>Overall Milestone Progress</span>
+                        <span style={{ fontWeight: 700 }}>{Math.round(activeItem.stats.pct)}% ({activeItem.stats.done}/{activeItem.stats.total})</span>
+                    </div>
+                    <div style={{ height: '12px', background: 'var(--md-sys-color-surface-variant)', borderRadius: '6px', overflow: 'hidden' }}>
+                        <div style={{ width: `${activeItem.stats.pct}%`, height: '100%', background: 'var(--md-sys-color-primary)', transition: 'width 0.8s ease' }} />
+                    </div>
+                </div>
+
+                {/* CALL TO ACTION - Target Papers */}
+                <div style={{ marginBottom: '40px' }}>
+                    <h3 style={{ fontSize: '1.1rem', marginBottom: '15px', opacity: 0.9 }}>📋 High Priority Tasks</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
+                        {activeItem.cta.map(paper => (
+                            <div key={paper.file_path} style={{
+                                background: 'var(--md-sys-color-surface-container-highest)',
+                                padding: '15px',
+                                borderRadius: '16px',
+                                border: '1px solid var(--md-sys-color-outline-variant)',
+                                position: 'relative'
+                            }}>
+                                <div style={{ fontSize: '0.7rem', color: 'var(--md-sys-color-tertiary)', fontWeight: 700, marginBottom: '5px' }}>{paper.subject.toUpperCase()}</div>
+                                <div style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '12px', lineHeight: 1.3 }}>{paper.school} ({paper.year})</div>
+                                <Link
+                                    to={`/view/${encodeURIComponent(paper.file_path)}`}
+                                    style={{
+                                        display: 'block',
+                                        textAlign: 'center',
+                                        padding: '8px',
+                                        background: 'var(--md-sys-color-primary)',
+                                        color: 'var(--md-sys-color-on-primary)',
+                                        textDecoration: 'none',
+                                        borderRadius: '8px',
+                                        fontSize: '0.8rem',
+                                        fontWeight: 600
+                                    }}
+                                >
+                                    Solve Now
+                                </Link>
+                            </div>
+                        ))}
+                        {activeItem.cta.length === 0 && (
+                            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '20px', background: 'var(--md-sys-color-surface-container)', borderRadius: '16px', opacity: 0.7 }}>
+                                🎉 All high priority papers for this milestone are done!
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Expand All Papers Toggle */}
+                <div style={{ borderTop: '1px solid var(--md-sys-color-outline-variant)', paddingTop: '20px' }}>
+                    <div
+                        onClick={() => setShowAll(!showAll)}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', userSelect: 'none' }}
+                    >
+                        <span style={{ fontWeight: 600, opacity: 0.8 }}>Full Breakdown ({activeItem.papers.length} Papers)</span>
+                        <span style={{ background: 'var(--md-sys-color-surface-variant)', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem' }}>
+                            {showAll ? 'Hide All' : 'Show All'}
+                        </span>
+                    </div>
+
+                    {showAll && (
+                        <div style={{
+                            marginTop: '20px',
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 1fr 1fr',
+                            gap: '20px',
+                            animation: 'fadeIn 0.3s ease'
+                        }}>
+                            {['Maths', 'English', 'Science'].map(subj => (
+                                <div key={subj}>
+                                    <div style={{
+                                        fontSize: '0.8rem',
+                                        fontWeight: 700,
+                                        color: 'var(--md-sys-color-primary)',
+                                        marginBottom: '10px',
+                                        borderBottom: '2px solid var(--md-sys-color-primary-container)',
+                                        paddingBottom: '4px'
+                                    }}>
+                                        {subj}
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                        {activeItem.papers.filter(p => (p.subject || 'Maths') === subj).map(p => {
+                                            const done = trackerData[p.file_path]?.completed;
+                                            return (
+                                                <div key={p.file_path} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', opacity: done ? 0.6 : 1 }}>
+                                                    <div onClick={() => markComplete(p.file_path, !done)} style={{ cursor: 'pointer', flexShrink: 0 }}>
+                                                        {done ? <CheckCircle2 size={16} color="var(--md-sys-color-success)" /> : <Circle size={16} />}
+                                                    </div>
+                                                    <Link to={`/view/${encodeURIComponent(p.file_path)}`} style={{ textDecoration: 'none', color: 'inherit', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                        {p.year} {p.school}
+                                                    </Link>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <style>{`
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `}</style>
         </div>
     );
 };
