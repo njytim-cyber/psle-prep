@@ -142,10 +142,6 @@ export const ExamPlan = () => {
         setExamPlannerSettings(newSettings);
     };
 
-    const handleSave = async () => {
-        await saveData();
-    };
-
     const activeItem = timeline[currentIndex];
     if (!activeItem) return null;
 

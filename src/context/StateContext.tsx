@@ -205,6 +205,15 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
         return null;
     }, [papers, trackerData, examPlannerSettings]);
 
+    // Auto-save logic
+    useEffect(() => {
+        if (!loadingData && user) {
+            const timeoutId = setTimeout(() => {
+                saveData();
+            }, 1000); // Debounce saves by 1s
+            return () => clearTimeout(timeoutId);
+        }
+    }, [trackerData, examPlannerSettings, userAvatar, loadingData, user]);
 
     // Load Data
     useEffect(() => {
