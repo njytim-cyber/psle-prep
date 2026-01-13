@@ -12,7 +12,15 @@ export default defineConfig({
     },
     build: {
         outDir: 'dist',
-        content: ['papers.js'], // Ensure we don't clobber papers if they were in dist (they aren't)
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vendor': ['react', 'react-dom', 'react-router-dom'],
+                    'firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore'],
+                    'icons': ['lucide-react']
+                }
+            }
+        }
     },
     server: {
         port: 5173,

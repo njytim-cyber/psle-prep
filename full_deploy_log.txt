@@ -1,0 +1,282 @@
+build_and_deploy	Set up job	﻿2026-01-13T05:59:34.6288255Z Current runner version: '2.330.0'
+build_and_deploy	Set up job	2026-01-13T05:59:34.6314540Z ##[group]Runner Image Provisioner
+build_and_deploy	Set up job	2026-01-13T05:59:34.6315763Z Hosted Compute Agent
+build_and_deploy	Set up job	2026-01-13T05:59:34.6316587Z Version: 20251211.462
+build_and_deploy	Set up job	2026-01-13T05:59:34.6317509Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+build_and_deploy	Set up job	2026-01-13T05:59:34.6318654Z Build Date: 2025-12-11T16:28:49Z
+build_and_deploy	Set up job	2026-01-13T05:59:34.6319718Z Worker ID: ***54e20f7c-05fb-4a49-81b5-0b84c9305dd3***
+build_and_deploy	Set up job	2026-01-13T05:59:34.6320656Z ##[endgroup]
+build_and_deploy	Set up job	2026-01-13T05:59:34.6321498Z ##[group]Operating System
+build_and_deploy	Set up job	2026-01-13T05:59:34.6322265Z Ubuntu
+build_and_deploy	Set up job	2026-01-13T05:59:34.6323041Z 24.04.3
+build_and_deploy	Set up job	2026-01-13T05:59:34.6323741Z LTS
+build_and_deploy	Set up job	2026-01-13T05:59:34.6324506Z ##[endgroup]
+build_and_deploy	Set up job	2026-01-13T05:59:34.6325205Z ##[group]Runner Image
+build_and_deploy	Set up job	2026-01-13T05:59:34.6326036Z Image: ubuntu-24.04
+build_and_deploy	Set up job	2026-01-13T05:59:34.6326761Z Version: 20260105.202.1
+build_and_deploy	Set up job	2026-01-13T05:59:34.6328273Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260105.202/images/ubuntu/Ubuntu2404-Readme.md
+build_and_deploy	Set up job	2026-01-13T05:59:34.6329902Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260105.202
+build_and_deploy	Set up job	2026-01-13T05:59:34.6331353Z ##[endgroup]
+build_and_deploy	Set up job	2026-01-13T05:59:34.6332868Z ##[group]GITHUB_TOKEN Permissions
+build_and_deploy	Set up job	2026-01-13T05:59:34.6334948Z Contents: write
+build_and_deploy	Set up job	2026-01-13T05:59:34.6335764Z Metadata: read
+build_and_deploy	Set up job	2026-01-13T05:59:34.6336553Z ##[endgroup]
+build_and_deploy	Set up job	2026-01-13T05:59:34.6338991Z Secret source: Actions
+build_and_deploy	Set up job	2026-01-13T05:59:34.6340009Z Prepare workflow directory
+build_and_deploy	Set up job	2026-01-13T05:59:34.6681286Z Prepare all required actions
+build_and_deploy	Set up job	2026-01-13T05:59:34.6724051Z Getting action download info
+build_and_deploy	Set up job	2026-01-13T05:59:35.1362040Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+build_and_deploy	Set up job	2026-01-13T05:59:35.2367687Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+build_and_deploy	Set up job	2026-01-13T05:59:35.3261479Z Download action repository 'FirebaseExtended/action-hosting-deploy@v0' (SHA:e2eda2e106cfa35cdbcf4ac9ddaf6c4756df2c8c)
+build_and_deploy	Set up job	2026-01-13T05:59:35.9795753Z Complete job name: build_and_deploy
+build_and_deploy	Run actions/checkout@v4	﻿2026-01-13T05:59:36.0553602Z ##[group]Run actions/checkout@v4
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0554722Z with:
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0555479Z   token: ***
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0556105Z   repository: njytim-cyber/psle-prep
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0556816Z   ssh-strict: true
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0557405Z   ssh-user: git
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0558221Z   persist-credentials: true
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0558875Z   clean: true
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0559513Z   sparse-checkout-cone-mode: true
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0560181Z   fetch-depth: 1
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0560751Z   fetch-tags: false
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0561331Z   show-progress: true
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0561927Z   lfs: false
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0562490Z   submodules: false
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0563110Z   set-safe-directory: true
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.0564014Z ##[endgroup]
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1672316Z Syncing repository: njytim-cyber/psle-prep
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1675882Z ##[group]Getting Git version info
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1677651Z Working directory is '/home/runner/work/psle-prep/psle-prep'
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1680060Z [command]/usr/bin/git version
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1752646Z git version 2.52.0
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1780047Z ##[endgroup]
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1795628Z Temporarily overriding HOME='/home/runner/work/_temp/205c7225-86fe-4359-9899-fc1d32802d33' before making global git config changes
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1798930Z Adding repository directory to the temporary git global config as a safe directory
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1809860Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/psle-prep/psle-prep
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1851134Z Deleting the contents of '/home/runner/work/psle-prep/psle-prep'
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1854789Z ##[group]Initializing the repository
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1860012Z [command]/usr/bin/git init /home/runner/work/psle-prep/psle-prep
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1988234Z hint: Using 'master' as the name for the initial branch. This default branch name
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1989826Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1990994Z hint: to use in all of your new repositories, which will suppress this warning,
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1992217Z hint: call:
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1992919Z hint:
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1993959Z hint: 	git config --global init.defaultBranch <name>
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1995173Z hint:
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1996394Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.1998814Z hint: 'development'. The just-created branch can be renamed via this command:
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2000649Z hint:
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2001799Z hint: 	git branch -m <name>
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2002998Z hint:
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2004460Z hint: Disable this message with "git config set advice.defaultBranchName false"
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2006892Z Initialized empty Git repository in /home/runner/work/psle-prep/psle-prep/.git/
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2010918Z [command]/usr/bin/git remote add origin https://github.com/njytim-cyber/psle-prep
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2048223Z ##[endgroup]
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2050191Z ##[group]Disabling automatic garbage collection
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2052397Z [command]/usr/bin/git config --local gc.auto 0
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2082077Z ##[endgroup]
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2083935Z ##[group]Setting up auth
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2089768Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2121244Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2492237Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2522187Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2742304Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.2772829Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.3000602Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.3034329Z ##[endgroup]
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.3036270Z ##[group]Fetching the repository
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:36.3044546Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +d06336ddc4731424d798a9e35ba8e85124083de7:refs/remotes/origin/master
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:55.0793972Z From https://github.com/njytim-cyber/psle-prep
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:55.0799445Z  * [new ref]         d06336ddc4731424d798a9e35ba8e85124083de7 -> origin/master
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:55.0824233Z ##[endgroup]
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:55.0824913Z ##[group]Determining the checkout info
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:55.0826137Z ##[endgroup]
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:55.0832113Z [command]/usr/bin/git sparse-checkout disable
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:55.0932441Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:55.0934151Z ##[group]Checking out the ref
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:55.0934840Z [command]/usr/bin/git checkout --progress --force -B master refs/remotes/origin/master
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.1151784Z Updating files:  26% (340/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.1657668Z Updating files:  27% (344/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.1997023Z Updating files:  28% (357/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.2282348Z Updating files:  29% (369/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.2502027Z Updating files:  30% (382/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.2942000Z Updating files:  31% (395/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.3363118Z Updating files:  32% (408/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.3686106Z Updating files:  33% (420/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.3875562Z Updating files:  34% (433/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.4117546Z Updating files:  35% (446/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.4552094Z Updating files:  36% (458/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.4953118Z Updating files:  37% (471/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.5376766Z Updating files:  38% (484/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.5888374Z Updating files:  39% (497/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.6501841Z Updating files:  40% (509/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.6914028Z Updating files:  41% (522/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.7113147Z Updating files:  42% (535/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.7546951Z Updating files:  43% (547/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.7906934Z Updating files:  44% (560/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.8215166Z Updating files:  45% (573/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.8880883Z Updating files:  46% (586/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.9376270Z Updating files:  47% (598/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:56.9704431Z Updating files:  48% (611/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.0032135Z Updating files:  49% (624/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.0391713Z Updating files:  50% (636/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.0569938Z Updating files:  51% (649/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.1012422Z Updating files:  52% (662/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.1192923Z Updating files:  52% (669/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.1655133Z Updating files:  53% (675/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.2175994Z Updating files:  54% (687/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.2562130Z Updating files:  55% (700/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.2965480Z Updating files:  56% (713/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.3267621Z Updating files:  57% (726/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.3546887Z Updating files:  58% (738/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.3990254Z Updating files:  59% (751/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.4312860Z Updating files:  60% (764/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.4667102Z Updating files:  61% (776/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.5044952Z Updating files:  62% (789/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.5710945Z Updating files:  63% (802/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.6169408Z Updating files:  64% (815/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.6482373Z Updating files:  65% (827/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.6801367Z Updating files:  66% (840/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.7062567Z Updating files:  67% (853/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.7406657Z Updating files:  68% (865/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.8040917Z Updating files:  69% (878/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.8447525Z Updating files:  70% (891/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.8970488Z Updating files:  71% (904/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.9373631Z Updating files:  72% (916/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.9639198Z Updating files:  73% (929/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:57.9987811Z Updating files:  74% (942/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.0274053Z Updating files:  75% (954/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.0905864Z Updating files:  76% (967/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.0996370Z Updating files:  77% (980/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.1439205Z Updating files:  77% (983/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.1922864Z Updating files:  78% (993/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.2378598Z Updating files:  79% (1005/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.2700105Z Updating files:  80% (1018/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.3029801Z Updating files:  81% (1031/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.3338480Z Updating files:  82% (1044/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.3658860Z Updating files:  83% (1056/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.4216398Z Updating files:  84% (1069/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.4685717Z Updating files:  85% (1082/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.5141142Z Updating files:  86% (1094/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.5443969Z Updating files:  87% (1107/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.5631110Z Updating files:  88% (1120/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.6124150Z Updating files:  89% (1133/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.6653215Z Updating files:  90% (1145/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.7155256Z Updating files:  91% (1158/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.7618792Z Updating files:  92% (1171/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.8096772Z Updating files:  93% (1183/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.8387099Z Updating files:  94% (1196/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.8678218Z Updating files:  95% (1209/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.9103944Z Updating files:  96% (1222/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.9108714Z Updating files:  97% (1234/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.9128260Z Updating files:  98% (1247/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.9134299Z Updating files:  99% (1260/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.9134856Z Updating files: 100% (1272/1272)
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.9135396Z Updating files: 100% (1272/1272), done.
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.9166397Z Reset branch 'master'
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.9169831Z branch 'master' set up to track 'origin/master'.
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.9497264Z ##[endgroup]
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.9536244Z [command]/usr/bin/git log -1 --format=%H
+build_and_deploy	Run actions/checkout@v4	2026-01-13T05:59:58.9561695Z d06336ddc4731424d798a9e35ba8e85124083de7
+build_and_deploy	Setup Node.js	﻿2026-01-13T05:59:58.9780080Z ##[group]Run actions/setup-node@v4
+build_and_deploy	Setup Node.js	2026-01-13T05:59:58.9780415Z with:
+build_and_deploy	Setup Node.js	2026-01-13T05:59:58.9780649Z   node-version: 20
+build_and_deploy	Setup Node.js	2026-01-13T05:59:58.9780913Z   always-auth: false
+build_and_deploy	Setup Node.js	2026-01-13T05:59:58.9781168Z   check-latest: false
+build_and_deploy	Setup Node.js	2026-01-13T05:59:58.9781535Z   token: ***
+build_and_deploy	Setup Node.js	2026-01-13T05:59:58.9781770Z ##[endgroup]
+build_and_deploy	Setup Node.js	2026-01-13T05:59:59.1560324Z Found in cache @ /opt/hostedtoolcache/node/20.19.6/x64
+build_and_deploy	Setup Node.js	2026-01-13T05:59:59.1567152Z ##[group]Environment details
+build_and_deploy	Setup Node.js	2026-01-13T06:00:01.3020166Z node: v20.19.6
+build_and_deploy	Setup Node.js	2026-01-13T06:00:01.3020572Z npm: 10.8.2
+build_and_deploy	Setup Node.js	2026-01-13T06:00:01.3020856Z yarn: 1.22.22
+build_and_deploy	Setup Node.js	2026-01-13T06:00:01.3022274Z ##[endgroup]
+build_and_deploy	Install Dependencies	﻿2026-01-13T06:00:01.3123578Z ##[group]Run npm ci
+build_and_deploy	Install Dependencies	2026-01-13T06:00:01.3123912Z [36;1mnpm ci[0m
+build_and_deploy	Install Dependencies	2026-01-13T06:00:01.3170271Z shell: /usr/bin/bash -e ***0***
+build_and_deploy	Install Dependencies	2026-01-13T06:00:01.3170634Z ##[endgroup]
+build_and_deploy	Install Dependencies	2026-01-13T06:00:07.3477341Z npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+build_and_deploy	Install Dependencies	2026-01-13T06:00:09.8709367Z npm warn deprecated json-ptr@3.1.1: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+build_and_deploy	Install Dependencies	2026-01-13T06:00:16.9357136Z 
+build_and_deploy	Install Dependencies	2026-01-13T06:00:16.9358323Z added 1074 packages, and audited 1075 packages in 16s
+build_and_deploy	Install Dependencies	2026-01-13T06:00:16.9358878Z 
+build_and_deploy	Install Dependencies	2026-01-13T06:00:16.9359232Z 200 packages are looking for funding
+build_and_deploy	Install Dependencies	2026-01-13T06:00:16.9359844Z   run `npm fund` for details
+build_and_deploy	Install Dependencies	2026-01-13T06:00:16.9371546Z 
+build_and_deploy	Install Dependencies	2026-01-13T06:00:16.9372081Z found 0 vulnerabilities
+build_and_deploy	Build	﻿2026-01-13T06:00:16.9706292Z ##[group]Run npm run build
+build_and_deploy	Build	2026-01-13T06:00:16.9706661Z [36;1mnpm run build[0m
+build_and_deploy	Build	2026-01-13T06:00:16.9744825Z shell: /usr/bin/bash -e ***0***
+build_and_deploy	Build	2026-01-13T06:00:16.9745138Z ##[endgroup]
+build_and_deploy	Build	2026-01-13T06:00:17.0836388Z 
+build_and_deploy	Build	2026-01-13T06:00:17.0837139Z > psle-prep@1.3.7 build
+build_and_deploy	Build	2026-01-13T06:00:17.0837755Z > tsc && vite build
+build_and_deploy	Build	2026-01-13T06:00:17.0838200Z 
+build_and_deploy	Build	2026-01-13T06:00:20.0434208Z [36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+build_and_deploy	Build	2026-01-13T06:00:20.0989291Z transforming...
+build_and_deploy	Build	2026-01-13T06:00:20.3438444Z 
+build_and_deploy	Build	2026-01-13T06:00:20.3439976Z avatars.png referenced in avatars.png didn't resolve at build time, it will remain unchanged to be resolved at runtime
+build_and_deploy	Build	2026-01-13T06:00:23.5224165Z [32m✓[39m 1743 modules transformed.
+build_and_deploy	Build	2026-01-13T06:00:26.0582989Z rendering chunks...
+build_and_deploy	Build	2026-01-13T06:00:26.0693228Z computing gzip size...
+build_and_deploy	Build	2026-01-13T06:00:26.0916050Z [2mdist/[22m[32mindex.html                 [39m[1m[2m  0.85 kB[22m[1m[22m[2m │ gzip:   0.46 kB[22m
+build_and_deploy	Build	2026-01-13T06:00:26.0917555Z [2mdist/[22m[2massets/[22m[35mindex-C9SYdHAu.css  [39m[1m[2m 33.28 kB[22m[1m[22m[2m │ gzip:   5.96 kB[22m
+build_and_deploy	Build	2026-01-13T06:00:26.0919592Z [2mdist/[22m[2massets/[22m[36mindex-CYKUIYFJ.js   [39m[1m[33m916.85 kB[39m[22m[2m │ gzip: 211.86 kB[22m
+build_and_deploy	Build	2026-01-13T06:00:26.0920650Z [33m
+build_and_deploy	Build	2026-01-13T06:00:26.0921453Z (!) Some chunks are larger than 500 kB after minification. Consider:
+build_and_deploy	Build	2026-01-13T06:00:26.0922433Z - Using dynamic import() to code-split the application
+build_and_deploy	Build	2026-01-13T06:00:26.0923985Z - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+build_and_deploy	Build	2026-01-13T06:00:26.0925742Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+build_and_deploy	Build	2026-01-13T06:00:26.0926666Z [32m✓ built in 6.03s[39m
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	﻿2026-01-13T06:00:26.1474457Z ##[group]Run FirebaseExtended/action-hosting-deploy@v0
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.1474856Z with:
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.1475199Z   repoToken: ***
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.1484768Z   firebaseServiceAccount: ***
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.1485072Z   channelId: live
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.1485323Z   projectId: psle-prep
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.1485579Z   expires: 7d
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.1485811Z   entryPoint: .
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.1486065Z   firebaseToolsVersion: latest
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.1486348Z   disableComment: false
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.1486805Z   force: false
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.1487041Z ##[endgroup]
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.2141657Z ##[group]Verifying firebase.json exists
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.2147152Z firebase.json file found. Continuing deploy.
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.2151063Z ##[endgroup]
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.2151871Z ##[group]Setting up CLI credentials
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.2165776Z Created a temporary file with Application Default Credentials.
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.2166872Z ##[endgroup]
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.2167635Z ##[group]Deploying to production site
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:26.2192040Z [command]/opt/hostedtoolcache/node/20.19.6/x64/bin/npx firebase-tools@latest deploy --only hosting --project psle-prep --json
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:40.8395905Z ***
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:40.8396453Z   "status": "success",
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:40.8396975Z   "result": ***
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:40.8397751Z     "hosting": "projects/883312014769/sites/psle-prep/versions/7efcedfb9bef4be3"
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:40.8398845Z   ***
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:40.8782421Z ***::endgroup::
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:40.8795207Z ***
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:40.8795774Z   details_url: 'https://psle-prep.web.app/',
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:40.8796300Z   conclusion: 'success',
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:40.8796594Z   output: ***
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:40.8796895Z     title: 'Production deploy succeeded',
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:40.8797363Z     summary: '[psle-prep.web.app](https://psle-prep.web.app/)'
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:40.8797789Z   ***
+build_and_deploy	Run FirebaseExtended/action-hosting-deploy@v0	2026-01-13T06:00:40.8842345Z ***
+build_and_deploy	Post Setup Node.js	﻿2026-01-13T06:00:40.8904756Z Post job cleanup.
+build_and_deploy	Post Run actions/checkout@v4	﻿2026-01-13T06:00:41.0560009Z Post job cleanup.
+build_and_deploy	Post Run actions/checkout@v4	2026-01-13T06:00:41.1508478Z [command]/usr/bin/git version
+build_and_deploy	Post Run actions/checkout@v4	2026-01-13T06:00:41.1544918Z git version 2.52.0
+build_and_deploy	Post Run actions/checkout@v4	2026-01-13T06:00:41.1590076Z Temporarily overriding HOME='/home/runner/work/_temp/e5c3f45e-fe27-442e-806a-4898380c134e' before making global git config changes
+build_and_deploy	Post Run actions/checkout@v4	2026-01-13T06:00:41.1591810Z Adding repository directory to the temporary git global config as a safe directory
+build_and_deploy	Post Run actions/checkout@v4	2026-01-13T06:00:41.1596529Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/psle-prep/psle-prep
+build_and_deploy	Post Run actions/checkout@v4	2026-01-13T06:00:41.1632563Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build_and_deploy	Post Run actions/checkout@v4	2026-01-13T06:00:41.1665872Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build_and_deploy	Post Run actions/checkout@v4	2026-01-13T06:00:41.1900287Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build_and_deploy	Post Run actions/checkout@v4	2026-01-13T06:00:41.1926038Z http.https://github.com/.extraheader
+build_and_deploy	Post Run actions/checkout@v4	2026-01-13T06:00:41.1940389Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+build_and_deploy	Post Run actions/checkout@v4	2026-01-13T06:00:41.1976436Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build_and_deploy	Post Run actions/checkout@v4	2026-01-13T06:00:41.2233351Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build_and_deploy	Post Run actions/checkout@v4	2026-01-13T06:00:41.2272058Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build_and_deploy	Complete job	﻿2026-01-13T06:00:41.2662557Z Cleaning up orphan processes

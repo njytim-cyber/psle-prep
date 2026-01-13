@@ -271,84 +271,95 @@ export const ExamPlan = () => {
                     boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
                 }}>
 
-                    {/* Content Breakdown Header */}
-                    <div style={{ marginBottom: '20px' }}>
-                        <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>Progress Breakdown</h3>
-                        <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>Track your completion across subjects.</p>
-                    </div>
-
-
-                    {/* Expand All Papers Toggle */}
-                    <div style={{ borderTop: '1px solid var(--md-sys-color-outline-variant)', paddingTop: '20px' }}>
-                        <div
-                            onClick={() => setShowAll(!showAll)}
-                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', userSelect: 'none' }}
-                        >
-                            <span style={{ fontWeight: 600, opacity: 0.8 }}>Full Breakdown ({activeItem.papers.length} Papers)</span>
-                            <span style={{ background: 'var(--md-sys-color-surface-variant)', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem' }}>
-                                {showAll ? 'Hide All' : 'Show All'}
-                            </span>
+                    {/* Content Breakdown Header with Toggle */}
+                    <div
+                        onClick={() => setShowAll(!showAll)}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            cursor: 'pointer',
+                            userSelect: 'none',
+                            marginBottom: '20px'
+                        }}
+                    >
+                        <div>
+                            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>
+                                Progress Breakdown ({activeItem.papers.length} Papers)
+                            </h3>
+                            <p style={{ fontSize: '0.9rem', opacity: 0.7, margin: '4px 0 0 0' }}>
+                                Track your completion across subjects.
+                            </p>
                         </div>
-
-                        {showAll && (
-                            <div style={{
-                                marginTop: '20px',
-                                display: 'grid',
-                                gridTemplateColumns: '1fr 1fr 1fr',
-                                gap: '20px',
-                                animation: 'fadeIn 0.3s ease'
-                            }}>
-                                {['Maths', 'English', 'Science'].map(subj => {
-                                    const subjPapers = activeItem.papers.filter(p => (p.subject || 'Maths') === subj);
-                                    const stats = activeItem.stats.subjects[subj] || { done: 0, total: 0 };
-                                    const isAllDone = stats.done === stats.total && stats.total > 0;
-
-                                    return (
-                                        <div key={subj} style={{ minWidth: 0 }}>
-                                            <div style={{
-                                                fontSize: '0.8rem',
-                                                fontWeight: 700,
-                                                color: isAllDone ? 'var(--md-sys-color-tertiary)' : 'var(--md-sys-color-primary)',
-                                                marginBottom: '10px',
-                                                borderBottom: `2px solid ${isAllDone ? 'var(--md-sys-color-tertiary-container)' : 'var(--md-sys-color-primary-container)'}`,
-                                                paddingBottom: '4px',
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                alignItems: 'center'
-                                            }}>
-                                                <span>{subj}</span>
-                                                <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>
-                                                    {isAllDone ? 'Done! ✨' : `(${stats.done}/${stats.total})`}
-                                                </span>
-                                            </div>
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                                {subjPapers.map(p => {
-                                                    const done = trackerData[p.file_path]?.completed;
-                                                    return (
-                                                        <PaperCard
-                                                            key={p.file_path}
-                                                            paper={p}
-                                                            completed={done}
-                                                            onToggleComplete={() => markComplete(p.file_path, !done)}
-                                                        />
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        )}
+                        <span style={{
+                            background: 'var(--md-sys-color-surface-variant)',
+                            padding: '6px 14px',
+                            borderRadius: '20px',
+                            fontSize: '0.85rem',
+                            fontWeight: 500
+                        }}>
+                            {showAll ? 'Hide All' : 'Show All'}
+                        </span>
                     </div>
-                </div>
 
-                <style>{`
+                    {showAll && (
+                        <div style={{
+                            marginTop: '20px',
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 1fr 1fr',
+                            gap: '20px',
+                            animation: 'fadeIn 0.3s ease'
+                        }}>
+                            {['Maths', 'English', 'Science'].map(subj => {
+                                const subjPapers = activeItem.papers.filter(p => (p.subject || 'Maths') === subj);
+                                const stats = activeItem.stats.subjects[subj] || { done: 0, total: 0 };
+                                const isAllDone = stats.done === stats.total && stats.total > 0;
+
+                                return (
+                                    <div key={subj} style={{ minWidth: 0 }}>
+                                        <div style={{
+                                            fontSize: '0.8rem',
+                                            fontWeight: 700,
+                                            color: isAllDone ? 'var(--md-sys-color-tertiary)' : 'var(--md-sys-color-primary)',
+                                            marginBottom: '10px',
+                                            borderBottom: `2px solid ${isAllDone ? 'var(--md-sys-color-tertiary-container)' : 'var(--md-sys-color-primary-container)'}`,
+                                            paddingBottom: '4px',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}>
+                                            <span>{subj}</span>
+                                            <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>
+                                                {isAllDone ? 'Done! ✨' : `(${stats.done}/${stats.total})`}
+                                            </span>
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                            {subjPapers.map(p => {
+                                                const done = trackerData[p.file_path]?.completed;
+                                                return (
+                                                    <PaperCard
+                                                        key={p.file_path}
+                                                        paper={p}
+                                                        completed={done}
+                                                        onToggleComplete={() => markComplete(p.file_path, !done)}
+                                                    />
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <style>{`
                 @keyframes fadeIn {
                     from { opacity: 0; transform: translateY(10px); }
                     to { opacity: 1; transform: translateY(0); }
                 }
             `}</style>
-            </div>
         </div>
     );
 };

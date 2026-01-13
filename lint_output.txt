@@ -2,43 +2,26 @@
 > psle-prep@1.3.7 lint
 > eslint .
 
-(node:6236) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/njyti/Desktop/Google-Antigravity/p4-math-papers/eslint.config.js?mtime=1768276323546 is not specified and it doesn't parse as CommonJS.
+(node:3608) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/njyti/Desktop/Google-Antigravity/p4-math-papers/eslint.config.js?mtime=1768276323546 is not specified and it doesn't parse as CommonJS.
 Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
 To eliminate this warning, add "type": "module" to C:\Users\njyti\Desktop\Google-Antigravity\p4-math-papers\package.json.
 (Use `node --trace-warnings ...` to show where the warning was created)
 
-C:\Users\njyti\Desktop\Google-Antigravity\p4-math-papers\src\components\layout\Sidebar.tsx
-  10:5   warning  'Search' is defined but never used                @typescript-eslint/no-unused-vars
-  17:10  warning  'AVATARS' is defined but never used               @typescript-eslint/no-unused-vars
-  20:37  warning  'signOut' is assigned a value but never used      @typescript-eslint/no-unused-vars
-  23:9   warning  'trackerData' is assigned a value but never used  @typescript-eslint/no-unused-vars
-
-C:\Users\njyti\Desktop\Google-Antigravity\p4-math-papers\src\components\ui\PaperCard.tsx
-  76:21  error  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
-
-C:\Users\njyti\Desktop\Google-Antigravity\p4-math-papers\src\context\AuthContext.tsx
-  14:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
-
-C:\Users\njyti\Desktop\Google-Antigravity\p4-math-papers\src\context\StateContext.tsx
-    6:33  warning  'AVATARS' is defined but never used                                                                                             @typescript-eslint/no-unused-vars
-   62:26  warning  Unexpected any. Specify a different type                                                                                        @typescript-eslint/no-explicit-any
-   63:40  warning  Unexpected any. Specify a different type                                                                                        @typescript-eslint/no-explicit-any
-   76:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
-  109:21  error    'paper' is never reassigned. Use 'const' instead                                                                                prefer-const
-
 C:\Users\njyti\Desktop\Google-Antigravity\p4-math-papers\src\pages\ExamPlan.tsx
-   31:11   warning  'navigate' is assigned a value but never used                          @typescript-eslint/no-unused-vars
-   60:21   error    'total' is never reassigned. Use 'const' instead                       prefer-const
-   61:21   error    'done' is never reassigned. Use 'const' instead                        prefer-const
-   63:34   warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
-  143:38   warning  'idx' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
-  230:102  warning  Unexpected any. Specify a different type                               @typescript-eslint/no-explicit-any
+    3:37  warning  'CheckCircle2' is defined but never used               @typescript-eslint/no-unused-vars
+    3:51  warning  'Circle' is defined but never used                     @typescript-eslint/no-unused-vars
+    3:59  warning  'Clock' is defined but never used                      @typescript-eslint/no-unused-vars
+   34:11  warning  'navigate' is assigned a value but never used          @typescript-eslint/no-unused-vars
+   36:12  warning  'editingId' is assigned a value but never used         @typescript-eslint/no-unused-vars
+  127:11  warning  'handleDateChange' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  134:11  warning  'handleSave' is assigned a value but never used        @typescript-eslint/no-unused-vars
 
 C:\Users\njyti\Desktop\Google-Antigravity\p4-math-papers\src\pages\PdfView.tsx
-   1:38  warning  'useRef' is defined but never used                                                                                     @typescript-eslint/no-unused-vars
-  68:31  warning  Unexpected any. Specify a different type                                                                               @typescript-eslint/no-explicit-any
-  84:8   warning  React Hook useEffect has a missing dependency: 'trackerItem?.notes'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+    2:27  warning  'Paper' is defined but never used               @typescript-eslint/no-unused-vars
+  100:25  error    'fbA' is never reassigned. Use 'const' instead  prefer-const
+  102:25  error    'fbB' is never reassigned. Use 'const' instead  prefer-const
+  120:37  warning  Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
 
-Γ£û 20 problems (4 errors, 16 warnings)
-  3 errors and 0 warnings potentially fixable with the `--fix` option.
+✖ 11 problems (2 errors, 9 warnings)
+  2 errors and 0 warnings potentially fixable with the `--fix` option.
 

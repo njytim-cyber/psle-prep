@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useState, useMemo } from '
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useAuth } from './AuthContext';
-import { papers as initialPapers } from '../data/papers';
 import { DEFAULT_EXAM_SETTINGS } from '../data/constants';
 
 export interface Paper {
@@ -56,13 +55,13 @@ export interface MilestoneProgress {
     exam: string;
 }
 
-const EXAM_TERM_MAPPING: { [key: string]: string[] } = {
+const EXAM_TERM_MAPPING: Record<string, string[]> = {
     'WA1': ['CA1', 'WA1'],
     'WA2': ['CA2', 'WA2', 'SA1'],
     'EYE': ['WA3', 'SA2', 'Prelim']
 };
 
-const XP_WEIGHTS: { [key: string]: number } = {
+const XP_WEIGHTS: Record<string, number> = {
     'SA1': 100, 'SA2': 100, 'Prelim': 120, 'Final Exam': 120,
     'WA1': 50, 'WA2': 50, 'WA3': 50, 'CA1': 50, 'CA2': 50
 };
@@ -99,11 +98,26 @@ export const useStateContext = () => {
 
 export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     const { user } = useAuth();
-    const [papers] = useState<Paper[]>(initialPapers);
+    const [papers, setPapers] = useState<Paper[]>([]);
+    const [papersLoading, setPapersLoading] = useState(true);
     const [trackerData, setTrackerData] = useState<TrackerData>({});
     const [userAvatar, setUserAvatar] = useState<string | undefined>(undefined);
     const [examPlannerSettings, setExamPlannerSettings] = useState(JSON.parse(JSON.stringify(DEFAULT_EXAM_SETTINGS)));
     const [loadingData, setLoadingData] = useState(true);
+
+    // Load papers data from JSON
+    useEffect(() => {
+        fetch('/data/papers.json')
+            .then(res => res.json())
+            .then((data: Paper[]) => {
+                setPapers(data);
+                setPapersLoading(false);
+            })
+            .catch(err => {
+                console.error('Failed to load papers:', err);
+                setPapersLoading(false);
+            });
+    }, []);
 
     // Global Filters
     const [filters, setFilters] = useState<Filters>({

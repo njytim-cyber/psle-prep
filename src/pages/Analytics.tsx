@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStateContext } from '../context/StateContext';
+import { ProgressTimeline } from '../components/charts/ProgressTimeline';
 
 const TERM_ORDER = ['CA1', 'CA2', 'WA1', 'WA2', 'WA3', 'SA1', 'SA2', 'Prelim'];
 
@@ -63,8 +64,13 @@ export const Analytics = () => {
     const percentComplete = totalPapers > 0 ? Math.round((completedCount / totalPapers) * 100) : 0;
 
     return (
-        <div id="analytics-view" className="view-pane" style={{ overflowY: 'auto' }}>
-            <div className="analytics-container">
+        <div id="analytics-view" className="view-pane view-enter" style={{ overflowY: 'auto', padding: '20px' }}>
+            <div className="analytics-container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+                {/* Progress Timeline Visualization */}
+                <div style={{ marginBottom: '32px' }}>
+                    <ProgressTimeline />
+                </div>
+
                 <div className="analytics-header">
                     <h2>📊 Analytics Dashboard</h2>
                     {/* Close button not needed as we have sidebar navigation */}

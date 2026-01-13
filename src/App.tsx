@@ -6,9 +6,33 @@ import { Analytics } from './pages/Analytics';
 import { ExamPlan } from './pages/ExamPlan';
 import { XpSystem } from './pages/XpSystem';
 import { PdfView } from './pages/PdfView';
+import { StudyHub } from './pages/StudyHub';
 
 import { LoginOverlay } from './components/auth/LoginOverlay';
 import { useAuth } from './context/AuthContext';
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
+import { ShortcutsHelpModal } from './components/ui/ShortcutsHelpModal';
+
+function AppContent() {
+    // Enable keyboard shortcuts globally
+    useKeyboardShortcuts();
+
+    return (
+        <>
+            <Routes>
+                <Route path="/" element={<Layout />}>
+                    <Route index element={<Home />} />
+                    <Route path="analytics" element={<Analytics />} />
+                    <Route path="exam" element={<ExamPlan />} />
+                    <Route path="xp" element={<XpSystem />} />
+                    <Route path="study" element={<StudyHub />} />
+                    <Route path="paper/*" element={<PdfView />} />
+                </Route>
+            </Routes>
+            <ShortcutsHelpModal />
+        </>
+    );
+}
 
 function App() {
     const { user, loading } = useAuth();
@@ -38,17 +62,10 @@ function App() {
 
     return (
         <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Layout />}>
-                    <Route index element={<Home />} />
-                    <Route path="analytics" element={<Analytics />} />
-                    <Route path="exam" element={<ExamPlan />} />
-                    <Route path="xp" element={<XpSystem />} />
-                    <Route path="paper/*" element={<PdfView />} />
-                </Route>
-            </Routes>
+            <AppContent />
         </BrowserRouter>
     );
 }
 
 export default App;
+
